@@ -3,7 +3,7 @@ import { Button } from 'native-base'
 import { View, Text, StyleSheet } from 'react-native';
 import { createCustomer } from '../../api/stripe';
 
-export default function StripeConsent() {
+export default function StripeConsent({ navigation }) {
 
     const onSubmit = () => {
         createCustomer()
@@ -13,7 +13,7 @@ export default function StripeConsent() {
                     alert(error);
                     return;
                 }
-                alert(result.data.message);
+                navigation.navigate("SetupCard");
             });
     }
 

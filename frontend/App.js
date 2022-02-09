@@ -7,6 +7,7 @@ import {
 
 import PostRide from "./components/IndexComponents/HomeComponents/PostRide";
 import Routes from './components/Routes'
+import Chat from "./components/IndexComponents/Chat";
 
 // Define the config
 const config = {

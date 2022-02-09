@@ -38,10 +38,7 @@ class PaymentService {
         if (!validEmail(email)) {
             throw new Error("Email is not in a valid format");
         }
-        const customer = await stripe.customers.list({
-            email,
-            limit: 1
-        })
+        const customer = await this.getCustomerByEmail(email);
         if (customer.data.length === 0) {
             throw new Error("User does not have stripe customer account");
         }
@@ -49,6 +46,30 @@ class PaymentService {
             customer: customer.data[0].id
         });
         return setupIntent.client_secret;
+    }
+
+    async getCustomerByEmail(email) {
+        const customer = await stripe.customers.list({
+            email,
+            limit: 1
+        })
+        return customer;
+    }
+
+    async getPaymentMethods(user) {
+        const { email } = user;
+        if (email === undefined || email === null) {
+            throw new Error("Token is invalid");
+        }
+        const customer = await this.getCustomerByEmail(email);
+        if (customer.data.length === 0) {
+            throw new Error("Customer is not registered in stripe.");
+        }
+        const methods = await stripe.customers.listPaymentMethods(
+            customer.data[0].id,
+            { type: "card" }
+        )
+        return methods.data;
     }
     
 }

@@ -26,4 +26,14 @@ paymentRouter.post('/setup', verifyToken, async function (req, res, next) {
     }
 })
 
+// Get all payment methods route
+paymentRouter.get("/methods", verifyToken, async function (req, res, next) {
+    try {
+        const methods = await paymentService.getPaymentMethods(req.user);
+        httpResponse.sendSuccess(res, "Payment methods fetched successfully.", { methods });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 module.exports = paymentRouter;

@@ -35,7 +35,7 @@ describe("Stripe and payment tests", function () {
                 })
         })
 
-        it ("Should return success if stripe customer is created successfully", function (done) {
+        it ("Should throw error is email is not in token", function (done) {
             const token = generateToken({
                 userId: "61df6e45bd6fe4e712e20dac",
             });
@@ -82,7 +82,7 @@ describe("Stripe and payment tests", function () {
 
         it ("Should have route to create setup intent", function (done) {
             const token = generateToken({
-                email: "Test"
+                email: "abc@test.com"
             });
             createSetupIntent(token)
                 .end(function (err, res) {
@@ -157,12 +157,78 @@ describe("Stripe and payment tests", function () {
             })
             createSetupIntent(token)
                 .end(function (err, res) {
+                    console.log(res.body);
                     res.body.should.haveOwnProperty("status");
                     res.body.should.haveOwnProperty("message");
                     res.body.should.haveOwnProperty("data");
                     res.body.status.should.equal("Success");
                     res.body.message.should.equal("Setup intent created");
                     res.body.data.should.haveOwnProperty("secret");
+                    done()
+                })
+        })
+
+    })
+
+    describe ("Get all payment methods tests", function () {
+
+        function getPaymentMethods(token) {
+            return chai.request(app)
+                        .get('/payments/methods')
+                        .set("Content-Type", "application/json")
+                        .set("Authorization", "Bearer " + token)
+        }
+
+        it ("Route should exist", function (done) {
+            getPaymentMethods()
+                .end(function (err, res) {
+                    res.status.should.not.be.equal(404);
+                    done();
+                })
+        })
+
+        it ("Should throw error if email is not present in token", function (done) {
+            const token = generateToken({});
+            getPaymentMethods(token)
+                .end(function (err, res) {
+                    res.status.should.be.equal(400);
+                    res.body.should.haveOwnProperty("status");
+                    res.body.should.haveOwnProperty("error");
+                    res.body.status.should.equal("Failure");
+                    res.body.error.should.equal("Token is invalid");
+                    done();
+                })
+        })
+
+        it ("Should throw error if customer is not registered in stripe", function (done) {
+            const token = generateToken({
+                email: "test@test.com"
+            })
+            getPaymentMethods(token)
+                .end(function (err, res) {
+                    res.status.should.be.equal(400);
+                    res.body.should.haveOwnProperty("status");
+                    res.body.should.haveOwnProperty("error");
+                    res.body.status.should.equal("Failure");
+                    res.body.error.should.equal("Customer is not registered in stripe.");
+                    done();
+                })
+        })
+
+        it ("Should return payment methods", function (done) {
+            const token = generateToken({
+                email: "aarytrivedi@gmail.com"
+            })
+            getPaymentMethods(token)
+                .end(function (err, res) {
+                    res.status.should.be.equal(200);
+                    res.body.should.haveOwnProperty("status");
+                    res.body.should.haveOwnProperty("message");
+                    res.body.should.haveOwnProperty("data");
+                    res.body.status.should.equal("Success");
+                    res.body.message.should.equal("Payment methods fetched successfully.");
+                    res.body.data.should.haveOwnProperty("methods");
+                    res.body.data.methods.length.should.be.equal(1);
                     done()
                 })
         })
