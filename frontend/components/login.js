@@ -4,8 +4,7 @@ import { Button } from 'native-base'
 import axios from 'axios';
 import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
 import Loading from './Loading';
-import { setToken } from "../helpers/Token";
-import { getToken } from "../helpers/Token";
+import {setToken} from '../helpers/token'
 
 export default function Login({navigation})  {
     const [email,setEmail] = useState("");
@@ -97,7 +96,7 @@ export default function Login({navigation})  {
        }
     }
         return (
-        <>
+        
         <ImageBackground
                 source={require('../assets/login.png')}
                 style={
@@ -138,7 +137,7 @@ export default function Login({navigation})  {
                 </View>
             {isLoading?<Loading/>:null}
         </ImageBackground>
-        </>
+        
         )
     }
 const styles = StyleSheet.create({

@@ -8,6 +8,9 @@ import ManageRide from './components/IndexComponents/Rides/ManageRide'
 import Routes from './components/Routes'
 import { RideContainer } from "./components/IndexComponents/Rides/RideContainer";
 import Chat from "./components/IndexComponents/Chat";
+import Document from "./components/IndexComponents/ProfileComponents/Document.js"
+import codePush from "react-native-code-push";
+
 
 // Define the config
 const config = {
@@ -22,8 +25,8 @@ export default function App() {
   return (
       <NativeBaseProvider>
         {/* <ManageRide/> */}
-        <Routes/>
-        {/* <Chat/> */}
+        {/* <Routes/> */}
+        <Document/>
       </NativeBaseProvider>
   );
 }
