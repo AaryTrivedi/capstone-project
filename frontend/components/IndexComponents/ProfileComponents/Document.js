@@ -8,8 +8,8 @@ import DocumentPicker from 'react-native-document-picker';
 import axios from 'axios';
 import { androidCameraPermission } from './permission';
 
+export default function Document(){
 
-  
    const onSelectImage = async () => {
     const permissionStatus = await androidCameraPermission()
     if (permissionStatus || Platform.OS == 'ios') {
@@ -59,16 +59,14 @@ import { androidCameraPermission } from './permission';
       }).then((error) => {
         console.log("error riased", error)
       })
-
   }
-
 
 
     return (
         <View >
             <ImageBackground source={require('../../../assets/login.png')}
                     style={
-                        [Styles.imgBackground, { height: '100%', width: '100%' }]
+                        [Styles.imgBackground, { height: '100%',opacity:0.5, width: '100%' }]
                     }>
                 <ScrollView>
     
@@ -94,7 +92,6 @@ import { androidCameraPermission } from './permission';
         </View>
     );
   }
-export default (Document);
 
 const Styles = StyleSheet.create({
     container: {
