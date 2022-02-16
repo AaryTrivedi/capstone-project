@@ -8,8 +8,7 @@ import ManageRide from './components/IndexComponents/Rides/ManageRide'
 import Routes from './components/Routes'
 import { RideContainer } from "./components/IndexComponents/Rides/RideContainer";
 import Chat from "./components/IndexComponents/Chat";
-import Document from "./components/IndexComponents/ProfileComponents/Document.js"
-import codePush from "react-native-code-push";
+ import Document from "./components/IndexComponents/ProfileComponents/Document.js"
 
 
 // Define the config

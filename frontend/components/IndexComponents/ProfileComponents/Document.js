@@ -1,66 +1,31 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import { FlatList } from 'react-native';
-import { Button } from 'react-native-paper';
+import { Button , AppRegistry} from 'react-native-paper';
 import { Alert,ImageBackground,Image,Linking,TouchableOpacity, ScrollView} from 'react-native';
 import { useState } from 'react';
-import DocumentPicker from 'react-native-document-picker';
+import DocumentPicker from "react-native-document-picker";
 import axios from 'axios';
-import { androidCameraPermission } from './permission';
 
-export default function Document(){
-
-   const onSelectImage = async () => {
-    const permissionStatus = await androidCameraPermission()
-    if (permissionStatus || Platform.OS == 'ios') {
-      Alert.alert(
-        'Choose PDF file',
-        'Choose an option',
-        [
-          { text: 'Camera', onPress: onCamera },
-          { text: 'Gallery', onPress: onGallery },
-          { text: 'Cancel', onPress: () => { } }
-        ]
-      )
+export default class  Document extends Component {
+  async openDoc(){
+    try {
+      const res = await DocumentPicker.pick({
+        type: [DocumentPicker.types.allFiles],
+      });
+      console.log(
+        res.uri,
+        res.type,
+        res.name,
+        res.size
+      );
+    } catch (err) {
+      if (DocumentPicker.isCancel(err)) {
+        
+      } else {
+        throw err;
+      }
     }
-  }
-
-  const onCamera = () => {
-   
-  }
-
-  const onGallery = () => {
-    DocumentPicker.openPicker({
-      width: 300,
-      height: 400,
-      cropping: true
-    }).then(image => {
-      console.log("selected Image", image)
-      imageUpload(image.path)
-    });
-  }
-
-  const imageUpload = (imagePath) => {
-    const imageData = new FormData()
-    imageData.append("file", {
-      uri: imagePath,
-      name: 'image.png',
-      fileName: 'image',
-      type: 'file/pdf'
-    })
-    console.log("form data", imageData)
-    axios({
-      method: 'post',
-      url: '',
-      data: imageData
-    })
-      .then(function (response) {
-        console.log("image upload successfully", response.data)
-      }).then((error) => {
-        console.log("error riased", error)
-      })
-  }
-
 
     return (
         <View >
@@ -75,15 +40,15 @@ export default function Document(){
                         style={Styles.img} />
                         
                         <Text style={Styles.titleText} >Documents</Text>
-                        <TouchableOpacity  onPress ={onSelectImage} style={Styles.btn}><Text style={Styles.text}>Profile Photo</Text></TouchableOpacity>
+                        <TouchableOpacity  onPress ={() => this.openDoc()} style={Styles.btn}><Text style={Styles.text}>Profile Photo</Text></TouchableOpacity>
 
-                        <TouchableOpacity   style={Styles.btn}><Text style={Styles.text}>Prood of Work Eligibility</Text></TouchableOpacity>
-                        <TouchableOpacity  style={Styles.btn}><Text style={Styles.text}>Driver's License</Text></TouchableOpacity>
+                        {/* <TouchableOpacity  onPress ={selectFile} style={Styles.btn}><Text style={Styles.text}>Prood of Work Eligibility</Text></TouchableOpacity>
+                        <TouchableOpacity  onPress ={selectFile} style={Styles.btn}><Text style={Styles.text}>Driver's License</Text></TouchableOpacity>
 
-                        <TouchableOpacity   style={Styles.btn}><Text style={Styles.text}>Legal Agreemnets</Text></TouchableOpacity>
-                        <TouchableOpacity   style={Styles.btn}><Text style={Styles.text}>Vehical Inspection</Text></TouchableOpacity>
-                        <TouchableOpacity   style={Styles.btn}><Text style={Styles.text}>Vehical Insurace</Text></TouchableOpacity>
-                        <TouchableOpacity   style={Styles.btn}><Text style={Styles.text}>Vehical Registration</Text></TouchableOpacity>
+                        <TouchableOpacity   onPress ={selectFile} style={Styles.btn}><Text style={Styles.text}>Legal Agreemnets</Text></TouchableOpacity>
+                        <TouchableOpacity  onPress ={selectFile} style={Styles.btn}><Text style={Styles.text}>Vehical Inspection</Text></TouchableOpacity>
+                        <TouchableOpacity  onPress ={selectFile} style={Styles.btn}><Text style={Styles.text}>Vehical Insurace</Text></TouchableOpacity>
+                        <TouchableOpacity  onPress ={selectFile} style={Styles.btn}><Text style={Styles.text}>Vehical Registration</Text></TouchableOpacity> */}
 
 
                     </View>
