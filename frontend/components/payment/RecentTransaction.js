@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Text,View,StyleSheet, TouchableOpacity, Alert} from 'react-native'
+import {Text,View,StyleSheet, TouchableOpacity, Alert, Image} from 'react-native'
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -27,7 +27,9 @@ export class RecentTransaction extends Component {
                     </View>
                     <View style={Styles.childContainer}>
                             <Text style={{ fontSize: 12, color: "#7C7979"  }}>{this.props.Date}{'   '}{this.props.Time}</Text>
-                            <Text style={{ fontSize: 12, color: "#7C7979"  }}>{this.props.price}</Text>
+                            <Image
+                              source={require("../../assets/Mastercard-logo.png")}
+                              style={Styles.icons} ></Image>
                     </View>
                 </View>
             </View>

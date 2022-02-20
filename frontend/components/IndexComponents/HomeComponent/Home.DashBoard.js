@@ -85,6 +85,12 @@ export default function Main({ navigation }) {
         navigation.navigate("Wallet")
     }
 
+    const goToRide = () => {
+        navigation.navigate("RideDetail", {
+            rideId: "6209e0ccd1302a1731b61b66",
+        });
+    }
+
     return (
         <ScrollView style={Styles.container}>
             <View
@@ -142,11 +148,15 @@ export default function Main({ navigation }) {
                 <Text style={{ marginLeft: 20, fontSize: 20 }}>
                     Rides around you
                 </Text>
+                <Button onPress={goToRide}>
+                    Go to ride
+                </Button>
                 {
                     rides.map((ride, index) => (
                         <RideContainer
                             ride={ride}
-                            key={index} />
+                            key={index}
+                            navigation={navigation} />
                     ))
                 }
             </View>

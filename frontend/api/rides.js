@@ -10,19 +10,15 @@ const API_URL =
         : "http://localhost:4000";
 
 
-export async function getRides() {
+export async function getRides(filters) {
     const token = await getToken()
     try {
-        const request = await axios.post(
-            `${API_URL}/rides/filter`,
-            {},
-            {
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
+        const request = await axios.post(`${API_URL}/rides/filter`, filters, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
         return [request, null];
     } catch (e) {
         console.log(e);
@@ -75,6 +71,60 @@ export async function getRideOfCurrentUserAsDriver() {
     try {
         const request = await axios.get(
             `${API_URL}/rides/of-user/as-driver`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function getRideById(rideId) {
+    const token = await getToken();
+    try {
+        const request = await axios.get(`${API_URL}/rides/${rideId}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function sendRideRequest(rideId, stopId="") {
+    const token = await getToken();
+    try {
+        const request = await axios.post(
+            `${API_URL}/rides/${rideId}/request`,
+            {
+                stopId
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function removeRideRequest(rideId) {
+    const token = await getToken();
+    try {
+        const request = await axios.delete(
+            `${API_URL}/rides/${rideId}/request`,
             {
                 headers: {
                     "Content-Type": "application/json",

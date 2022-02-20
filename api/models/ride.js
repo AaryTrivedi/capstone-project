@@ -78,6 +78,10 @@ const requestSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    stopId: {
+        type: String,
+        default: ""
     }
 });
 

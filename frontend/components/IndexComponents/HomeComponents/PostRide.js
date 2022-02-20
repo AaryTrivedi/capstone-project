@@ -4,7 +4,7 @@ import {Button,Input} from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RadioForm from 'react-native-simple-radio-button';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
-import { getToken } from '../../../helpers/Token';
+// import { getToken } from '../../../helpers/Token';
 import axios from 'axios';
 import { getLocationDetails } from '../../../api/map';
 import SelectBox from 'react-native-multi-selectbox'

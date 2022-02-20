@@ -42,9 +42,6 @@ export default function NotificationScreen() {
         getCurrentUserNotifications()
             .then(response => {
                 const [result, error] = response;
-                debugger;
-                debugger;
-                debugger;
                 if (error) {
                     console.error(error);
                     return;

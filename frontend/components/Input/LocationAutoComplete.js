@@ -1,9 +1,8 @@
-import { View, Text } from 'native-base';
 import React, { useState } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { getLocationsByName } from '../../api/map';
 
-export const LocationAutoComplete = ({ onChange }) => {
+export default function LocationAutoComplete ({ onChange }){
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -13,8 +12,6 @@ export const LocationAutoComplete = ({ onChange }) => {
         setLoading(true);
         getLocationsByName(text)
             .then(result => {
-                debugger;
-                debugger;
                 const [response, error] = result;
                 if (response && response.data && response.data.predictions) {
                     const data = response.data.predictions.map(
@@ -39,18 +36,19 @@ export const LocationAutoComplete = ({ onChange }) => {
     }
 
   return (
-      <DropDownPicker
-          searchable={true}
-          disableLocalSearch={true}
-          onChangeSearchText={handleSearchTextChange}
-          onSelectItem={onChange}
-          loading={loading}
-          open={open}
-          value={value}
-          items={items}
-          setOpen={setOpen}
-          setValue={setValue}
-          setItems={setItems}
-      />
+        <DropDownPicker
+            placeholder="Type the location ..."
+            searchable={true}
+            disableLocalSearch={true}
+            onChangeSearchText={handleSearchTextChange}
+            onSelectItem={onChange}
+            loading={loading}
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            setItems={setItems}
+        />
   );
 };
