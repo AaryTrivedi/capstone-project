@@ -8,6 +8,7 @@ import {
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
 
 import Routes from './components/Routes'
+import EditRide from "./components/IndexComponents/Rides/EditRide";
 
 // Define the config
 const config = {
@@ -23,6 +24,7 @@ export default function App() {
     <NativeBaseProvider>
       <AuthProvider>
         <Routes />
+        {/* <EditRide/> */}
       </AuthProvider>
     </NativeBaseProvider>
   );
