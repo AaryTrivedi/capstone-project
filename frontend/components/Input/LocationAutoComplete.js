@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { getLocationsByName } from '../../api/map';
 
-export default function LocationAutoComplete ({ onChange }){
+export function LocationAutoComplete ({ onChange, initialValue={} }){
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -44,6 +45,7 @@ export default function LocationAutoComplete ({ onChange }){
             onSelectItem={onChange}
             loading={loading}
             open={open}
+            defaultValue={initialValue}
             value={value}
             items={items}
             setOpen={setOpen}

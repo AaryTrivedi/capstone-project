@@ -26,11 +26,19 @@ export default function PostRide() {
   const [female, setFemale] = useState(false);
   const [luggage, setLuggage] = useState(false);
   const [preferences, setPreferences] = useState([''])
+  const [isRecurring, setRecurring] = useState(false);
+  const [selectedTeams, setSelectedTeams] = useState([])
+  const [errors,setErrors] = useState(
+    {
+      fromError : "",
+      toError : "",
+      dateError : "",
+      amountError : "",
+      stopAmountError : "",
+      seatsError: ""
+    }
+  );
 
-  const [submitBtn, setSubmitBtn] = useState(true);
-  const [error, setError] = useState([{}]);
-
-  //const Preferences = ['Pet Allowed','Smoke free','Women Friendly','Luggage'];
   const radio_props = [
     { label: 'Cash', value: 0 },
     { label: 'Card', value: 1 },
@@ -42,7 +50,7 @@ export default function PostRide() {
     setShowDateTimePicker(false)
   };
 
-  const handleChange = (i, loc) => {
+  const handleChangeStop = (i, loc) => {
     const values = [...fields];
     values[i].value = value;
     setFields(values);
@@ -74,18 +82,21 @@ export default function PostRide() {
     }
   }
 
-  const handleTo = (text) => {
-    if (text === '') {
-      setTo(false)
-      setError("To : can't be empty")
-      return false
+  const handleTo = (text)=> {
+    if(text === "" || text === undefined || text === null)
+    {
+      setErrors({
+        ...errors,
+        toError : "Please select 'to' location"
+      })
     }
-    else {
-      setTo(true)
-      setError(null)
-      return true
+    else
+    {
+      setErrors({
+        ...errors,
+        toError : ""
+      })
     }
-
   }
 
   const handleAmount = (value) => {
@@ -203,7 +214,6 @@ export default function PostRide() {
       paymentType: paymentMethod.toLowerCase(),
       stops
     };
-    debugger;
 
     try {
       const token = await getToken();
@@ -267,12 +277,16 @@ export default function PostRide() {
           />
 
           <Text style={Styles.textLable}>Seats Available</Text>
-          <Input
-            style={Styles.input}
-            placeholder={" 4 "}
-            autoCapitalize="none"
-            onChangeText={handleSeat}
-          />
+          <View style={{marginLeft:'3%', marginTop:'1%'}}>
+                   <NumericInput 
+                       value={seatsAvailable} 
+                       onChange={(value)=>setSeatsAvailable(value)} 
+                       onLimitReached={(isMax,msg) => alert(msg)}               
+                       valueType='real'
+                       rounded 
+                       minValue={0}
+                    />
+            </View>
 
           <Text style={Styles.textLable}>Preferences</Text>
 
@@ -337,7 +351,7 @@ export default function PostRide() {
                 <View style={Styles.stopContainer} key={idx}>
                   <LocationAutoComplete
                     value={field.value}
-                    onChange={(loc) => handleChange(idx, loc)}
+                    onChange={(loc) => handleChangeStop(idx, loc)}
                   />
                   <TouchableOpacity
                     disabled={fields.length === 1}

@@ -3,25 +3,25 @@ import {View,Text,TextInput,StyleSheet,Switch,SafeAreaView,Image,Dimensions,Scro
 import {Button,Input} from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RadioForm from 'react-native-simple-radio-button';
-import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
+import LocationAutoComplete from '../../Input/LocationAutoComplete';
 import { getToken } from '../../../helpers/Token';
 import axios from 'axios';
 import { getLocationDetails } from '../../../api/map';
 import SelectBox from 'react-native-multi-selectbox'
 import { xorBy } from 'lodash'
-import { getRideOfCurrentUserAsDriver } from '../../../api/rides';
+import { getRideById, getRideOfCurrentUserAsDriver } from '../../../api/rides';
 import NumericInput from 'react-native-numeric-input'
 
-export default function EditRide({ route, navigation }) {
+export default function EditRide({ route, navigation}) {
 
-  const { rideId } = route.params;
-
+    const { rideId } = route.params;
     const [date, setDate] = useState(new Date());
-    const [paymentMethod, setPaymentMethod] = useState("Cash");
+    const [paymentMethod, setPaymentMethod] = useState();
+    const [paymentInitial, setPaymentInitial] = useState();
     const [from, setFrom] = useState(false);
     const [to, setTo] = useState(false);
     const [amount, setAmount] = useState(0);
-    const [seatsAvailable, setSeatsAvailable] = useState(false);
+    const [seatsAvailable, setSeatsAvailable] = useState(0);
     const [fields, setFields] = useState([{ value: null, key: 1 }]);
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
   
@@ -47,8 +47,30 @@ export default function EditRide({ route, navigation }) {
     );
 
     useEffect(() => {
-        getRideById()
+        getRideById(rideId).then(response => {
+          const [result, error] = response;
+          if (error) {
+            console.error(error);
+            return;
+          }
+          const { ride } = result.data;
+          console.log(ride)
+          setDate(ride.startDateAndTime)
+          setSeatsAvailable(ride.numberOfSeats)
+          setAmount(ride.pricePerSeat)
+          setPaymentMethod(ride.paymentType)
+        })
     }, []);
+
+    
+    useEffect(() => {
+      if(paymentMethod === "cash"){
+        setPaymentInitial(0)
+      }
+      else if(paymentMethod === "card"){
+        setPaymentInitial(1)
+      }
+    },[]);
 
     const K_OPTIONS = [
       {
@@ -95,6 +117,7 @@ export default function EditRide({ route, navigation }) {
     const onChange = (event, selectedDate) => {
       const currentDate = selectedDate || date;
       setDate(currentDate);
+      console.log(currentDate);
       setShowDateTimePicker(false)
     };
     const handleChangeStop = (i, loc) =>{
@@ -337,9 +360,9 @@ export default function EditRide({ route, navigation }) {
             <Text style={Styles.secondaryHeader}>Ride Details</Text>
   
             <Text style={Styles.textLable}>From</Text>
-            <LocationAutoComplete value={from} onChange={setFrom} />
+            <LocationAutoComplete initialValue={from} onChange={setFrom} />
             <Text style={Styles.textLable}>To</Text>
-            <LocationAutoComplete value={to} onChange={setTo} />
+            <LocationAutoComplete initialValue={to} onChange={setTo} />
   
             <TouchableOpacity
               onPress={() => {
@@ -362,7 +385,7 @@ export default function EditRide({ route, navigation }) {
   
             <Text style={Styles.textLable}>Amount</Text>
             <Input
-              value={`$ ${rides[0].pricePerSeat}`}
+              value={`${amount}`}
               style={Styles.input}
               placeholder={" $35"}
               keyboardType="decimal-pad"
@@ -370,15 +393,35 @@ export default function EditRide({ route, navigation }) {
               autoCapitalize="none"
               onChangeText={(text) => handleAmount(text)}
             />
+
+            <Text style={Styles.textLable}>Ride recurring ?</Text>
+               <View style={{marginLeft:'3%',flex:1,alighItems:"flex-start"}}>
+                  <Switch size="sm" value={isRecurring} onValueChange={toggleSwitch} />
+                    {isRecurring&& 
+                      <View> 
+                      <SelectBox   
+                         label="Select Days"
+                         options={K_OPTIONS}
+                         selectedValues={selectedTeams}
+                         onMultiSelect={onMultiChange()}
+                         onTapClose={onMultiChange()}
+                         isMulti
+                       />
+                      </View>}
+               </View>           
+
   
             <Text style={Styles.textLable}>Seats Available</Text>
-            <Input
-            //  value={`${rides[0].numberOfSeats}`}
-              style={Styles.input}
-              placeholder={" 4 "}
-              autoCapitalize="none"
-              onChangeText={(text) => handleSeat(text)}
-            />
+            <View style={{marginLeft:'3%', marginTop:'1%'}}>
+                   <NumericInput 
+                       value={seatsAvailable} 
+                       onChange={(value)=>setSeatsAvailable(value)} 
+                       onLimitReached={(isMax,msg) => alert(msg)}               
+                       valueType='real'
+                       rounded 
+                       minValue={0}
+                    />
+            </View>
   
             <Text style={Styles.textLable}>Preferences</Text>
   
@@ -429,27 +472,33 @@ export default function EditRide({ route, navigation }) {
                 itemShowKey="label"
                 itemRealKey="value"
                 formHorizontal={true}
-                initial={0}
-                value={0}
+                initial={paymentInitial}
                 onPress={(value) => handleRole(value)}
               />
+
             </View>
   
             <Text style={Styles.secondaryHeader}>Stops</Text>
-  
+            <Text style={{color:"red"}}>
+                             {errors.stopAmountError}
+            </Text>
             <View>
               {fields.map((field, idx) => {
                 return (
                   <View style={Styles.stopContainer} key={idx}>
                     <LocationAutoComplete
                       value={field.value}
-                      onChange={(loc) => handleChange(idx, loc)}
+                      onChange={(loc) => handleChangeStop(idx, loc)}
                     />
+
+                    <Input placeholder = "$ 15" 
+                           onChange = {(loc) => handleStopAmount(idx, loc)}>
+                    </Input>
                     <TouchableOpacity
                       disabled={fields.length === 1}
                       style={Styles.stopButton}
                       onPress={() => handleRemove(idx)}
-                      Remove
+                    
                     >
                       <Text style={Styles.innerText}>X</Text>
                     </TouchableOpacity>
@@ -459,9 +508,6 @@ export default function EditRide({ route, navigation }) {
             </View>
   
             <View style={Styles.addBtnText}>
-              {/* <>{fields.length === 1?
-                <Button onPress={()=> handleAdd()}><Text> + Add Stop</Text></Button>
-                : */}
               <TouchableOpacity
                 disabled={fields[fields.length - 1].value === null}
                 onPress={() => handleAdd()}
@@ -477,7 +523,7 @@ export default function EditRide({ route, navigation }) {
       </View >
     );
   }
-  
+  debugger;
   
   const Styles = StyleSheet.create({
     header: {

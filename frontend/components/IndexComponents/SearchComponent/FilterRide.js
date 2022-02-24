@@ -101,12 +101,8 @@ export default function FilterRide({ navigation }) {
             <View width={"full"}>
                 <Text fontSize={"sm"}>From</Text>
                 <LocationAutoComplete onChange={setFrom} />
-            </View>
-            <View width={"full"}>
                 <Text fontSize={"sm"}>To</Text>
                 <LocationAutoComplete onChange={setTo} />
-            </View>
-            <View>
                 <Text fontSize={"sm"}>Amount</Text>
                 <View>
                     <View>
@@ -115,8 +111,6 @@ export default function FilterRide({ navigation }) {
                             onChange={setMaxAmount} />
                     </View>
                 </View>
-            </View>
-            <View>
                 <Text fontSize={"sm"}>Preferences</Text>
                 <View flexDirection={"row"} justifyContent={"space-between"}>
                     <Button

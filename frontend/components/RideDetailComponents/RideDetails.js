@@ -209,6 +209,12 @@ export default function RideDetails({ route, navigation }) {
     );
   }
 
+  const goToEdit = () => {
+      navigation.navigate("EditRide", {
+          rideId: rideDetails._id
+      })
+  }
+
   return (
       <>
           <ScrollView>
@@ -280,7 +286,7 @@ export default function RideDetails({ route, navigation }) {
                           <Text>Delete</Text>
                       </Button>
                       <Button
-                          onPress={() => console.log("Edit Button Pressed")}
+                          onPress={goToEdit}
                           flex={1}
                           flexDirection={"row"}
                           size={"sm"}

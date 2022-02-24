@@ -6,7 +6,7 @@ import { Icon } from 'react-native-elements';
 import { AuthContext } from '../../context/AuthContext';
 import EditRide from './Rides/EditRide'
 
-export default function Profile({navigation}){
+export default function Profile({route,navigation}){
 
   const authContext = useContext(AuthContext);
 

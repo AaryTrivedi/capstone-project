@@ -79,7 +79,7 @@ export default function Login({ navigation }) {
                 };
                 setIsLoading(true);
                 const { data } = await axios.post(
-                    `http://192.168.0.158:4000/users/login`,
+                    `http://localhost:4000/users/login`,
                     {
                         email, // R@P.com
                         password, // Rutik123

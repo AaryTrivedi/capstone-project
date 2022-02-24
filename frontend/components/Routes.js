@@ -17,6 +17,7 @@ import StripeConsent from "./payment/stripe-consent";
 import AddToWallet from "./payment/AddToWallet";
 import RideDetails from "./RideDetailComponents/RideDetails";
 import AllRides from "./IndexComponents/SearchComponent/AllRides";
+import EditRide from "./IndexComponents/Rides/EditRide";
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,9 @@ export default function Routes() {
                                   headerBackTitleVisible: false,
                               })}
                           />
+                          <Stack.Screen
+                            name="EditRide"
+                            component={EditRide} />
                       </>
                   ) : (
                       <>

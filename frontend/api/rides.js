@@ -32,7 +32,7 @@ export async function getRidesAroundUser() {
         const location = await Loc.getCurrentPositionAsync({ enableHighAccuracy: true });
         const { latitude, longitude } = location.coords;
         const request = await axios.get(
-            `${API_URL}/rides/around/user?latitude=latitude&longitude=longitude`,
+            `${API_URL}/rides/around/user?latitude=${latitude}&longitude=${longitude}`,
             {
                 headers: {
                     "Content-Type": "application/json",
