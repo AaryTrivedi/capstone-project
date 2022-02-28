@@ -8,8 +8,11 @@ import {Navbar,Nav,Container,NavDropdown} from 'react-bootstrap'
 
 function HomePage({navigation}) {
     let history = useHistory()
-    const user = jwt(localStorage.getItem('token'))
-
+    let Token = localStorage.getItem('token')
+    if (Token === null || Token === "" || Token === undefined){
+        window.location.href = "http://localhost:3000/login"
+    }
+    const user = jwt(Token)
     const DisplayData=JsonData.map(
         (info,idx)=>{
             return(
@@ -23,6 +26,7 @@ function HomePage({navigation}) {
             )
         }
     ) 
+
     const handleLogout=()=>{
         localStorage.clear();
         history.push("/")
@@ -74,6 +78,6 @@ function HomePage({navigation}) {
                 </div>
                 </div>
         </>
-    )
- }
+    )}
+ 
 export default HomePage;
