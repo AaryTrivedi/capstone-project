@@ -63,6 +63,18 @@ class UserService {
         return User.findOne({ email });
     }
     
+    async pendingDriverList(){
+        return User.find({
+            driverDetailsValid:'false',
+            role:'driver'})
+    }
+
+    async approvedDriverList() {
+        return User.find({
+            driverDetailsValid: 'true',
+            role: 'driver'
+        })
+    }
 }
 
 module.exports = new UserService;

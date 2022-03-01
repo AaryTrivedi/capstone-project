@@ -25,4 +25,22 @@ userRouter.post('/login', async function (req, res, next) {
 })
 
 
+userRouter.get('/approved-driver-details-list', async function (req, res, next) {
+    try {
+        const result = await userService.approvedDriverList(req.body);
+        httpResponse.sendSuccess(res, "data fetched successfully", result);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+userRouter.get('/pending-driver-details-list', async function (req, res, next) {
+    try {
+        const result = await userService.pendingDriverList(req.body);
+        httpResponse.sendSuccess(res, "data fetched successfully", result);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
+
 module.exports = userRouter;
