@@ -4,7 +4,7 @@ import QRCode from 'react-native-qrcode-svg';
 
 export default function DriverActions({ rideDetails }) {
 
-    const url = "mark present url";
+    const url = "aarytrivedi.github.io/portfolio";
 
     return (
         <View>

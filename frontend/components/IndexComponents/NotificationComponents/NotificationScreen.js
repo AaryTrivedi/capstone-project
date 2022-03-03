@@ -4,7 +4,7 @@ import { StyleSheet,Text } from 'react-native';
 import { getCurrentUserNotifications } from "../../../api/notification";
 import NotificationList from './NotificationListComponent';
 
-export default function NotificationScreen() {
+export default function NotificationScreen({ navigation }) {
 
     const [notifications, setNotifications] = useState([]);
     
@@ -20,6 +20,12 @@ export default function NotificationScreen() {
             })
     }, [])
 
+    const navigateToRequestList = (rideId) => {
+        navigation.navigate("RequestList", {
+            rideId
+        })
+    }
+
     return (
         <View backgroundColor="white" style={styles.container}>
             <View style={styles.headingContainer}>
@@ -29,6 +35,7 @@ export default function NotificationScreen() {
             </View>
             <View>
                 <NotificationList
+                    navigateToRequestList={navigateToRequestList}
                     notifications={notifications} />
             </View>
         </View>

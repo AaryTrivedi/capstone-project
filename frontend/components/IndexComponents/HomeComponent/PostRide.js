@@ -244,28 +244,6 @@ export default function PostRide() {
     }
     return stops;
   }
-  const handlePost = async ()=>{
-    try {
-        const [fromLocationDetailsResponse, fromLocationDetailsError] =
-            await getLocationDetails(from.place_id);
-        const [toLocationDetailsResponse, toLocationDetailsError] =
-            await getLocationDetails(to.place_id);
-
-        const { result: fromLocationDetails } =
-            fromLocationDetailsResponse.data;
-        const { result: toLocationDetails } = toLocationDetailsResponse.data;
-
-        const fromDetails = {
-            locationName: from.structured_formatting.main_text,
-            latitude: fromLocationDetails.geometry.location.lat,
-            longitude: fromLocationDetails.geometry.location.lng,
-        };
-
-        const toDetails = {
-            locationName: to.structured_formatting.main_text,
-            latitude: toLocationDetails.geometry.location.lat,
-            longitude: toLocationDetails.geometry.location.lng,
-        };
 
   const handlePost = async () => {
 
@@ -314,10 +292,12 @@ export default function PostRide() {
             },
         };
         const response = await axios.post(
-            `http://192.168.0.158:4000/rides`,
+            `http://localhost:4000/rides`,
             details,
             config
         );
+        console.log(response);
+        // navigation.navigate("RideDetail", {})
     } catch (e) {
         console.error(e);
         Alert.alert(e);

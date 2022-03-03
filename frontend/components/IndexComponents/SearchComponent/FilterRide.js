@@ -102,9 +102,9 @@ export default function FilterRide({ navigation }) {
             </View>
             <View width={"full"}>
                 <Text fontSize={"sm"}>From</Text>
-                <LocationAutoComplete onChange={setFrom} />
+                <LocationAutoComplete zIndex={2} zIndexInverse={1} onChange={setFrom} />
                 <Text fontSize={"sm"}>To</Text>
-                <LocationAutoComplete onChange={setTo} />
+                <LocationAutoComplete zIndex={1} zIndexInverse={2} onChange={setTo} />
                 <Text fontSize={"sm"}>Amount</Text>
                 <View>
                     <View>
@@ -167,51 +167,9 @@ export default function FilterRide({ navigation }) {
                     </Button>
                 </View>
             </View>
-            <View style={[{ borderBottomColor: 'black', borderBottomWidth: 0.5, paddingVertical: 10 }, Styles.marginleft, Styles.marginright]}></View>
-            <Text style={[Styles.textLable, Styles.marginleft, { paddingVertical: 10 }]}>Preferences</Text>
-            <View style={[Styles.img, { paddingVertical: 10 },Styles.marginleft]}>
-                
-                <TouchableOpacity
-                    onPress={() => checkPet()}
-                    style={pet ? Styles.iconSelected : Styles.icons}
-                >
-                    <Image
-                        source={require("../../../assets/pet.png")}
-                        style={Styles.icons}
-                        alt={"pet"}
-                    ></Image>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => checkSmoke()}
-                    style={smokeFree ? Styles.iconSelected : Styles.icons}
-                >
-                    <Image
-                        source={require("../../../assets/smokeFree.png")}
-                        style={Styles.icons}
-                        alt={"smokefree"}
-                    ></Image>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => checkFemale()}
-                    style={female ? Styles.iconSelected : Styles.icons}
-                >
-                    <Image
-                        source={require("../../../assets/female.png")}
-                        style={Styles.icons}
-                        alt={"female"}
-                    ></Image>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => checkLuggage()}
-                    style={luggage ? Styles.iconSelected : Styles.icons}
-                >
-                    <Image
-                        source={require("../../../assets/luggage.png")}
-                        style={Styles.icons}
-                        alt={"luggage"}
-                    ></Image>
-                </TouchableOpacity>
-            </View>
+            <Button onPress={handleSubmit} width={"full"} mx={3}>
+                Search
+            </Button>
         </View>
     );
 }

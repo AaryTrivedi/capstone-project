@@ -59,19 +59,19 @@ export default function EditRide({ route, navigation}) {
           setDate(ride.startDateAndTime)
           setSeatsAvailable(ride.numberOfSeats)
           setAmount(ride.pricePerSeat)
-          setPaymentMethod(ride.paymentType)
+          setInitialPaymentMethod(ride.paymentType)
         })
     }, []);
 
     
-    useEffect(() => {
+    const setInitialPaymentMethod = (paymentMethod) => {
       if(paymentMethod === "cash"){
         setPaymentInitial(0)
       }
       else if(paymentMethod === "card"){
         setPaymentInitial(1)
       }
-    },[]);
+    };
 
     const K_OPTIONS = [
       {

@@ -19,6 +19,7 @@ import RideDetails from "./RideDetailComponents/RideDetails";
 import AllRides from "./IndexComponents/SearchComponent/AllRides";
 import EditRide from "./IndexComponents/Rides/EditRide";
 import StartRide from "./IndexComponents/Rides/StartRide";
+import AllRideRequest from "./RideDetailComponents/AllRideRequest";
 
 const Stack = createNativeStackNavigator();
 
@@ -82,6 +83,9 @@ export default function Routes() {
                           <Stack.Screen  
                             name="StartRide"
                             component={StartRide} />
+                            <Stack.Screen
+                                name="RequestList"
+                                component={AllRideRequest} />
                       </>
                   ) : (
                       <>
