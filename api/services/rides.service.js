@@ -21,10 +21,8 @@ class RidesService {
         this.validateCreateRideFields(rideDetails);
         const rideIdentifier = await this.getRideIdentifier(rideDetails);
         rideDetails.rideIdentifier = rideIdentifier;
-        console.log(rideIdentifier);
         const ride = new Ride(rideDetails);
         await ride.save();
-        console.log(ride);
         return ride;
     }
 

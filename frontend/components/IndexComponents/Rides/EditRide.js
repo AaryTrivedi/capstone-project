@@ -3,7 +3,7 @@ import {View,Text,TextInput,StyleSheet,Switch,SafeAreaView,Image,Dimensions,Scro
 import {Button,Input} from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RadioForm from 'react-native-simple-radio-button';
-import LocationAutoComplete from '../../Input/LocationAutoComplete';
+import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
 import { getToken } from '../../../helpers/Token';
 import axios from 'axios';
 import { getLocationDetails } from '../../../api/map';
@@ -11,6 +11,7 @@ import SelectBox from 'react-native-multi-selectbox'
 import { xorBy } from 'lodash'
 import { getRideById, getRideOfCurrentUserAsDriver } from '../../../api/rides';
 import NumericInput from 'react-native-numeric-input'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function EditRide({ route, navigation}) {
 
@@ -486,11 +487,12 @@ export default function EditRide({ route, navigation}) {
               {fields.map((field, idx) => {
                 return (
                   <View style={Styles.stopContainer} key={idx}>
+                    <View style={{ width: "90%" }}>
                     <LocationAutoComplete
                       value={field.value}
                       onChange={(loc) => handleChangeStop(idx, loc)}
                     />
-
+                    </View>
                     <Input placeholder = "$ 15" 
                            onChange = {(loc) => handleStopAmount(idx, loc)}>
                     </Input>
@@ -498,9 +500,8 @@ export default function EditRide({ route, navigation}) {
                       disabled={fields.length === 1}
                       style={Styles.stopButton}
                       onPress={() => handleRemove(idx)}
-                    
                     >
-                      <Text style={Styles.innerText}>X</Text>
+                     <Icon color="red" name="remove" size={25} />
                     </TouchableOpacity>
                   </View>
                 );

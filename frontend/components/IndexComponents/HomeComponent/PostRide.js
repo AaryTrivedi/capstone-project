@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, SafeAreaView, Image, Dimensions, ScrollView, To
 import { Button, Input } from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RadioForm from 'react-native-simple-radio-button';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
 import { getLocationDetails } from '../../../api/map';
 // import { Autocomplete, verify } from '@lob/react-address-autocomplete'
@@ -243,9 +244,9 @@ export default function PostRide() {
           <Text style={Styles.secondaryHeader}>Ride Details</Text>
 
           <Text style={Styles.textLable}>From</Text>
-          <LocationAutoComplete value={from} onChange={setFrom} />
+          <LocationAutoComplete zIndexInverse={2} zIndex={3} value={from} onChange={setFrom} />
           <Text style={Styles.textLable}>To</Text>
-          <LocationAutoComplete value={to} onChange={setTo} />
+          <LocationAutoComplete zIndexInverse={1} zIndex={2} value={to} onChange={setTo} />
 
           <TouchableOpacity
             onPress={() => {
@@ -349,17 +350,23 @@ export default function PostRide() {
             {fields.map((field, idx) => {
               return (
                 <View style={Styles.stopContainer} key={idx}>
-                  <LocationAutoComplete
-                    value={field.value}
-                    onChange={(loc) => handleChangeStop(idx, loc)}
-                  />
+                  <View style={{ width: "90%" }}>
+                    <LocationAutoComplete
+                      value={field.value}
+                      onChange={(loc) => handleChangeStop(idx, loc)}
+                      position={idx}
+                    />
+                  </View>
+                  <Input placeholder = "$ 15" 
+                          onChange = {(loc) => handleStopAmount(idx, loc)}>
+                  </Input>
                   <TouchableOpacity
                     disabled={fields.length === 1}
                     style={Styles.stopButton}
                     onPress={() => handleRemove(idx)}
                     Remove
                   >
-                    <Text style={Styles.innerText}>X</Text>
+                    <Icon name="remove" size={25} />
                   </TouchableOpacity>
                 </View>
               );

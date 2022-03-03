@@ -12,7 +12,6 @@ export default function Profile({route,navigation}){
 
   const logout = async () => {
       AsyncStorage.removeItem("user");
-      debugger;
       await SecureStore.deleteItemAsync("token");
       authContext.logoutUser();
   };
@@ -20,7 +19,7 @@ export default function Profile({route,navigation}){
     return (
         <View style={Styles.container}>
             <Text>Profile</Text>
-            <EditRide/>
+            {/* <EditRide/> */}
         <TouchableOpacity onPress={logout}><Text style={Styles.icon}> Sign out</Text></TouchableOpacity>
         </View>
     );
