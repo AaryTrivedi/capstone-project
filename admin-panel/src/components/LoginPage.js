@@ -10,7 +10,8 @@ class LogInPage extends Component{
         super(props);
         this.state = {
             input: {},
-            errors: {}
+            errors: {},
+            responseError:{}
         };
         this.validate = this.validate.bind(this)
         this.handleChange = this.handleChange.bind(this);
@@ -56,7 +57,7 @@ class LogInPage extends Component{
     handleSubmit = async (e) => {
       e.preventDefault();
         const { email, password } = this.state.input;
-
+        let responseError = {};
         if (this.validate()) {
           try {
             const config = {
@@ -72,36 +73,46 @@ class LogInPage extends Component{
                 },
                 config
             ).then(response => {
-              console.log('response', response);
-              if (response.status === 200) {
+            //   console.log('response', response);
+              const role = response.data.data.user.role
+              if(role ==="admin"||role ==="ADMIN"||role ==="Admin")
+              {
                 window.localStorage.setItem('token', response.data.data.token);
                 alert('User logged-in successfully');
                 this.props.history.push("/home");
               }
+              else {
+                responseError['responseError'] = 'User must be admin'
+                // alert('User must be admin')
+                this.setState({ responseError: responseError});
+                this.props.history.push("/login");
+              }
             });
-            alert(data)
            } catch (e) {
-              alert(e.response.data.error)
+            responseError['responseError']=e.response.data.error
+            this.setState({ responseError: responseError });
           }
         }
         else {
-            alert(this.state.errors)
+            console.log(this.state.errors)
         }
       }
 
 
     render(){
         return (
+            <>
             <div className="text-center m-5-auto">
                 <h2>Sign in</h2>
                 <form onSubmit={this.handleSubmit} >
+                    <div className="text-danger">{this.state.responseError.responseError}</div>
                     <p>
                         <label>email address</label><br />
                         <input
                             type="text"
                             name="email"
                             onChange={this.handleChange}
-                             />
+                            />
                     </p>
                     <div className="text-danger">{this.state.errors.email}</div>
                     <p>
@@ -126,6 +137,7 @@ class LogInPage extends Component{
                     <p><Link to="/">Back to Homepage</Link>.</p>
                 </footer>
             </div>
+            </>
         )
     }
 

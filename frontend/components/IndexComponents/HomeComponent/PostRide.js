@@ -1,19 +1,20 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, SafeAreaView, Image, Dimensions, ScrollView, TouchableOpacity } from 'react-native'
-import { Button, Input } from 'native-base'
+import React, {useState} from 'react';
+import {View,Text,StyleSheet,Switch,SafeAreaView,Image,Alert,ScrollView,TouchableOpacity} from 'react-native'
+import {Button,Input} from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RadioForm from 'react-native-simple-radio-button';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
+import { getToken } from '../../../helpers/Token';
+import axios from 'axios';
 import { getLocationDetails } from '../../../api/map';
-// import { Autocomplete, verify } from '@lob/react-address-autocomplete'
-const { width } = Dimensions.get("window");
+import SelectBox from 'react-native-multi-selectbox'
+import { xorBy } from 'lodash'
+import NumericInput from 'react-native-numeric-input'
 
 export default function PostRide() {
 
   const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState('datetime');
-  const [show, setShow] = useState(false);
   const [paymentMethod, setPaymentMethod] = useState("Cash");
   const [from, setFrom] = useState(false);
   const [to, setTo] = useState(false);
@@ -39,25 +40,90 @@ export default function PostRide() {
       seatsError: ""
     }
   );
+ 
+  const K_OPTIONS = [
+    {
+      item: 'Sunday',
+      id: 1,
+    },
+    {
+      item: 'Monday',
+      id: 2,
+    },
+    {
+      item: 'Tuesday',
+      id: 3,
+    },
+    {
+      item: 'Wednesday',
+      id: 4,
+    },
+    {
+      item: 'Thursday',
+      id: 5,
+    },
+    {
+      item: 'Friday',
+      id: 6,
+    },
+    {
+      item: 'Saturday',
+      id: 7,
+    }
+  ]
 
+  const toggleSwitch = () => {
+    setRecurring(!isRecurring)
+  };
+  const [submitBtn, setSubmitBtn] = useState(true);
+  const [error, setError] = useState([{}]);
+
+  //const Preferences = ['Pet Allowed','Smoke free','Women Friendly','Luggage'];
   const radio_props = [
     { label: 'Cash', value: 0 },
     { label: 'Card', value: 1 },
   ];
-
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
     setShowDateTimePicker(false)
   };
-
-  const handleChangeStop = (i, loc) => {
+  const handleChange = (i, loc) => {
     const values = [...fields];
     values[i].value = value;
     setFields(values);
   }
-
-  const handleAdd = () => {
+  const handleChangeStop = (i, loc) =>{
+    const values = [...fields];
+    values[i].value = loc;
+    setFields(values);
+  }
+  const handleStopAmount = (i, loc) =>{
+    const values = [...fields];
+    if(fields[0].values === ""){
+      setErrors({
+				...errors,
+				stopAmountError : "Please select stop address first !"
+			})  
+    }
+    else if(loc === null)
+    {
+      setErrors({
+				...errors,
+				stopAmountError : "Amount can not be empty"
+			})    
+    }
+    else
+    { 
+      setErrors({
+        ...errors,
+        stopAmountError: "",
+      });   
+      values[i].amount = loc;
+      setFields(values);
+    }
+  }
+  const handleAdd =()=> {
     const values = [...fields];
     values.push({ value: null });
     setFields(values);
@@ -68,91 +134,93 @@ export default function PostRide() {
     values.splice(i, 1);
     setFields(values);
   }
+  const handleRole=(value)=>
+  {
+        if(!value)
+        {
+          setPaymentMethod(
+            radio_props[0].label
+          )
+        }
+        else
+        {
+          setPaymentMethod(
+            radio_props[1].label
+          ) 
+        return true 
+        }  
+  }
 
-  const handleRole = (value) => {
-    if (!value) {
-      setPaymentMethod(
-        radio_props[0].label
-      )
+  const handleFrom =(text) => {
+    if(text === "" || text === undefined || text === null)
+    {
+      setErrors({
+				...errors,
+				fromError : "Please select 'from' location"
+			})
     }
-    else {
-      setPaymentMethod(
-        radio_props[1].label
-      )
-      return true
+    else
+    {
+      setErrors({
+				...errors,
+				fromError : ""
+			})
     }
+
   }
 
   const handleTo = (text)=> {
     if(text === "" || text === undefined || text === null)
     {
       setErrors({
-        ...errors,
-        toError : "Please select 'to' location"
-      })
+				...errors,
+				toError : "Please select 'to' location"
+			})
     }
     else
     {
       setErrors({
-        ...errors,
-        toError : ""
-      })
+				...errors,
+				toError : ""
+			})
     }
   }
-
   const handleAmount = (value) => {
     let pattern = new RegExp(/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/);
-    if (value.trim() === "") {
-      setError("Amount : can't be empty")
-      setAmount(false);
-      return false;
-    } else if (!pattern.test(value)) {
-      setError("Only numbers are acceptable")
-      setAmount(false);
-      return false;
-    } else {
-      setError("")
-      setAmount(true);
-      return true
+    if(value.trim() === "")
+    {
+      setErrors({
+				...errors,
+				amountError : "Please enter a valid amount! "
+			}) 
+    }else if(!pattern.test(value)){ 
+      setErrors({
+				...errors,
+				amountError : "Only numeric values are allowed! "
+			}) 
+    }else{
+      setErrors({
+				...errors,
+				amountError : ""
+			}) 
+      setAmount(value)
     };
 
   }
-
-  const handleSeat = (value) => {
-    let pattern = new RegExp(/^[0-9\b]+$/);
-    if (value.trim() === "") {
-      setError('please enter number of available seats')
-      setSeatsAvailable(false);
-      return false;
-    } else if (!pattern.test(value)) {
-      setError("Only numbers are acceptable")
-      setSeatsAvailable(false);
-      return false;
-    } else {
-      setError("")
-      setSeatsAvailable(true);
-      return true;
-    }
-
-  }
-
+  
   const checkPet = () => {
     setPet(!pet)
   }
-
   const checkSmoke = () => {
     setSmokeFree(!smokeFree)
   }
-
-  const checkFemale = () => {
+  const checkFemale = () =>{
     setFemale(!female)
   }
-
-  const checkLuggage = () => {
+  const checkLuggage = () =>{
     setLuggage(!luggage)
   }
-
-  const handlePreferences = () => {
+  const handlePreferences=()=>{
     const preferences = [];
     if (pet) { preferences.push("pet") }
     if (smokeFree) { preferences.push("somefree") }
@@ -160,7 +228,6 @@ export default function PostRide() {
     if (luggage) { preferences.push("luggage") }
     return preferences;
   }
-
   const getStopsValue = async () => {
     const stops = [];
     for (const field of fields) {
@@ -177,9 +244,32 @@ export default function PostRide() {
     }
     return stops;
   }
+  const handlePost = async ()=>{
+    try {
+        const [fromLocationDetailsResponse, fromLocationDetailsError] =
+            await getLocationDetails(from.place_id);
+        const [toLocationDetailsResponse, toLocationDetailsError] =
+            await getLocationDetails(to.place_id);
 
+        const { result: fromLocationDetails } =
+            fromLocationDetailsResponse.data;
+        const { result: toLocationDetails } = toLocationDetailsResponse.data;
+
+        const fromDetails = {
+            locationName: from.structured_formatting.main_text,
+            latitude: fromLocationDetails.geometry.location.lat,
+            longitude: fromLocationDetails.geometry.location.lng,
+        };
+
+        const toDetails = {
+            locationName: to.structured_formatting.main_text,
+            latitude: toLocationDetails.geometry.location.lat,
+            longitude: toLocationDetails.geometry.location.lng,
+        };
 
   const handlePost = async () => {
+
+    try {
 
     const [fromLocationDetailsResponse, fromLocationDetailsError] =
       await getLocationDetails(from.place_id);
@@ -216,26 +306,46 @@ export default function PostRide() {
       stops
     };
 
-    try {
-      const token = await getToken();
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-          Authorization: `Bearer ${token}`
-        }
-      }
-      const { data } = await axios.post(
-        `http://localhost:4000/rides`,
-        details,
-        config
-      );
+        const token = await getToken();
+        const config = {
+            headers: {
+                "Content-type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        const response = await axios.post(
+            `http://192.168.0.158:4000/rides`,
+            details,
+            config
+        );
     } catch (e) {
-      console.error(e);
-      Alert.alert(e)
+        console.error(e);
+        Alert.alert(e);
+    }
+ 
+   }
+  const handleSeat = (value) => {
+    let pattern = new RegExp(/^[0-9\b]+$/);
+    if (value.trim() === "") {
+      setError('please enter number of available seats')
+      setSeatsAvailable(false);
+      return false;
+    } else if (!pattern.test(value)) {
+      setError("Only numbers are acceptable")
+      setSeatsAvailable(false);
+      return false;
+    } else {
+      setError("")
+      setSeatsAvailable(true);
+      return true;
     }
 
   }
 
+  function onMultiChange() {
+    return (item) => setSelectedTeams(xorBy(selectedTeams, [item], 'id'))
+  }
+  
   return (
     <View style={{ flex: 1 }} showsVerticalScrollIndicator={true}>
       <SafeAreaView style={Styles.container}>
@@ -387,9 +497,9 @@ export default function PostRide() {
           <Button style={Styles.enabled} onPress={() => handlePost()}>
             Post Ride
           </Button>
-        </ScrollView>
-      </SafeAreaView>
-    </View>
+        </ScrollView >
+      </SafeAreaView >
+    </View >
   );
 }
 
@@ -408,20 +518,21 @@ const Styles = StyleSheet.create({
     alignSelf: "center",
     textAlign: "center",
   },
-  disabled: {
-    backgroundColor: '#90d3ab',
-    justifyContent: "center",
-    alignItems: "center",
-    width: '100%',
-    alignSelf: "center",
-    textAlign: "center",
+  disabled:{
+    backgroundColor:'#90d3ab',
+    justifyContent : "center",
+    alignItems : "center",
+    width : '100%',
+    alignSelf : "center",
+    textAlign : "center",
     opacity: 0.5,
-    color: 'black'
+    color:'black'
   },
 
   innerText: {
     color: 'red',
-    fontWeight: 'bold',
+    fontWeight : '700',
+    fontSize : 18,
   },
 
   icons: {
@@ -435,10 +546,10 @@ const Styles = StyleSheet.create({
     width: 30
   },
 
-  addBtn: {
-    width: '100%',
-    height: 50,
-    justifyContent: "center"
+  addBtn:{
+    width : '100%',
+    height : 50,
+    justifyContent : "center"  
   },
 
   addBtnText: {
@@ -460,26 +571,28 @@ const Styles = StyleSheet.create({
     fontSize: 18,
   },
 
-  textLable: {
-    marginTop: "5%",
-    marginLeft: "5%"
+  textLable:{
+    marginTop : "6%",
+    marginLeft : "3%"
   },
 
-  input: {
-    borderColor: 'black',
-    height: 35,
-    width: "90%",
-    marginLeft: "5%",
-    borderRadius: 5,
+  input:{
+    borderColor:'black',
+    height: 35 , 
+    width : "90%" , 
+    marginLeft : "3%",
+    borderRadius :5,
   },
-  dateTime: {
-    width: "90%",
-    marginLeft: "5%",
 
+  dateTime : {
+    width : "90%" , 
+    marginLeft : "5%",
+    
   },
-  stopContainer: {
-    flexDirection: "row",
-    width: "100%",
+  stopContainer:{
+    flexDirection:"row",
+    marginLeft : "1%",
+    width : "88%",
   },
 
   img: {
@@ -499,11 +612,21 @@ const Styles = StyleSheet.create({
     marginRight: '15%',
     marginBottom: '2%'
   },
-  stopButton: {
-    marginRight: "15%",
-    color: '#FF0000',
-    alignSelf: "center",
-    fontWeight: '100'
+  stopButton:{
+    marginRight : "15%",
+    color:'#FF0000',
+    alignSelf : "center",
+    fontWeight: '100',
+  },
+
+  recurring:{
+    borderColor:'black',
+    height: 35 , 
+    width : "90%" , 
+    marginLeft : "3%",
+    borderRadius :5,
+    flexDirection:'row',
+    alignItems:'center'
   },
 
 
@@ -519,8 +642,11 @@ const Styles = StyleSheet.create({
     marginLeft: "3%",
     marginTop: '3%'
   },
-  container: {
-    flex: 1,
+
+  container:{
+      flex: 1,
+      marginRight:'3%',
+      marginLeft : "3%",
   },
   screen: {
     flex: 1,

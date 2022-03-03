@@ -6,6 +6,8 @@ const {
 const notificationModel = require("../models/notification");
 const Ride = require("../models/ride");
 const User = require("../models/user");
+const ConnectedRides = require("./connected-rides.service");
+const paymentService = require("./payment.service");
 
 class RidesService {
     async getRides(filters = {}) {
@@ -20,7 +22,9 @@ class RidesService {
     async createRide(rideDetails) {
         this.validateCreateRideFields(rideDetails);
         const rideIdentifier = await this.getRideIdentifier(rideDetails);
+        const rideCode = this.generateRideCodeOfLength(6);
         rideDetails.rideIdentifier = rideIdentifier;
+        rideDetails.code = rideCode;
         const ride = new Ride(rideDetails);
         await ride.save();
         return ride;
@@ -38,34 +42,28 @@ class RidesService {
         return rideIdentifier;
     }
 
-    async addUserAsPassengerToRideOfId(user, rideId) {
-        const { _id } = user;
-        if (_id === undefined || _id === null) {
-            throw new Error("Token is invalid");
-        }
+    async addUserAsPassengerToRideOfId(userId, rideId) {
         const ride = await this.getRideById(rideId);
         if (ride === undefined || ride === null) {
             throw new Error("Ride with id does not exist");
         }
-        if (this.isUserPassengerOfRide(user, ride)) {
+        if (this.isUserPassengerOfRide(userId, ride)) {
             throw new Error("User is already passenger of ride.");
         }
-        const code = this.generatePassengerCodeOfLength(7);
         const passengerProperties = {
-            userId: _id,
-            code,
+            userId
         };
         ride.passengers.push(passengerProperties);
         await ride.save();
         return {};
     }
 
-    generatePassengerCodeOfLength(length) {
-        var result = "";
-        var characters =
+    generateRideCodeOfLength(length) {
+        let result = "";
+        let characters =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        var charactersLength = characters.length;
-        for (var i = 0; i < length; i++) {
+        let charactersLength = characters.length;
+        for (let i = 0; i < length; i++) {
             result += characters.charAt(
                 Math.floor(Math.random() * charactersLength)
             );
@@ -132,7 +130,7 @@ class RidesService {
         }
         const request = {
             userId,
-            stopId
+            stopId,
         };
         console.log(request);
         const notification = new notificationModel({
@@ -160,13 +158,6 @@ class RidesService {
             (request) => request.userId.toString() !== userId
         );
         ride.requests = newRideRequests;
-        const notification = new notificationModel({
-            fromUser: userId,
-            forUser: ride.driver,
-            ride: ride._id,
-            type: "reject-request",
-        });
-        await notification.save();
         await ride.save();
         return {};
     }
@@ -201,6 +192,53 @@ class RidesService {
             longFiveKMMinus,
             latFiveKMMinus,
             rides,
+        };
+    }
+
+    async acceptRequest(rideId, passengerId, userId) {
+        await this.addUserAsPassengerToRideOfId(passengerId, rideId);
+        await this.removeRideRequest(rideId, { _id: passengerId });
+        const notification = new notificationModel({
+            fromUser: userId,
+            forUser: passengerId,
+            ride: rideId,
+            type: "accept-request",
+        });
+        await notification.save();
+        return {};
+    }
+
+    async rejectRequest(rideId, passengerId, userId) {
+        await this.removeRideRequest(rideId, { _id: passengerId });
+        const notification = new notificationModel({
+            fromUser: userId,
+            forUser: passengerId,
+            ride: rideId,
+            type: "reject-request",
+        });
+        await notification.save();
+        return {};
+    }
+
+    async markAsPresent(user, paymentDetails, rideDetails) {
+        const { email } = user;
+        if (paymentDetails.method === "wallet") {
+            await paymentService.payByWallet(email, paymentDetails.amount);
+        } else {
+            await paymentService.payFromCustomerPayment(
+                email,
+                paymentDetails.paymentMethodId,
+                paymentDetails.amount
+            );
+        }
+        return {};
+    }
+
+    async getConnectedRides(fromLocation, toLocation) {
+        const connectedRide = new ConnectedRides(fromLocation, toLocation);
+        const rides = await connectedRide.getConnectingRides();
+        return {
+            rides
         };
     }
 
@@ -374,13 +412,24 @@ class RidesService {
         return formattedFilters;
     }
 
-    isUserPassengerOfRide(user, ride) {
-        const { _id } = user;
+    isUserPassengerOfRide(_id, ride) {
         const isPassenger =
             ride.passengers.findIndex((passenger) => {
+                console.log(passenger);
                 return passenger.userId.toString() === _id;
             }) > -1;
         return isPassenger;
+    }
+
+    async getRequestList(_id) {
+        const result = await Ride.findOne({ _id }).populate({
+            path: "requests",
+            populate: {
+                path: "userId",
+            },
+        });
+        const requestList = result.requests;
+        return requestList;
     }
 }
 

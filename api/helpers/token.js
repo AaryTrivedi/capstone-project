@@ -29,7 +29,6 @@ function verifyToken(req, res, next) {
     jwt.verify(token, tokenSecret, (err, user) => {
         if (err) {
             httpResponse.sendUnauthorized(res, "Token not verified");
-            console.log(token, "THERE");
             return;
         }
         req.user = user

@@ -24,8 +24,8 @@ class PaymentService {
             email,
             name,
             metadata: {
-                amountInWallet: 0
-            }
+                amountInWallet: 0,
+            },
         });
         return {};
     }
@@ -65,7 +65,6 @@ class PaymentService {
             throw new Error("Token is invalid");
         }
         const customer = await this.getCustomerByEmail(email);
-        console.log(customer);
         if (customer.data.length === 0) {
             throw new Error("Customer is not registered in stripe.");
         }
@@ -100,8 +99,7 @@ class PaymentService {
         });
         stripe.customers.update(customerAccount.data[0].id, {
             metadata: {
-                amountInWallet:
-                    Number(amountInWallet) + amount,
+                amountInWallet: Number(amountInWallet) + amount,
             },
         });
         return {};
@@ -112,11 +110,53 @@ class PaymentService {
         return user;
     }
 
+    async payByWallet(email, amount) {
+        const customerAccount = await this.getCustomerByEmail(email);
+        const charge = await stripe.charges.create({
+            currency: "cad",
+            amount: amount * 100,
+            source: config["WALLET_ACC_ID"],
+            on_behalf_of: config["PAYOUT_ACC_ID"]
+        });
+        await stripe.transfers.create({
+            amount: amount * 100,
+            currency: "cad",
+            source_transaction: charge.id,
+            destination: config["PAYOUT_ACC_ID"]
+        })
+        const { amountInWallet } = customerAccount.data[0].metadata;
+        stripe.customers.update(customerAccount.data[0].id, {
+            metadata: {
+                amountInWallet: Number(amountInWallet) - amount,
+            },
+        });
+        return {};
+    }
+
+    async payFromCustomerPayment(email, paymentMethodId, amount) {
+        const customerAccount = await this.getCustomerByEmail(email);
+        await stripe.paymentIntents.create({
+            currency: "cad",
+            payment_method_types: ["card"],
+            amount: amount * 100,
+            payment_method: paymentMethodId,
+            customer: customerAccount.data[0].id,
+            transfer_data: {
+                destination: config["PAYOUT_ACC_ID"],
+            },
+            confirm: true,
+        });
+        return {};
+    }
+
     async confirmPaymentIntent(user, paymentIntentId, paymentMethodId) {
         const customerAccount = await this.getCustomerByEmail(user.email);
-        const confirmedIntent = await stripe.paymentIntents.confirm(paymentIntentId, {
-            payment_method: paymentMethodId,
-        });
+        const confirmedIntent = await stripe.paymentIntents.confirm(
+            paymentIntentId,
+            {
+                payment_method: paymentMethodId,
+            }
+        );
         return "Done";
     }
 }

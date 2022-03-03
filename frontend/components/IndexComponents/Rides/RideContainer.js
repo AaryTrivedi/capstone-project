@@ -12,11 +12,11 @@ export class RideContainer extends Component {
         };
     }
 
-    myCar = <Icon name="car" size={20} />;
     myArrow = <Ionicons name="arrow-down" size={20} />;
     map = <Icon name="map-marker" size={18} />;
     arrow = <Ionicons name="ray-start-arrow" size={25} />
-    clock = <Icon name="clock-o" color={'orange'} size={16} />;
+    time = <Icon name="clock-o" color={'orange'} size={16} />;
+    celender = <Icon name="calendar" color={'orange'} size={16} />;
     seat = <Ionicons name="seat" size={16} />
     star = <Icon name="star" size={16} />
     flag = <Icon name="flag" size={16} />
@@ -24,7 +24,7 @@ export class RideContainer extends Component {
     check = <Icon name="Check" size={16} color={'green'} />
 
 
-
+    date = this.props.ride.startDateAndTime
     render() {
 
         return (
@@ -37,10 +37,7 @@ export class RideContainer extends Component {
                                     style={{ fontSize: 13, fontWeight: "bold" }}
                                 >
                                     {this.map}{" "}
-                                    {this.props.ride.from.locationName.substring(
-                                        0,
-                                        40
-                                    )}
+                                    {this.props.ride.from.locationName.substring(0,35)}
                                 </Text>
                             </View>
                             <Text>{this.myArrow}</Text>
@@ -49,10 +46,7 @@ export class RideContainer extends Component {
                                     style={{ fontSize: 13, fontWeight: "bold" }}
                                 >
                                     {this.map}{" "}
-                                    {this.props.ride.to.locationName.substring(
-                                        0,
-                                        40
-                                    )}
+                                    {this.props.ride.to.locationName.substring(0,35)}
                                 </Text>
                             </View>
                         </View>
@@ -68,7 +62,10 @@ export class RideContainer extends Component {
                     />
                     <View style={Styles.childContainer}>
                         <Text style={{ fontSize: 15 }}>
-                            {this.clock} {this.props.ride.startDateAndTime}
+                            {this.celender} {this.props.ride.startDateAndTime.substring(0, 10)}  
+                        </Text>
+                        <Text style={{ fontSize: 15 }}>
+                            {this.time} {this.props.ride.startDateAndTime.substring(11, 16)}
                         </Text>
                         <Text style={{ fontSize: 15 }}>
                             {this.seat} {this.props.ride.numberOfSeats}

@@ -1,6 +1,7 @@
 import React, { useState,useEffect} from 'react'
-import { Text, View, Button, Heading, Input, Image } from "native-base";
-import LocationAutoComplete from '../../Input/LocationAutoComplete';
+import { StyleSheet, TouchableOpacity} from 'react-native'
+import { Text, View,ScrollView, Button, Heading, Input, Image } from "native-base";
+import {LocationAutoComplete} from '../../Input/LocationAutoComplete';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import NumericInput from 'react-native-numeric-input';
@@ -18,10 +19,8 @@ export default function FilterRide({ navigation }) {
     const [luggage, setLuggage] = useState(false);
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
     const arrow = <Icon name="long-arrow-down" size={60} />
-    const [minAmount,setMinAmount] = useState(0)
     const [maxAmount, setMaxAmount] = useState(0)
     const [seat,setSeat] = useState(0)
-    const [preferences, setPreferences] = useState([''])
     
     const onChangeDate = (event, selectedDate) => {
         const currentDate = selectedDate || date;
@@ -89,7 +88,10 @@ export default function FilterRide({ navigation }) {
         }
 
         navigation.navigate("AllRides", {
-            rides: rides.data.data
+            rides: rides.data.data,
+            fromFilter: true,
+            from,
+            to
         })
     }
 
@@ -108,7 +110,13 @@ export default function FilterRide({ navigation }) {
                     <View>
                         <Text fontSize={"xs"}>Max</Text>
                         <NumericInput
-                            onChange={setMaxAmount} />
+                            value={maxAmount}
+                            onChange={value => onChangeMaxAmount(value)}
+                            //   onLimitReached={(isMax, msg) => alert(msg)} 
+                            minValue={1}
+                            valueType='real'
+                            rounded
+                        />
                     </View>
                 </View>
                 <Text fontSize={"sm"}>Preferences</Text>
@@ -159,12 +167,117 @@ export default function FilterRide({ navigation }) {
                     </Button>
                 </View>
             </View>
-            <View>
-                <Button
-                    onPress={handleSubmit}>
-                    Search
-                </Button>
+            <View style={[{ borderBottomColor: 'black', borderBottomWidth: 0.5, paddingVertical: 10 }, Styles.marginleft, Styles.marginright]}></View>
+            <Text style={[Styles.textLable, Styles.marginleft, { paddingVertical: 10 }]}>Preferences</Text>
+            <View style={[Styles.img, { paddingVertical: 10 },Styles.marginleft]}>
+                
+                <TouchableOpacity
+                    onPress={() => checkPet()}
+                    style={pet ? Styles.iconSelected : Styles.icons}
+                >
+                    <Image
+                        source={require("../../../assets/pet.png")}
+                        style={Styles.icons}
+                        alt={"pet"}
+                    ></Image>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => checkSmoke()}
+                    style={smokeFree ? Styles.iconSelected : Styles.icons}
+                >
+                    <Image
+                        source={require("../../../assets/smokeFree.png")}
+                        style={Styles.icons}
+                        alt={"smokefree"}
+                    ></Image>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => checkFemale()}
+                    style={female ? Styles.iconSelected : Styles.icons}
+                >
+                    <Image
+                        source={require("../../../assets/female.png")}
+                        style={Styles.icons}
+                        alt={"female"}
+                    ></Image>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => checkLuggage()}
+                    style={luggage ? Styles.iconSelected : Styles.icons}
+                >
+                    <Image
+                        source={require("../../../assets/luggage.png")}
+                        style={Styles.icons}
+                        alt={"luggage"}
+                    ></Image>
+                </TouchableOpacity>
             </View>
         </View>
     );
 }
+
+const Styles = StyleSheet.create({
+    container: {
+        width: '100%',
+        marginTop: "3%",
+        marginBottom: "3%",
+    },
+    marginleft: {
+        marginLeft: "7%",
+    },
+    marginright: {
+        marginRight: "7%",
+    },
+    textLable: {
+        fontSize: 22
+    },
+    minimum: {
+        fontSize: 16
+    },
+    header: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: "space-between"
+    },
+    filterRide: {
+        justifyContent: 'flex-start',
+        alignItems: 'flex-start',
+        fontSize: 32
+    },
+    wallet: {
+        alignSelf: 'center',
+        marginRight: "8%",
+    },
+    fromLocation: {
+        paddingVertical: 26
+    },
+    arrow: {
+        alignSelf: 'center',
+        opacity: 0.5
+    },
+    amount: {
+        flexDirection: 'row',
+        justifyContent: "space-around",
+        marginLeft: "7%",
+    },
+    inputField: {
+        borderColor: 'black',
+        borderBottomWidth: 1,
+        marginTop: "5%"
+    },
+    img: {
+        marginLeft: "5%",
+        flexDirection: "row",
+        justifyContent: 'space-between',
+        marginRight: "8%",
+    },
+    icons: {
+        height: 25,
+        width: 25,
+        resizeMode: 'stretch',
+    },
+    iconSelected: {
+        borderWidth: 2,
+        width: 30
+    },
+})

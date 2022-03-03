@@ -4,10 +4,7 @@ import {
   extendTheme,
 
 } from "native-base";
-
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
-
-
 import Routes from './components/Routes'
 import EditRide from "./components/IndexComponents/Rides/EditRide";
 

@@ -1,7 +1,6 @@
 import { Box, View, Text, Button, ScrollView, Actionsheet, useDisclose } from 'native-base';
-
 import React, { useState, useEffect } from "react";
-
+import Loading from '../Loading';
 import Ionicons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -13,6 +12,7 @@ import {
 } from "../../api/rides";
 import { getUser } from "../../helpers/user";
 import MapView, { Marker } from 'react-native-maps';
+import RequestList from '../IndexComponents/Rides/RequestList';
 
 export default function RideDetails({ route, navigation }) {
 
@@ -147,6 +147,16 @@ export default function RideDetails({ route, navigation }) {
     );
   }
 
+  const handleStartPress = () => {
+      try {
+          navigation.navigate("StartRide", {
+              rideId
+          })
+      } catch (e) {
+          console.error(e);
+      }
+  }
+
   const StartButton = () => {
     return(
       <Button
@@ -155,9 +165,8 @@ export default function RideDetails({ route, navigation }) {
           justifyContent={"center"}
           alignItems={"center"}
           backgroundColor={"#2421A6"}
-          onPress={() => console.log("start pressed")}
+          onPress={() => handleStartPress()}
       >
-          <Ionicons name="play-circle" size={25} color={"white"} />
           <Text color={"white"}>Start</Text>
       </Button>
     );
@@ -242,6 +251,8 @@ export default function RideDetails({ route, navigation }) {
                           latitudeDelta: 3,
                           longitudeDelta: 3,
                       }}
+                      showsUserLocation={true}
+                      zoomEnabled={true}
                   >
                       <Marker
                           coordinate={{
@@ -314,6 +325,7 @@ export default function RideDetails({ route, navigation }) {
                       {time}
                   </Text>
               </View>
+              
               <View
                   marginY={3}
                   flex={1}
@@ -401,8 +413,19 @@ export default function RideDetails({ route, navigation }) {
                   </View>
               </View>
               <View
+                margin={3}>
+                  {
+                      currentUser._id === rideDetails.driver &&
+                      <RequestList
+                        rideId={rideDetails._id} />
+                  }
+              </View>
+              <View
                 padding={4}>
-                  {currentUser._id === rideDetails.driver ?
+                  {
+                  (currentUser._id === rideDetails.driver)
+                  ||
+                  (rideDetails.started) ?
                   <StartButton />
                   :
                   <RequestButton />

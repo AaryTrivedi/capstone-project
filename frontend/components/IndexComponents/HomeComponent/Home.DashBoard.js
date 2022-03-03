@@ -148,9 +148,6 @@ export default function Main({ navigation }) {
                 <Text style={{ marginLeft: 20, fontSize: 20 }}>
                     Rides around you
                 </Text>
-                <Button onPress={goToRide}>
-                    Go to ride
-                </Button>
                 {
                     rides.map((ride, index) => (
                         <RideContainer
@@ -176,7 +173,7 @@ const Styles = StyleSheet.create({
     welcome: {
         justifyContent: 'flex-start',
         alignItems: 'flex-start',
-        marginRight: "55%",
+        // marginRight: "55%",
         marginLeft: '1%',
     },
     userName: {

@@ -62,7 +62,9 @@ class UserService {
     async getUserByEmail(email) {
         return User.findOne({ email });
     }
-    
+    async getUserById(_id) {
+        return User.findOne({ _id });
+    }
 }
 
 module.exports = new UserService;
