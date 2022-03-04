@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react';
 import {View,Text,TextInput,StyleSheet,Switch,SafeAreaView,Image,Dimensions,ScrollView,TouchableOpacity} from 'react-native'
 import {Button,Input} from 'native-base'
+import { Radio, Stack } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import RadioForm from 'react-native-simple-radio-button';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
@@ -13,24 +14,24 @@ import { getRideById, getRideOfCurrentUserAsDriver } from '../../../api/rides';
 import NumericInput from 'react-native-numeric-input'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+
 export default function EditRide({ route, navigation}) {
 
     const { rideId } = route.params;
     const [date, setDate] = useState(new Date());
-    const [paymentMethod, setPaymentMethod] = useState();
-    const [paymentInitial, setPaymentInitial] = useState();
+    const [role, setRole] = useState();
     const [from, setFrom] = useState(false);
     const [to, setTo] = useState(false);
     const [amount, setAmount] = useState(0);
     const [seatsAvailable, setSeatsAvailable] = useState(0);
     const [fields, setFields] = useState([{ value: null, key: 1 }]);
     const [showDateTimePicker, setShowDateTimePicker] = useState(false);
+    const [rideDetails, setRideDetails] = useState({})
   
     const [pet, setPet] = useState(false);
     const [smokeFree, setSmokeFree] = useState(false);
     const [female, setFemale] = useState(false);
     const [luggage, setLuggage] = useState(false);
-    const [preferences, setPreferences] = useState([''])
     const [isRecurring, setRecurring] = useState(false);
     const [selectedTeams, setSelectedTeams] = useState([])
     const [rides, setRides] = useState([]);
@@ -55,11 +56,12 @@ export default function EditRide({ route, navigation}) {
             return;
           }
           const { ride } = result.data;
-          console.log(ride)
+         // console.log(ride)
+          setRideDetails(result.data.ride)
           setDate(ride.startDateAndTime)
           setSeatsAvailable(ride.numberOfSeats)
           setAmount(ride.pricePerSeat)
-          setInitialPaymentMethod(ride.paymentType)
+          setRole(ride.paymentType)
         })
     }, []);
 
@@ -415,7 +417,7 @@ export default function EditRide({ route, navigation}) {
             <Text style={Styles.textLable}>Seats Available</Text>
             <View style={{marginLeft:'3%', marginTop:'1%'}}>
                    <NumericInput 
-                       value={seatsAvailable} 
+                       value = {seatsAvailable}
                        onChange={(value)=>setSeatsAvailable(value)} 
                        onLimitReached={(isMax,msg) => alert(msg)}               
                        valueType='real'
@@ -429,7 +431,7 @@ export default function EditRide({ route, navigation}) {
             <View style={Styles.img}>
               <TouchableOpacity
                 onPress={() => checkPet()}
-                style={pet ? Styles.iconSelected : Styles.icon}
+                style={rideDetails.preferences.includes('pet')?Styles.iconSelected:null}
               >
                 <Image
                   source={require("../../../assets/pet.png")}
@@ -438,7 +440,7 @@ export default function EditRide({ route, navigation}) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => checkSmoke()}
-                style={smokeFree ? Styles.iconSelected : Styles.icon}
+                style={preferences.includes('smokeFree')?Styles.iconSelected:null}
               >
                 <Image
                   source={require("../../../assets/smokeFree.png")}
@@ -447,7 +449,7 @@ export default function EditRide({ route, navigation}) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => checkFemale()}
-                style={female ? Styles.iconSelected : Styles.icon}
+                style={preferences.includes('female')?Styles.iconSelected:null}
               >
                 <Image
                   source={require("../../../assets/female.png")}
@@ -456,7 +458,7 @@ export default function EditRide({ route, navigation}) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => checkLuggage()}
-                style={luggage ? Styles.iconSelected : Styles.icon}
+                style={preferences.includes('luggage')?Styles.iconSelected:null}
               >
                 <Image
                   source={require("../../../assets/luggage.png")}
@@ -466,7 +468,19 @@ export default function EditRide({ route, navigation}) {
             </View>
   
             <Text style={Styles.textLable}>Payment Type</Text>
-            <View style={({ paddingTop: "5%" }, { marginLeft: "5%" })}>
+            <Radio.Group value={role} onChange={setRole}>
+                        <Stack
+                            direction={"row"}
+                            alignItems="center"
+                            space={4}
+                            w="75%"
+                            maxW="300px"
+                        >
+                            <Radio value="cash">Cash</Radio>
+                            <Radio value="card">Card</Radio>
+                        </Stack>
+            </Radio.Group>
+            {/* <View style={({ paddingTop: "5%" }, { marginLeft: "5%" })}>
               <RadioForm
                 style={Styles.radio}
                 radio_props={radio_props}
@@ -477,7 +491,7 @@ export default function EditRide({ route, navigation}) {
                 onPress={(value) => handleRole(value)}
               />
 
-            </View>
+            </View> */}
   
             <Text style={Styles.secondaryHeader}>Stops</Text>
             <Text style={{color:"red"}}>
