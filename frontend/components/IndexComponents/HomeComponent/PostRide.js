@@ -223,7 +223,7 @@ export default function PostRide() {
   const handlePreferences=()=>{
     const preferences = [];
     if (pet) { preferences.push("pet") }
-    if (smokeFree) { preferences.push("somefree") }
+    if (smokeFree) { preferences.push("smokefree") }
     if (female) { preferences.push("female") }
     if (luggage) { preferences.push("luggage") }
     return preferences;
@@ -456,7 +456,7 @@ export default function PostRide() {
                     onPress={() => handleRemove(idx)}
                     Remove
                   >
-                    <Icon name="remove" size={25} />
+                    <Icon color="red" name="remove" size={25} />
                   </TouchableOpacity>
                 </View>
               );

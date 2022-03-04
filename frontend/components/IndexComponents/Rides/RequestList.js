@@ -2,11 +2,13 @@ import { ScrollView, View, Heading, Button } from 'native-base'
 import { Text, StyleSheet, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { getRequestList, requestAccept, requestReject } from '../../../api/rides'
+import { updateSeen,getCurrentUserNotifications } from "../../../api/notification";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 const RequestList = ({rideId,limit=null}) => {
     const user = <Icon name="user-circle-o" size={20}/>
     const [requestList, setRequestList] = useState([])
+    const [notificationId, setNotificationId] = useState([])
     const getRides = async () => {
         const [requestList, error] = await getRequestList(rideId);
         if (error) {
@@ -35,9 +37,11 @@ const RequestList = ({rideId,limit=null}) => {
             if (error) {
                 console.log(error);
                 return;
-            }
-            const newAllRequests = allRequest.filter(
-                (request) => request.id !== requestId
+            }    
+            updateSeen(requestId)
+            // console.log(requestId)
+            const newAllRequests = requestList.filter(
+                (request) => request._id !== requestId
             );
             setRequestList(newAllRequests);
         });
@@ -50,8 +54,10 @@ const RequestList = ({rideId,limit=null}) => {
                 console.log(error);
                 return;
             }
-            const newAllRequests = allRequest.filter(
-                (request) => request.id !== requestId
+            updateSeen(requestId)
+            // console.log(requestId)
+            const newAllRequests = requestList.filter(
+                (request) => request._id !== requestId
             );
             setRequestList(newAllRequests);
         });

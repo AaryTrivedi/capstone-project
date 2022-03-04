@@ -7,7 +7,7 @@ import NotificationList from './NotificationListComponent';
 export default function NotificationScreen({ navigation }) {
 
     const [notifications, setNotifications] = useState([]);
-    
+    const [notificationsId,setNotificationId] = useState()
     useEffect(() => {
         getCurrentUserNotifications()
             .then(response => {
@@ -19,11 +19,17 @@ export default function NotificationScreen({ navigation }) {
                 setNotifications(result.data.notifications);
             })
     }, [])
-
+        // alert(JSON.stringify(notificationsId))
     const navigateToRequestList = (rideId) => {
         navigation.navigate("RequestList", {
             rideId
         })
+        if(notifications.seen){
+        const newNotification = notifications.filter(
+            (notification) =>(notification.ride._id !== rideId),     
+            );
+            setNotifications(newNotification)
+        }
     }
 
     return (

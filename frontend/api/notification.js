@@ -23,3 +23,21 @@ export async function getCurrentUserNotifications() {
         return [null, e.message];
     }
 }
+export async function updateSeen(id) {
+    const token = await getToken();
+    try {
+        const request = await axios.post(
+            `${API_URL}/notifications/update/${id}`,
+            {seen:true},
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
