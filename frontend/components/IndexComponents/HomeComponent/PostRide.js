@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {View,Text,StyleSheet,Switch,SafeAreaView,Image,Alert,ScrollView,TouchableOpacity} from 'react-native'
 import {Button,Input} from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
-import RadioForm from 'react-native-simple-radio-button';
+import { Radio, Stack } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
 import { getToken } from '../../../helpers/Token';
@@ -15,7 +15,7 @@ import NumericInput from 'react-native-numeric-input'
 export default function PostRide() {
 
   const [date, setDate] = useState(new Date());
-  const [paymentMethod, setPaymentMethod] = useState("Cash");
+  const [paymentMethod, setPaymentMethod] = useState('cash');
   const [from, setFrom] = useState(false);
   const [to, setTo] = useState(false);
   const [amount, setAmount] = useState(false);
@@ -79,10 +79,7 @@ export default function PostRide() {
   const [error, setError] = useState([{}]);
 
   //const Preferences = ['Pet Allowed','Smoke free','Women Friendly','Luggage'];
-  const radio_props = [
-    { label: 'Cash', value: 0 },
-    { label: 'Card', value: 1 },
-  ];
+ 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
@@ -134,23 +131,7 @@ export default function PostRide() {
     values.splice(i, 1);
     setFields(values);
   }
-  const handleRole=(value)=>
-  {
-        if(!value)
-        {
-          setPaymentMethod(
-            radio_props[0].label
-          )
-        }
-        else
-        {
-          setPaymentMethod(
-            radio_props[1].label
-          ) 
-        return true 
-        }  
-  }
-
+  
   const handleFrom =(text) => {
     if(text === "" || text === undefined || text === null)
     {
@@ -422,16 +403,18 @@ export default function PostRide() {
 
           <Text style={Styles.textLable}>Payment Type</Text>
           <View style={({ paddingTop: "5%" }, { marginLeft: "5%" })}>
-            <RadioForm
-              style={Styles.radio}
-              radio_props={radio_props}
-              itemShowKey="label"
-              itemRealKey="value"
-              formHorizontal={true}
-              initial={0}
-              value={0}
-              onPress={(value) => handleRole(value)}
-            />
+          <Radio.Group value={paymentMethod} onChange={setPaymentMethod}>
+                        <Stack
+                            direction={"row"}
+                            alignItems="center"
+                            space={4}
+                            w="75%"
+                            maxW="300px"
+                        >
+                            <Radio value="cash">Cash</Radio>
+                            <Radio value="card">Card</Radio>
+                        </Stack>
+            </Radio.Group>
           </View>
 
           <Text style={Styles.secondaryHeader}>Stops</Text>

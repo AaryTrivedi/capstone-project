@@ -112,11 +112,6 @@ export default function EditRide({ route, navigation}) {
     const [submitBtn, setSubmitBtn] = useState(true);
     const [error, setError] = useState([{}]);
   
-    //const Preferences = ['Pet Allowed','Smoke free','Women Friendly','Luggage'];
-    const radio_props = [
-      { label: 'Cash', value: 0 },
-      { label: 'Card', value: 1 },
-    ];
     const onChange = (event, selectedDate) => {
       const currentDate = selectedDate || date;
       setDate(currentDate);
@@ -164,23 +159,7 @@ export default function EditRide({ route, navigation}) {
       values.splice(i, 1);
       setFields(values);
     }
-    const handleRole=(value)=>
-    {
-          if(!value)
-          {
-            setPaymentMethod(
-              radio_props[0].label
-            )
-          }
-          else
-          {
-            setPaymentMethod(
-              radio_props[1].label
-            ) 
-          return true 
-          }  
-    }
-  
+    
     const handleFrom =(text) => {
       if(text === "" || text === undefined || text === null)
       {
@@ -431,7 +410,7 @@ export default function EditRide({ route, navigation}) {
             <View style={Styles.img}>
               <TouchableOpacity
                 onPress={() => checkPet()}
-                style={rideDetails.preferences.includes('pet')?Styles.iconSelected:null}
+               // style={rideDetails.preferences.includes('pet')?Styles.iconSelected:null}
               >
                 <Image
                   source={require("../../../assets/pet.png")}
@@ -440,7 +419,7 @@ export default function EditRide({ route, navigation}) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => checkSmoke()}
-                style={preferences.includes('smokeFree')?Styles.iconSelected:null}
+               // style={preferences.includes('smokeFree')?Styles.iconSelected:null}
               >
                 <Image
                   source={require("../../../assets/smokeFree.png")}
@@ -449,7 +428,7 @@ export default function EditRide({ route, navigation}) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => checkFemale()}
-                style={preferences.includes('female')?Styles.iconSelected:null}
+               // style={preferences.includes('female')?Styles.iconSelected:null}
               >
                 <Image
                   source={require("../../../assets/female.png")}
@@ -458,7 +437,7 @@ export default function EditRide({ route, navigation}) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => checkLuggage()}
-                style={preferences.includes('luggage')?Styles.iconSelected:null}
+              //  style={preferences.includes('luggage')?Styles.iconSelected:null}
               >
                 <Image
                   source={require("../../../assets/luggage.png")}
@@ -538,7 +517,7 @@ export default function EditRide({ route, navigation}) {
       </View >
     );
   }
-  debugger;
+
   
   const Styles = StyleSheet.create({
     header: {
