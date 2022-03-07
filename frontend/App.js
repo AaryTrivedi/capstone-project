@@ -6,6 +6,9 @@ import {
 } from "native-base";
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
 import Routes from './components/Routes'
+import Signup from "./components/Signup";
+import ResetPassword from "./components/IndexComponents/ProfileComponent/ResetPassword";
+import Profile from "./components/IndexComponents/Profile";
 
 // Define the config
 const config = {
@@ -19,9 +22,12 @@ export const theme = extendTheme({ config });
 export default function App() {
   return (
     <NativeBaseProvider>
-      <AuthProvider>
+      {/* <AuthProvider>
         <Routes />
-      </AuthProvider>
+      </AuthProvider> */}
+      {/* <Signup /> */}
+      <ResetPassword/>
+      {/* <Profile/> */}
     </NativeBaseProvider>
   );
 }
