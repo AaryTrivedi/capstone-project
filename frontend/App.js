@@ -8,6 +8,7 @@ import { AuthProvider, AuthStateValue } from "./context/AuthContext";
 import Routes from './components/Routes';
 import Chat from "./components/IndexComponents/Chat";
 import Chats from "./components/IndexComponents/Chat";
+import ChatScreen from "./components/IndexComponents/ChatScreen";
 
 // Define the config
 const config = {
@@ -23,7 +24,8 @@ export default function App() {
     <NativeBaseProvider>
       <AuthProvider>
         {/* <Routes /> */}
-        <Chat/>
+        {/* <Chat/> */}
+        {/* <ChatScreen/> */}
       </AuthProvider>
     </NativeBaseProvider>
   );
