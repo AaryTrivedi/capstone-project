@@ -46,6 +46,7 @@
     "native-base": "3.2.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "react-file-viewer": "^1.2.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-datepicker": "^1.7.2",
     "react-native-document-picker": "^8.0.0",

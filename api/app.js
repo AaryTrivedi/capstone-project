@@ -70,5 +70,8 @@ app.use("/notifications", notificationRouter);
 
 const chatRouter = require('./routes/chat.routes');
 app.use("/chat", chatRouter);
+
+const documentRouter = require('./routes/document.route');
+app.use("/document", documentRouter);
 // Export app for testing
 module.exports = app

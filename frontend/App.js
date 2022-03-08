@@ -4,10 +4,8 @@ import {
   extendTheme,
 
 } from "native-base";
-import DocumentPicker from "./components/DocumentPicker";
+import DocumentPickerExample from "./components/DocumentPicker";
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
-
-
 import Routes from './components/Routes'
 
 // Define the config
@@ -23,7 +21,7 @@ export default function App() {
   return (
     <NativeBaseProvider>
       <AuthProvider>
-        <DocumentPicker />
+        <Routes />
       </AuthProvider>
     </NativeBaseProvider>
   );
