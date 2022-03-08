@@ -10,12 +10,12 @@ class DocumentService {
     }
 
     async uploadDocument(documentDetails,userId) {
-        const { documentUri } = documentDetails;
+        const { documentCollection } = documentDetails;
 
         try {
             const newDocument = Document({
                 userId,
-                documentUri
+                documentCollection
             })
             await newDocument.save()
         }

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Image, View, Platform, Text } from 'react-native';
+import { Button, Image, View, Platform, Text, } from 'react-native';
+import { Input } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import {uploadDocument} from '../api/document';
@@ -72,7 +73,7 @@ export default function DocumentPickerExample() {
             // formData.append('filetoupload', { uri: fileUri, name: filename, type });
             formData.append('filetoupload', { uri: fileUri, name: filename, type });
 
-            uploadDocument(userId, fileUri)
+            uploadDocument(userId, formData)
                 .then((response) => {
                     const [result, error] = response;
                     if (error) {
@@ -94,6 +95,7 @@ export default function DocumentPickerExample() {
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Button title="Pick a Photo from mobile" onPress={pickImage} />
+            
             {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
             <View style={{ height: 50 }} />
             <Button title="Pick a file from mobile" onPress={pickFile} />

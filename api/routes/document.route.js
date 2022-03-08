@@ -1,4 +1,5 @@
 const express = require('express');
+const Document = require('../models/document')
 const httpResponse = require('../helpers/httpResponse');
 const { verifyToken } = require('../helpers/token');
 const documentServices = require('../services/document.services');
@@ -12,7 +13,7 @@ var storage = multer.diskStorage({
         cb(null, 'uploads')
     },
     filename: function (req, file, cb) {
-        cb(null, file.fieldname + '-' + Date.now())
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
     }
 })
 
@@ -25,7 +26,7 @@ documentRouter.post("/uploadphoto", upload.single('myImage'), (req, res) => {
         contentType: req.file.mimetype,
         image: new Buffer(encode_img, 'base64')
     };
-    imageModel.create(final_img, function (err, result) {
+    Document.create(final_img, function (err, result) {
         if (err) {
             console.log(err);
         } else {
