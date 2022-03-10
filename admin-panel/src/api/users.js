@@ -30,6 +30,29 @@ export async function pendingDriversList() {
                 },
             }
         );
+        return request.data
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function approveDocuments(_id,driverDetailsValid,approveBy) {
+    const token = localStorage.getItem('token')
+    try {
+        const request = await axios.post(
+            `http://localhost:4000/users/approveDocument`,
+            {
+                _id,
+                driverDetailsValid,
+                approveBy
+            },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+            }
+        );
         // return [request.data.data[0], null];
         return request.data
     } catch (e) {

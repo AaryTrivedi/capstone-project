@@ -5,17 +5,16 @@ const app = require('express')()
 
 class DocumentService {
     async getDocumetnByuserId(userId) {
-        const document = await Document.find({userId});
-        return  document 
+        const document = await Document.find({ userId });
+        return document
     }
 
-    async uploadDocument(documentDetails,userId) {
-        const { documentCollection } = documentDetails;
-
+    async uploadDocument(documentName, documentType, userId) {
         try {
             const newDocument = Document({
                 userId,
-                documentCollection
+                documentName,
+                documentType
             })
             await newDocument.save()
         }

@@ -56,9 +56,16 @@ class UserService {
             throw new Error("Password is incorrect");
         }
         const token = generateToken({ ...user._doc })
-        return { token,user }
+        return { token , user }
     }
-
+    async ApproveUser(userDetails){
+        const { _id, driverDetailsValid, approveBy } = userDetails;
+        const user = await User.findOne({ _id })
+        user.driverDetailsValid = driverDetailsValid
+        user.approveBy = approveBy
+        user.save()
+        return {user}
+    }
     async getUserByEmail(email) {
         return User.findOne({ email });
     }
@@ -75,6 +82,7 @@ class UserService {
             role: 'driver'
         })
     }
+
 }
 
 module.exports = new UserService;

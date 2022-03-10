@@ -78,7 +78,7 @@ class LogInPage extends Component{
               if(role ==="admin"||role ==="ADMIN"||role ==="Admin")
               {
                 window.localStorage.setItem('token', response.data.data.token);
-                alert('User logged-in successfully');
+                // alert('User logged-in successfully');
                 this.props.history.push("/home");
               }
               else {

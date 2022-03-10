@@ -5,10 +5,14 @@ const DocumentSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    documentCollection: {
-        type: String,
+    documentType: {
+        type: "String",
         required: true,
-        trim: true,
+        enum: ["Licence", "Insurance" , "Workpermit" , "profilePhoto"]
+    },
+    documentName: {
+        type: "String",
+        required: true,
     }
 
 })

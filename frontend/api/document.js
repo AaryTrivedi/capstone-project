@@ -10,23 +10,28 @@ const API_URL =
         : "http://localhost:4000";
 
 
-export async function uploadDocument(userId,documentUri) {
+export async function uploadDocument(formData) {
     const token = await getToken();
     try {
-        const request = await axios.post(
-            `${API_URL}/document/upload/${userId}`,
+        fetch(
+            "http://localhost:4000/document/upload",
             {
-                documentUri
-            },
-            {
+                method: "POST",
+                body: formData,
                 headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
+                    "Authorization": `Bearer ${token}`
+                }
             }
-        );
-        return [request.data, null];
+        )
+            .then(function (response) {
+                //handle success
+                console.log(response);
+            })
+            .catch(function (response) {
+                //handle error
+                console.log(response);
+            });
     } catch (e) {
-        return [null, e.message];
+        return e.message;
     }
 }

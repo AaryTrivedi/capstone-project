@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export async function getDocumetnByuserId(userId) {
+export async function getDocumentByuserId(userId) {
     const token = localStorage.getItem('token')
     try {
         const request = await axios.get(`http://localhost:4000/document/${userId}`, {
@@ -11,6 +11,6 @@ export async function getDocumetnByuserId(userId) {
         });
         return request.data;
     } catch (e) {
-        return [null, e.message];
+        return  e.message;
     }
 }
