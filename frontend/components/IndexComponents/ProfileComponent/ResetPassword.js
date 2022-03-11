@@ -121,13 +121,18 @@ export default class ResetPassword extends React.Component {
 
   render() {
     return (
+      <ImageBackground
+            source={require("../../../assets/login.png")}
+            style={{ height: Dimensions.get("screen") }.height}
+        >
       <View style={{ flex: 1 }} showsVerticalScrollIndicator={false}>
+        
         
           <View style={styles.container}>
             <Text style={styles.title}>Create New Password</Text>
-            <View style={styles.warning}>
+            {/* <View style={styles.warning}>
             <Text style={styles.warningText}>Your new password must be different from previously used password.</Text>
-            </View>
+            </View> */}
             
             <Text>Password</Text>
             <TextInput
@@ -158,6 +163,8 @@ export default class ResetPassword extends React.Component {
             </Button>
           </View>
       </View>
+      </ImageBackground>
+
     );
   }
 }

@@ -9,6 +9,7 @@ import Routes from './components/Routes'
 import Signup from "./components/Signup";
 import ResetPassword from "./components/IndexComponents/ProfileComponent/ResetPassword";
 import Profile from "./components/IndexComponents/Profile";
+import ForgetPassword from "./components/IndexComponents/ProfileComponent/ForgetPassword";
 
 // Define the config
 const config = {
@@ -26,8 +27,9 @@ export default function App() {
         <Routes />
       </AuthProvider> */}
       {/* <Signup /> */}
-      <ResetPassword/>
+      {/* <ResetPassword/> */}
       {/* <Profile/> */}
+      <ForgetPassword/>
     </NativeBaseProvider>
   );
 }
