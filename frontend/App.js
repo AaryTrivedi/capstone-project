@@ -25,7 +25,7 @@ export default function App() {
       <AuthProvider>
         {/* <Routes /> */}
         {/* <Chat/> */}
-        {/* <ChatScreen/> */}
+        <ChatScreen/>
       </AuthProvider>
     </NativeBaseProvider>
   );
