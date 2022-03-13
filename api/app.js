@@ -3,6 +3,10 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const chatServices = require('./services/chat.services')
+const app = express();
+const http = require('http').createServer(app)
+const io = require('socket.io')(http)
 
 // Initialize environment
 const env = process.env.NODE_ENV || "development";
@@ -10,7 +14,13 @@ const env = process.env.NODE_ENV || "development";
 // Get config for current environment
 const config = require('./config/config.json')[env];
 // Initialize express app
-const app = express();
+
+io.on('connection', (socket) => {
+    socket.on(message,(data)=>{
+        io.emit(data)
+        chatServices.saveMessage(data)
+    })
+})
 
 // Enable accepting json body
 app.use(bodyParser.json())
@@ -58,5 +68,10 @@ app.use('/payments', paymentRouter);
 const notificationRouter = require('./routes/notification.routes');
 app.use("/notifications", notificationRouter);
 
+const chatRouter = require('./routes/chat.routes');
+app.use("/chat", chatRouter);
+
+const documentRouter = require('./routes/document.route');
+app.use("/document", documentRouter);
 // Export app for testing
 module.exports = app
