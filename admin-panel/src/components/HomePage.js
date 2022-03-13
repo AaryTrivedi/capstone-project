@@ -23,7 +23,6 @@ function HomePage({ navigation }) {
         async function fetchData() {
             await approvedDriversList().then((value) => setApprovedData(value.data))
             await pendingDriversList().then((value) => setPendingData(value.data))
-
         }
         fetchData()
     }, [])

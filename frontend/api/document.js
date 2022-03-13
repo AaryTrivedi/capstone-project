@@ -1,8 +1,5 @@
 import axios from 'axios';
-import * as Loc from "expo-location";
-import { GetCurrentLocation } from '../components/IndexComponents/HomeComponent/GetCurrentLocation';
 import { getToken } from '../helpers/Token';
-import { getUser } from '../helpers/user'
 
 const API_URL =
     Platform.OS === "android"
@@ -25,7 +22,35 @@ export async function uploadDocument(formData) {
         )
             .then(function (response) {
                 //handle success
+                return response
+                // console.log(response);
+            })
+            .catch(function (response) {
+                //handle error
                 console.log(response);
+            });
+    } catch (e) {
+        return e.message;
+    }
+}
+
+export async function uploadImage(formData) {
+    const token = await getToken();
+    try {
+        fetch(
+            "http://localhost:4000/document/uploadimage",
+            {
+                method: "POST",
+                body: formData,
+                headers: {
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+        )
+            .then(function (response) {
+                return response
+                //handle success
+                // console.log(response);
             })
             .catch(function (response) {
                 //handle error

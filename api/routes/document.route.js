@@ -5,13 +5,14 @@ const { verifyToken } = require('../helpers/token');
 const documentServices = require('../services/document.services');
 const documentRouter = express.Router();
 const multer = require("multer");
+const fs  =require('fs')
 
 
 var storage = multer.diskStorage(
     {
         destination: './uploads/',
         filename: function (req, file, cb) {
-            console.log(file);
+            // console.log(file);
             const fileTypeInfo = file.originalname.split('.')
             const fileType = fileTypeInfo[fileTypeInfo.length - 1];
             const name = Date.now() +'.'+ fileType
@@ -34,6 +35,14 @@ const upload = multer({
 documentRouter.post('/upload', verifyToken, upload.single('file'), async (req, res, next) => {
     try {
         const result = await documentServices.uploadDocument(req.file.filename, req.body.type, req.user._id);
+        httpResponse.sendSuccess(res, "Document sent successfully", result);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+documentRouter.post('/uploadimage', verifyToken, upload.single('myimage'), async (req, res, next) => {
+    try {
+        const result = await documentServices.uploadDocument(req.file.filename, 'profilePhoto', req.user._id);
         httpResponse.sendSuccess(res, "Document sent successfully", result);
     } catch (e) {
         httpResponse.sendFailure(res, e.message);

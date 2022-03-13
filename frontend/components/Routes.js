@@ -17,6 +17,7 @@ import StripeConsent from "./payment/stripe-consent";
 import AddToWallet from "./payment/AddToWallet";
 import RideDetails from "./RideDetailComponents/RideDetails";
 import AllRides from "./IndexComponents/SearchComponent/AllRides";
+import DocumentUpload from "./IndexComponents/ProfileComponent/DocumentUpload";
 
 const Stack = createNativeStackNavigator();
 
@@ -57,6 +58,10 @@ export default function Routes() {
                           <Stack.Screen
                               name="RideDetail"
                               component={RideDetails}
+                          />
+                          <Stack.Screen
+                              name="DocumentUpload"
+                              component={DocumentUpload}
                           />
                           <Stack.Screen name="RideForm" component={PostRide} />
                           <Stack.Screen name="Wallet" component={Wallet} />
