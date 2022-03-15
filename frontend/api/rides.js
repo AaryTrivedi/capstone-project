@@ -217,3 +217,5 @@ export async function markPresent(paymentDetails, rideDetails) {
         return [null, e.message];
     }
 }
+
+

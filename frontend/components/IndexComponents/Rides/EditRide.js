@@ -216,7 +216,6 @@ export default function EditRide({ route, navigation}) {
       };
   
       try {
-        // await updateRide(details)
         const token = await getToken();
         const config={
             headers:{
@@ -229,6 +228,11 @@ export default function EditRide({ route, navigation}) {
             details,
             config
             );
+            if(data.status === 'Success'){
+              navigation.navigate("Home")
+            }
+            console.log(data)
+            // navigation.navigate("RideDetail")
         } catch (e) {
           console.error(e);
           Alert.alert(e)

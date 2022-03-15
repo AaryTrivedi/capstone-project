@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, TouchableOpacity } from 'react-native'
+import {safeAreaView} from 'react-native'
 import { View, Button, ScrollView } from 'native-base';
 import { GetCurrentLocation } from './GetCurrentLocation';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUser } from "../../../helpers/user"
-import { getRidesAroundUser } from "../../../api/rides";
+import { getRidesAroundUser,getRideOfCurrentUserAsDriver } from "../../../api/rides";
 import { RideContainer } from '../Rides/RideContainer';
 
 
@@ -13,7 +14,8 @@ export default function Main({ navigation }) {
     const [location, setLocation] = useState({})
     const [user, setUser] = useState({})
     const [rides, setRides] = useState([])
-
+    const [driverRides,setDriverRides] = useState([])
+    const[ small,setSmall] =useState({})
     const myCar = <Icon name="car" size={20} />;
     const myArrow = <Icon name="arrow-right" size={20} />;
     const map = <Icon name="map-marker" size={18} />;
@@ -23,7 +25,15 @@ export default function Main({ navigation }) {
     const star = <Icon name="star" size={16} />
     const flag = <Icon name="flag" size={16} />
 
+    // console.log(new Date(Date.now()))
+    // // console.log(new Date(rides[0].startDateAndTime));
+    // console.log((rides[0].startDateAndTime))
+
+    
     const list = () => {
+        
+        
+
         try {
             return [].map((element) => {
                 return (
@@ -58,14 +68,6 @@ export default function Main({ navigation }) {
     // setUser(getUser())
     // to access the lattitude and longitude the use location.lat and location.long 
     useEffect(() => {
-        getRidesAroundUser().then((response) => {
-            const [result, error] = response;
-            if (error) {
-                alert(error);
-                return;
-            }
-            setRides(result.data.data.rides);
-        });
         GetCurrentLocation().then((value) => {
             setLocation(value)
         });
@@ -77,6 +79,55 @@ export default function Main({ navigation }) {
         })
     }, [])
 
+    useEffect(() => {
+        getRideOfCurrentUserAsDriver().then((response)=>{
+            const [result, error] = response;
+            if (error) {
+                alert(error);
+                return;
+            }
+            // console.log(response)
+            setDriverRides(result.data.rides)
+            // console.log(driverRides);
+            
+        });
+    },[])
+
+    useEffect(() => {
+        getRidesAroundUser().then((response) => {
+            const [result, error] = response;
+            if (error) {
+                alert(error);
+                return;
+            }
+            setRides(result.data.data.rides);
+            // console.log(rides)
+        });
+    },[])
+    const viewCurrentRide=()=>{
+        const newDriverRides = driverRides.filter(
+            (rides)=>
+            (rides.startDateAndTime > new Date().toISOString())
+        )
+        setDriverRides(newDriverRides)
+
+        var smallest = driverRides[0]
+        for(var i=1; i<driverRides.length; i++){
+            if(driverRides[i].startDateAndTime < smallest.startDateAndTime){
+                smallest = driverRides[i];   
+            }
+        }
+        console.log(smallest)
+        setDriverRides(smallest)
+        setSmall(smallest)
+        console.log(small)
+        console.log(driverRides[0]);
+    }
+
+    useEffect(() => {
+        viewCurrentRide()
+    },[])
+    
     const navigateToManageRide = () => {
         navigation.navigate("ManageRide")
     }
@@ -121,8 +172,10 @@ export default function Main({ navigation }) {
                 <Text style={Styles.containerText}>in 0000 hours</Text>
             </View>
             <View marginTop={"-10"} style={Styles.backgroundContainer}>
-                <TouchableOpacity>
-                    <Text>Details</Text>
+                <TouchableOpacity >
+                    {/* <Text>Details{console.log(driverRides[0])}</Text> */}
+
+                    {/* <RideContainer ride={driverRides[0]} onSelect={() => goToRide(driverRides[0]._id)}/> */}
                 </TouchableOpacity>
             </View>
             <TouchableOpacity onPress={navigateToManageRide}>

@@ -4,6 +4,7 @@ import { StyleSheet,Text } from 'react-native';
 import { getCurrentUserNotifications } from "../../../api/notification";
 import NotificationList from './NotificationListComponent';
 import { updateSeen } from '../../../api/notification'
+
 export default function NotificationScreen({ navigation }) {
 
     const [notifications, setNotifications] = useState([]);
