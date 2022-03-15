@@ -7,8 +7,9 @@ export default function NotificationItem({
     notification
 }) {
     const handlePress = () => {
+        // alert(notification._id)
         if (notification.type === "join-request") {
-            navigateToRequestList(notification.ride._id);
+            navigateToRequestList(notification.ride._id,notification._id);
         }
     }
 

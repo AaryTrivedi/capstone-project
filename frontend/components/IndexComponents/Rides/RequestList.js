@@ -5,10 +5,9 @@ import { getRequestList, requestAccept, requestReject } from '../../../api/rides
 import { updateSeen,getCurrentUserNotifications } from "../../../api/notification";
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const RequestList = ({rideId,limit=null}) => {
+const RequestList = ({rideId,limit=null,notificationId}) => {
     const user = <Icon name="user-circle-o" size={20}/>
     const [requestList, setRequestList] = useState([])
-    const [notificationId, setNotificationId] = useState([])
     const getRides = async () => {
         const [requestList, error] = await getRequestList(rideId);
         if (error) {
@@ -17,7 +16,7 @@ const RequestList = ({rideId,limit=null}) => {
         }
         return requestList.data
     }
-
+    // alert(notificationId)
     useEffect(() => {
         getRides()
             .then(allRequest => {
@@ -38,8 +37,6 @@ const RequestList = ({rideId,limit=null}) => {
                 console.log(error);
                 return;
             }    
-            updateSeen(requestId)
-            // console.log(requestId)
             const newAllRequests = requestList.filter(
                 (request) => request._id !== requestId
             );
@@ -54,8 +51,7 @@ const RequestList = ({rideId,limit=null}) => {
                 console.log(error);
                 return;
             }
-            updateSeen(requestId)
-            // console.log(requestId)
+
             const newAllRequests = requestList.filter(
                 (request) => request._id !== requestId
             );

@@ -9,12 +9,12 @@ const API_URL =
 export async function getCurrentUserNotifications() {
     const token = await getToken();
     try {
-        const request = await axios.get(
+        const request = await axios.post(
             `${API_URL}/notifications`,
             {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
+                    "Authorization": `Bearer ${token}`,
                 },
             }
         );
@@ -32,7 +32,7 @@ export async function updateSeen(id) {
             {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
+                    "Authorization": `Bearer ${token}`,
                 },
             }
         );

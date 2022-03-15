@@ -253,7 +253,6 @@ export default function PostRide() {
 
     const preferences = handlePreferences()
     const stops = await getStopsValue();
-    debugger;
     const details = {
       from: fromDetails,
       to: toDetails,
@@ -278,7 +277,6 @@ export default function PostRide() {
             config
         );
         console.log(response);
-        // navigation.navigate("RideDetail", {})
     } catch (e) {
         console.error(e);
         Alert.alert(e);

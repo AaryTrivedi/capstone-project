@@ -3,7 +3,6 @@ import {View,Text,TextInput,StyleSheet,Switch,SafeAreaView,Image,Dimensions,Scro
 import {Button,Input} from 'native-base'
 import { Radio, Stack } from 'native-base';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import RadioForm from 'react-native-simple-radio-button';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
 import { getToken } from '../../../helpers/Token';
 import axios from 'axios';
@@ -13,7 +12,7 @@ import { xorBy } from 'lodash'
 import { getRideById, getRideOfCurrentUserAsDriver } from '../../../api/rides';
 import NumericInput from 'react-native-numeric-input'
 import Icon from 'react-native-vector-icons/FontAwesome';
-
+import { updateRide} from'../../../api/rides'
 
 export default function EditRide({ route, navigation}) {
 
@@ -48,7 +47,9 @@ export default function EditRide({ route, navigation}) {
       }
     );
 
-    useEffect(() => {
+   
+      //console.log(rideDetails)
+      useEffect(() => {
         getRideById(rideId).then(response => {
           const [result, error] = response;
           if (error) {
@@ -56,14 +57,16 @@ export default function EditRide({ route, navigation}) {
             return;
           }
           const { ride } = result.data;
-         // console.log(ride)
-          setRideDetails(result.data.ride)
+          console.log(ride)
+         
+         setRideDetails(result.data.ride)
+       // alert(JSON.stringify(rideDetails.preferences))
           setDate(ride.startDateAndTime)
           setSeatsAvailable(ride.numberOfSeats)
           setAmount(ride.pricePerSeat)
           setRole(ride.paymentType)
         })
-    }, []);
+     },[]);
 
     
     const setInitialPaymentMethod = (paymentMethod) => {
@@ -118,82 +121,8 @@ export default function EditRide({ route, navigation}) {
       console.log(currentDate);
       setShowDateTimePicker(false)
     };
-    const handleChangeStop = (i, loc) =>{
-      const values = [...fields];
-      values[i].value = loc;
-      setFields(values);
-    }
-    const handleStopAmount = (i, loc) =>{
-      const values = [...fields];
-      if(fields[0].values === ""){
-        setErrors({
-                  ...errors,
-                  stopAmountError : "Please select stop address first !"
-              })  
-      }
-      else if(loc === null)
-      {
-        setErrors({
-                  ...errors,
-                  stopAmountError : "Amount can not be empty"
-              })    
-      }
-      else
-      { 
-        setErrors({
-          ...errors,
-          stopAmountError: "",
-        });   
-        values[i].amount = loc;
-        setFields(values);
-      }
-    }
-    const handleAdd =()=> {
-      const values = [...fields];
-      values.push({ value: null });
-      setFields(values);
-    }
   
-    const handleRemove = (i) => {
-      const values = [...fields];
-      values.splice(i, 1);
-      setFields(values);
-    }
     
-    const handleFrom =(text) => {
-      if(text === "" || text === undefined || text === null)
-      {
-        setErrors({
-                  ...errors,
-                  fromError : "Please select 'from' location"
-              })
-      }
-      else
-      {
-        setErrors({
-                  ...errors,
-                  fromError : ""
-              })
-      }
-  
-    }
-  
-    const handleTo = (text)=> {
-      if(text === "" || text === undefined || text === null)
-      {
-        setErrors({
-                  ...errors,
-                  toError : "Please select 'to' location"
-              })
-      }
-      else
-      {
-        setErrors({
-                  ...errors,
-                  toError : ""
-              })
-      }
-    }
     const handleAmount = (value) => {
       let pattern = new RegExp(/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/);
       if(value.trim() === "")
@@ -274,43 +203,20 @@ export default function EditRide({ route, navigation}) {
       }
       return stops;
     }
-    const handlePost = async ()=>{
-  
-      const [fromLocationDetailsResponse, fromLocationDetailsError] =
-        await getLocationDetails(from.place_id);
-      const [toLocationDetailsResponse, toLocationDetailsError] =
-        await getLocationDetails(to.place_id);
-  
-      const { result: fromLocationDetails } = fromLocationDetailsResponse.data;
-      const { result: toLocationDetails } =
-        toLocationDetailsResponse.data;
-  
-      const fromDetails = {
-        locationName: from.structured_formatting.main_text,
-        latitude: fromLocationDetails.geometry.location.lat,
-        longitude: fromLocationDetails.geometry.location.lng,
-      };
-  
-      const toDetails = {
-        locationName: to.structured_formatting.main_text,
-        latitude: toLocationDetails.geometry.location.lat,
-        longitude: toLocationDetails.geometry.location.lng,
-      };
+    const handleUpdate = async ()=>{
   
       const preferences = handlePreferences()
-      const stops = await getStopsValue();
       const details = {
-        from: fromDetails,
-        to: toDetails,
+        _id : rideId,
         preferences,
         startDateAndTime: date,
         numberOfSeats: Number(seatsAvailable),
         pricePerSeat: Number(amount),
-        paymentType: paymentMethod.toLowerCase(),
-        stops
+        paymentType: role.toLowerCase(),
       };
   
       try {
+        // await updateRide(details)
         const token = await getToken();
         const config={
             headers:{
@@ -319,7 +225,7 @@ export default function EditRide({ route, navigation}) {
             }
         }
         const {data} = await axios.post(
-            `http://localhost:4000/rides`,
+            `http://localhost:4000/rides/updateRide`,
             details,
             config
             );
@@ -339,13 +245,12 @@ export default function EditRide({ route, navigation}) {
         <SafeAreaView style={Styles.container}>
           <ScrollView style={Styles.scrollView}>
             <Text style={Styles.header}>Edit a Ride</Text>
-            <Text style={Styles.secondaryHeader}>Ride Details</Text>
-  
+{/*   
             <Text style={Styles.textLable}>From</Text>
             <LocationAutoComplete initialValue={from} onChange={setFrom} />
             <Text style={Styles.textLable}>To</Text>
             <LocationAutoComplete initialValue={to} onChange={setTo} />
-  
+   */}
             <TouchableOpacity
               onPress={() => {
                 setShowDateTimePicker(!showDateTimePicker);
@@ -394,7 +299,17 @@ export default function EditRide({ route, navigation}) {
 
   
             <Text style={Styles.textLable}>Seats Available</Text>
-            <View style={{marginLeft:'3%', marginTop:'1%'}}>
+            <Input
+              value={`${seatsAvailable}`}
+              style={Styles.input}
+              placeholder={" 3 "}
+              keyboardType="decimal-pad"
+              maxLength={2}
+              autoCapitalize="none"
+              onChangeText={(value) => setSeatsAvailable(value)}
+            />
+
+            {/* <View style={{marginLeft:'3%', marginTop:'1%'}}>
                    <NumericInput 
                        value = {seatsAvailable}
                        onChange={(value)=>setSeatsAvailable(value)} 
@@ -403,23 +318,24 @@ export default function EditRide({ route, navigation}) {
                        rounded 
                        minValue={0}
                     />
-            </View>
+            </View> */}
+
   
-            <Text style={Styles.textLable}>Preferences</Text>
+            <Text style={Styles.textLable}>Preferences </Text>
   
             <View style={Styles.img}>
-              <TouchableOpacity
-                onPress={() => checkPet()}
-               // style={rideDetails.preferences.includes('pet')?Styles.iconSelected:null}
-              >
-                <Image
-                  source={require("../../../assets/pet.png")}
-                  style={Styles.icons}
-                ></Image>
-              </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => checkPet()}
+              style={pet ? Styles.iconSelected : Styles.icons}
+            >
+              <Image
+                source={require("../../../assets/pet.png")}
+                style={Styles.icons}
+              ></Image>
+            </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => checkSmoke()}
-               // style={preferences.includes('smokeFree')?Styles.iconSelected:null}
+                style={smokeFree ? Styles.iconSelected:Styles.icon}
               >
                 <Image
                   source={require("../../../assets/smokeFree.png")}
@@ -428,7 +344,7 @@ export default function EditRide({ route, navigation}) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => checkFemale()}
-               // style={preferences.includes('female')?Styles.iconSelected:null}
+                style={female ? Styles.iconSelected: Styles.icon}
               >
                 <Image
                   source={require("../../../assets/female.png")}
@@ -437,7 +353,7 @@ export default function EditRide({ route, navigation}) {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => checkLuggage()}
-              //  style={preferences.includes('luggage')?Styles.iconSelected:null}
+                style={luggage ? Styles.iconSelected: Styles.icon}
               >
                 <Image
                   source={require("../../../assets/luggage.png")}
@@ -459,60 +375,12 @@ export default function EditRide({ route, navigation}) {
                             <Radio value="card">Card</Radio>
                         </Stack>
             </Radio.Group>
-            {/* <View style={({ paddingTop: "5%" }, { marginLeft: "5%" })}>
-              <RadioForm
-                style={Styles.radio}
-                radio_props={radio_props}
-                itemShowKey="label"
-                itemRealKey="value"
-                formHorizontal={true}
-                initial={paymentInitial}
-                onPress={(value) => handleRole(value)}
-              />
-
-            </View> */}
-  
-            <Text style={Styles.secondaryHeader}>Stops</Text>
-            <Text style={{color:"red"}}>
-                             {errors.stopAmountError}
-            </Text>
-            <View>
-              {fields.map((field, idx) => {
-                return (
-                  <View style={Styles.stopContainer} key={idx}>
-                    <View style={{ width: "90%" }}>
-                    <LocationAutoComplete
-                      value={field.value}
-                      onChange={(loc) => handleChangeStop(idx, loc)}
-                    />
-                    </View>
-                    <Input placeholder = "$ 15" 
-                           onChange = {(loc) => handleStopAmount(idx, loc)}>
-                    </Input>
-                    <TouchableOpacity
-                      disabled={fields.length === 1}
-                      style={Styles.stopButton}
-                      onPress={() => handleRemove(idx)}
-                    >
-                     <Icon color="red" name="remove" size={25} />
-                    </TouchableOpacity>
-                  </View>
-                );
-              })}
+            <View style={{marginTop:'20%'}}>
+              <Button style={Styles.enabled} onPress={() => handleUpdate()}>
+                Update Ride
+              </Button>
             </View>
-  
-            <View style={Styles.addBtnText}>
-              <TouchableOpacity
-                disabled={fields[fields.length - 1].value === null}
-                onPress={() => handleAdd()}
-              >
-                <Text> + Add Stop</Text>
-              </TouchableOpacity>
-            </View>
-            <Button style={Styles.enabled} onPress={() => alert(rides)}>
-              Update Ride
-            </Button>
-          </ScrollView >
+            </ScrollView >
         </SafeAreaView >
       </View >
     );

@@ -3,11 +3,10 @@ import React, { useEffect, useState } from 'react';
 import { StyleSheet,Text } from 'react-native';
 import { getCurrentUserNotifications } from "../../../api/notification";
 import NotificationList from './NotificationListComponent';
-
+import { updateSeen } from '../../../api/notification'
 export default function NotificationScreen({ navigation }) {
 
     const [notifications, setNotifications] = useState([]);
-    const [notificationsId,setNotificationId] = useState()
     useEffect(() => {
         getCurrentUserNotifications()
             .then(response => {
@@ -19,18 +18,22 @@ export default function NotificationScreen({ navigation }) {
                 setNotifications(result.data.notifications);
             })
     }, [])
-        // alert(JSON.stringify(notificationsId))
-    const navigateToRequestList = (rideId) => {
-        navigation.navigate("RequestList", {
-            rideId
-        })
+    //    alert(JSON.stringify(notifications))
+    const navigateToRequestList = (rideId,notificationsid) => {
+       updateSeen(notificationsid)
+        console.log(updateSeen(notificationsid))
         if(notifications.seen){
         const newNotification = notifications.filter(
             (notification) =>(notification.ride._id !== rideId),     
             );
             setNotifications(newNotification)
         }
+        
+        navigation.navigate("RequestList", {
+            rideId,notificationsid
+        })
     }
+    console.log(notifications)
 
     return (
         <View backgroundColor="white" style={styles.container}>

@@ -17,7 +17,7 @@ notificationRouter.get("/", verifyToken, async (req, res) => {
 })
 notificationRouter.post("/update/:id", verifyToken, async (req, res) => {
     try {
-        const notifications =await notificationModel.findByIdAndUpdate(req.params.id,req.body.seen);
+        const notifications =await notificationModel.findByIdAndUpdate(req.params.id,req.body);
         httpResponse.sendSuccess(res, "Notifications fetched successfully", {
             notifications
         });
