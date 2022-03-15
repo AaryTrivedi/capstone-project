@@ -5,14 +5,17 @@ import { GetCurrentLocation } from './GetCurrentLocation';
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUser } from "../../../helpers/user"
-import { getRidesAroundUser } from "../../../api/rides";
+import { getRidesAroundUser, getCurrentRideOfCurrentUserAsDriver } from "../../../api/rides";
 import { RideContainer } from '../Rides/RideContainer';
+import Loading from '../../Loading'
 
 
 export default function Main({ navigation }) {
     const [location, setLocation] = useState({})
     const [user, setUser] = useState({})
     const [rides, setRides] = useState([])
+    const [driverRide,setDriverRides]=useState([])
+    const [isLoading,setIsLoding]=useState(false)
 
     const myCar = <Icon name="car" size={20} />;
     const myArrow = <Icon name="arrow-right" size={20} />;
@@ -23,38 +26,66 @@ export default function Main({ navigation }) {
     const star = <Icon name="star" size={16} />
     const flag = <Icon name="flag" size={16} />
 
-    const list = () => {
-        try {
-            return [].map((element) => {
-                return (
-                    <View key={element._id}>
-                        <View>
-                            <View style={Styles.backgroundContainer}>
-                                <View style={Styles.childContainer}>
-                                    <Text style={{ fontSize: 18, fontWeight: "bold" }}> {map} {element.from['locationName']}</Text>
-                                    <Text> {arrow} </Text>
-                                    <Text style={{ fontSize: 18, fontWeight: "bold" }}> {map} {element.to['locationName']}</Text>
-                                    <Text style={{ fontSize: 20, marginRight: 5 }}>${element.pricePerSeat}</Text>
-                                </View>
-                                <View style={{ borderBottomColor: '#F5F5F5', borderBottomWidth: 1, }} />
-                                <View style={Styles.childContainer}>
-                                    <Text style={{ fontSize: 16 }}> {clock} {element.startDateAndTime}</Text>
-                                    <Text style={{ fontSize: 16 }}> {seat} {element.numberOfSeats}</Text>
-                                    <Text style={{ fontSize: 16 }}> {star} 2</Text>
-                                    <Text style={{ fontSize: 16 }}> {flag} {element.stops.length}</Text>
-                                    <TouchableOpacity onPress={() => { navigation.navigate('RideDetails') }} ><Text style={{ color: '#0D92DD', }}>Details</Text></TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                );
-            });
-        }
-        catch (e) {
-            alert(JSON.stringify(e.message))
-        }
-
-    };
+    // const list = () => {
+    //             return (
+    //                 <View style={Styles.container}>
+    //                     <View style={Styles.parentContainer}>
+    //                         <View style={Styles.childContainer}>
+    //                             <View>
+    //                                 <View>
+    //                                     <Text
+    //                                         style={{ fontSize: 13, fontWeight: "bold" }}
+    //                                     >
+    //                                         {map}{" "}
+    //                                         {driverRide.from.locationName.substring(
+    //                                             0,
+    //                                             40
+    //                                         )}
+    //                                     </Text>
+    //                                 </View>
+    //                                 <Text>{arrow}</Text>
+    //                                 <View>
+    //                                     <Text
+    //                                         style={{ fontSize: 13, fontWeight: "bold" }}
+    //                                     >
+    //                                         {map}{" "}
+    //                                         {driverRide.to.locationName.substring(
+    //                                             0,
+    //                                             40
+    //                                         )}
+    //                                     </Text>
+    //                                 </View>
+    //                             </View>
+    //                             <Text style={{ fontSize: 20 }}>
+    //                                 {dollar} {driverRide.pricePerSeat}
+    //                             </Text>
+    //                         </View>
+    //                         <View
+    //                             style={{
+    //                                 borderBottomColor: "#F5F5F5",
+    //                                 borderBottomWidth: 1,
+    //                             }}
+    //                         />
+    //                         <View style={Styles.childContainer}>
+    //                             <Text style={{ fontSize: 15 }}>
+    //                                 {clock} {driverRide.startDateAndTime}
+    //                             </Text>
+    //                             <Text style={{ fontSize: 15 }}>
+    //                                 {seat} {driverRide.numberOfSeats}
+    //                             </Text>
+    //                             <Text style={{ fontSize: 15 }}>
+    //                                 {flag} {driverRide.stops.length}
+    //                             </Text>
+    //                             <TouchableOpacity
+    //                                 onPress={()=>goToRide(driverRide._id)}
+    //                             >
+    //                                 <Text style={{ color: "#0D92DD" }}>Details</Text>
+    //                             </TouchableOpacity>
+    //                         </View>
+    //                     </View>
+    //                 </View>
+    //             );
+    // };
     // setUser(getUser())
     // to access the lattitude and longitude the use location.lat and location.long 
     useEffect(() => {
@@ -77,6 +108,20 @@ export default function Main({ navigation }) {
         })
     }, [])
 
+    useEffect(()=>{
+        setIsLoding(true)
+        getCurrentRideOfCurrentUserAsDriver().then((response)=>{
+            const [result,error] = response
+            if (error) {
+                alert(error);
+                return;
+            }
+            setDriverRides(result.data.rides)
+            setIsLoding(false)
+            console.log(driverRide);
+            // console.log(driverRides._id);
+        })
+    },[driverRide===null])
     const navigateToManageRide = () => {
         navigation.navigate("ManageRide")
     }
@@ -85,9 +130,9 @@ export default function Main({ navigation }) {
         navigation.navigate("Wallet")
     }
 
-    const goToRide = () => {
+    const goToRide = (rideId ="6209e0ccd1302a1731b61b66") => {
         navigation.navigate("RideDetail", {
-            rideId: "6209e0ccd1302a1731b61b66",
+            rideId,
         });
     }
 
@@ -121,9 +166,66 @@ export default function Main({ navigation }) {
                 <Text style={Styles.containerText}>in 0000 hours</Text>
             </View>
             <View marginTop={"-10"} style={Styles.backgroundContainer}>
-                <TouchableOpacity>
-                    <Text>Details</Text>
-                </TouchableOpacity>
+            {
+                driverRide === undefined || driverRide === null || driverRide === ''?
+                <Loading loading={driverRide}/>
+                :
+                
+                <View style={Styles.container}>
+                    <View style={Styles.parentContainer}>
+                      <View style={Styles.childContainer}>
+                            <View>
+                                <View>
+                                    <Text
+                                        style={{ fontSize: 13, fontWeight: "bold" }}
+                                    >
+                                        {map}{" "}
+                                        {driverRide.from.locationName.substring(0, 35)}
+                                    </Text>
+                                </View>
+                                <Text>{arrow}</Text>
+                                <View>
+                                    <Text
+                                        style={{ fontSize: 13, fontWeight: "bold" }}
+                                    >
+                                        {map}{" "}
+                                        {driverRide.to.locationName.substring(0, 35)}
+                                    </Text>
+                                </View>
+                            </View>
+                            <Text style={{ fontSize: 20 }}>
+                                    {driverRide.pricePerSeat}
+                            </Text>
+                        </View>
+                        <View
+                            style={{
+                                borderBottomColor: "#F5F5F5",
+                                borderBottomWidth: 1,
+                            }}
+                        />
+                        <View style={Styles.childContainer}>
+                            <Text style={{ fontSize: 15 }}>
+                                    {driverRide.startDateAndTime.substring(0, 10)}
+                            </Text>
+                            <Text style={{ fontSize: 15 }}>
+                                    {driverRide.startDateAndTime.substring(11, 16)}
+                            </Text>
+                            <Text style={{ fontSize: 15 }}>
+                                {seat} {driverRide.numberOfSeats}
+                            </Text>
+                            <Text style={{ fontSize: 15 }}>
+                                {flag} {driverRide.stops.length}
+                            </Text>
+                            <TouchableOpacity
+                                onPress={() => goToRide(driverRide._id)}
+                            >
+                                <Text style={{ color: "#0D92DD" }}>Details</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                </View>
+                         
+            }
             </View>
             <TouchableOpacity onPress={navigateToManageRide}>
                 <View

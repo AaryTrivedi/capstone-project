@@ -137,3 +137,21 @@ export async function removeRideRequest(rideId) {
         return [null, e.message];
     }
 }
+
+export async function getCurrentRideOfCurrentUserAsDriver() {
+    const token = await getToken();
+    try {
+        const request = await axios.get(
+            `${API_URL}/rides/current-ride/of-user/as-driver`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
