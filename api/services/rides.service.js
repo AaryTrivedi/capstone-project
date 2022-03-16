@@ -89,6 +89,15 @@ class RidesService {
         });
         return rides;
     }
+    
+    async getRidesOfUserAsDriver(user) {
+        const { _id } = user;
+        if (_id === undefined || _id === null) {
+            throw new Error("Token is invalid");
+        }
+        const rides = await Ride.find({driver: new ObjectId(_id),})
+        return rides;
+    }
     async getCurrentRideOfUserAsPassenger(user) {
         const { _id } = user;
         if (_id === undefined || _id === null) {
@@ -97,15 +106,15 @@ class RidesService {
         const rides = await Ride.find({
             "passengers.userId": new ObjectId(_id),
         }).where('startDateAndTime').gte(new Date().toISOString());
-        return rides;
-    }
-    async getRidesOfUserAsDriver(user) {
-        const { _id } = user;
-        if (_id === undefined || _id === null) {
-            throw new Error("Token is invalid");
+
+        var smallest = rides[0]
+
+        for (var i = 1; i < rides.length; i++) {
+            if (rides[i].startDateAndTime < smallest.startDateAndTime) {
+                smallest = rides[i];
+            }
         }
-        const rides = await Ride.find({driver: new ObjectId(_id),})
-        return rides;
+        return smallest;
     }
     async getCurrentRideOfUserAsDriver(user) {
         const { _id } = user;
@@ -123,7 +132,7 @@ class RidesService {
                 }
             }
         // rides = smallest
-        console.log((smallest));
+        // console.log((smallest));
         return smallest;
     }
 

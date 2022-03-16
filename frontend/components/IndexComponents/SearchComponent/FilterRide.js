@@ -95,26 +95,21 @@ export default function FilterRide({ navigation }) {
 
     return (
         <View padding={3} flexDirection={"column"} justifyContent={"flex-start"}>
-            <View>
-                <Heading fontSize={"2xl"}>Filter Rides</Heading>
-            </View>
             <View width={"full"}>
+                <Heading fontSize={"2xl"}>Filter Rides</Heading>
                 <Text fontSize={"sm"}>From</Text>
                 <LocationAutoComplete onChange={setFrom} />
-            </View>
-            <View width={"full"}>
+                <Text></Text>
+                <Text></Text>
+                <Text></Text>
                 <Text fontSize={"sm"}>To</Text>
                 <LocationAutoComplete onChange={setTo} />
-            </View>
-            <View>
+                <Text></Text>
+                <Text></Text>
                 <Text fontSize={"sm"}>Amount</Text>
-                <View>
-                    <View>
-                        <Text fontSize={"xs"}>Max</Text>
-                        <NumericInput
-                            onChange={setMaxAmount} />
-                    </View>
-                </View>
+                <Text fontSize={"xs"}>Max</Text>
+                <NumericInput
+                    onChange={setMaxAmount} />
             </View>
             <View>
                 <Text fontSize={"sm"}>Preferences</Text>
