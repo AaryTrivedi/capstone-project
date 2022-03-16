@@ -86,7 +86,11 @@ export default function Login({ navigation }) {
                 };
                 setIsLoading(true);
                 const { data } = await axios.post(
+<<<<<<< HEAD
+                    `http://192.168.0.158:4000/users/login`,
+=======
                     `${API_URL}/users/login`,
+>>>>>>> CP-114-admin-panel-endpoints
                     {
                         email, // R@P.com
                         password, // Rutik123
@@ -98,13 +102,21 @@ export default function Login({ navigation }) {
                 authContext.signInUser();
                 // setIsLoading(false);
             } catch (e) {
-                Alert.alert(e.response.data.error)
+                if (e.response === undefined || e.response === null || e.response === ""){
+                    setIsLoading(false)
+                    Alert.alert(e.message) 
+                }
+                else {
+                    setIsLoading(false)
+                    Alert.alert(JSON.stringify(e.response.data.error))
+                    return
+                }
                 setIsLoading(false)
             }
         }
         else {
             setIsLoading(false)
-            //    Alert.alert("Something went wrong")
+           
         }
     }
     return (

@@ -25,10 +25,9 @@
     "@react-navigation/bottom-tabs": "^6.0.9",
     "@react-navigation/core": "^6.1.0",
     "@react-navigation/material-bottom-tabs": "^6.0.9",
-    "@react-navigation/material-top-tabs": "^6.1.1",
+    "@react-navigation/material-top-tabs": "^6.0.6",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
-    "@react-navigation/stack": "^6.1.1",
     "@react-stately/checkbox": "^3.0.3",
     "@react-stately/slider": "^3.0.3",
     "@react-stately/tabs": "^3.0.1",
@@ -62,6 +61,7 @@
     "react-native-numeric-input": "^1.9.1",
     "react-native-pager-view": "^5.0.12",
     "react-native-paper": "^4.11.2",
+    "react-native-qrcode-svg": "^6.1.2",
     "react-native-ratings": "^8.1.0",
     "react-native-reanimated": "~2.2.0",
     "react-native-router-flux": "^4.3.1",
@@ -78,7 +78,8 @@
     "react-navigation-stack": "^2.10.4",
     "react-spinners": "^0.11.0",
     "styled-components": "^5.3.0",
-    "styled-system": "^5.1.5"
+    "styled-system": "^5.1.5",
+    "expo-barcode-scanner": "~10.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0"

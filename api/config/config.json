@@ -7,7 +7,8 @@
         "JWT_SECRET": "development",
         "STRIPE_PUBLISHABLE_KEY": "pk_test_51JipKvJSijMdla1x0pJ2EjkQpvgsfESI7zbqPwExNQ9nHlGTy2XUXk0kZc2Tq9J6XiYmzGm5umC3U9gP2zetDD6K00TOImtlbb",
         "STRIPE_SECRET_KEY": "sk_test_51JipKvJSijMdla1xV2CFDPtglcS6QUpeyBR131fTAFAeHltNaqSDACTlCBSV3ijCq1Mm1LlcW97MBVpbFYvsHLuw00sGEwaDno",
-        "WALLET_ACC_ID": "acct_1JippXQxS4lKLWmw"
+        "WALLET_ACC_ID": "acct_1JippXQxS4lKLWmw",
+        "PAYOUT_ACC_ID": "acct_1KXWJTR3fiEoQimA"
     },
     "test": {
         "PORT": 4000,
@@ -17,6 +18,7 @@
         "JWT_SECRET": "test",
         "STRIPE_PUBLISHABLE_KEY": "pk_test_51JipKvJSijMdla1x0pJ2EjkQpvgsfESI7zbqPwExNQ9nHlGTy2XUXk0kZc2Tq9J6XiYmzGm5umC3U9gP2zetDD6K00TOImtlbb",
         "STRIPE_SECRET_KEY": "sk_test_51JipKvJSijMdla1xV2CFDPtglcS6QUpeyBR131fTAFAeHltNaqSDACTlCBSV3ijCq1Mm1LlcW97MBVpbFYvsHLuw00sGEwaDno",
-        "WALLET_ACC_ID": "acct_1JippXQxS4lKLWmw"
+        "WALLET_ACC_ID": "acct_1JippXQxS4lKLWmw",
+        "PAYOUT_ACC_ID": "acct_1KXWJTR3fiEoQimA"
     }
 }

@@ -4,7 +4,10 @@ import {
   extendTheme,
 
 } from "native-base";
+<<<<<<< HEAD
+=======
 import DocumentUpload from "./components/IndexComponents/ProfileComponent/DocumentUpload";
+>>>>>>> CP-114-admin-panel-endpoints
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
 import Routes from './components/Routes'
 

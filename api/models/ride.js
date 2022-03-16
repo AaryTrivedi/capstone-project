@@ -55,10 +55,6 @@ const passenger = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
     },
-    code: {
-        type: "String",
-        required: true
-    },
     joinedAt: {
         type: Date,
         default: Date.now
@@ -146,6 +142,14 @@ const rideSchema = new mongoose.Schema({
         type: [rideException],
         default: [],
     },
+    code: {
+        type: String,
+        required: true
+    },
+    started: {
+        type: Boolean,
+        default: false
+    }
 });
 
 const Ride = mongoose.model("ride", rideSchema)

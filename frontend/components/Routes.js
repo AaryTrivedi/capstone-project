@@ -8,7 +8,7 @@ import SplashScreen from "./SplashScreen";
 import { getToken } from "../helpers/Token";
 import ChatScreen from "./IndexComponents/ChatScreen";
 import { AuthContext } from "../context/AuthContext";
-import PostRide from "./IndexComponents/HomeComponents/PostRide";
+import PostRide from "./IndexComponents/HomeComponent/PostRide";
 import ManageRide from "./IndexComponents/Rides/ManageRide";
 import Wallet from "./payment/wallet";
 import AddCard from "./payment/AddCard";
@@ -17,7 +17,11 @@ import StripeConsent from "./payment/stripe-consent";
 import AddToWallet from "./payment/AddToWallet";
 import RideDetails from "./RideDetailComponents/RideDetails";
 import AllRides from "./IndexComponents/SearchComponent/AllRides";
+<<<<<<< HEAD
+import StartRide from "./IndexComponents/Rides/StartRide";
+=======
 import DocumentUpload from "./IndexComponents/ProfileComponent/DocumentUpload";
+>>>>>>> CP-114-admin-panel-endpoints
 
 const Stack = createNativeStackNavigator();
 
@@ -79,13 +83,16 @@ export default function Routes() {
                                   headerBackTitleVisible: false,
                               })}
                           />
+                          <Stack.Screen
+                            name="StartRide"
+                            component={StartRide} />
                       </>
                   ) : (
                       <>
                           <Stack.Screen
                               name="SplashScreen"
                               component={SplashScreen}
-                              options={{ gestureEnabled: false }}
+                            options={{ headerShown: false, gestureEnabled: false }}
                           />
                           <Stack.Screen
                               name="Login"
