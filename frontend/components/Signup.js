@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import axios from 'axios';
 import  RadioForm from 'react-native-simple-radio-button';
-import { setToken } from "../../frontend/helpers/token";
+import { setToken } from "../../frontend/helpers/Token";
 
 const radio_props = [
   {label: 'Driver', value: 0 },

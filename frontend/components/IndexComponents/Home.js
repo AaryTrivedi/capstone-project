@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text,View,StyleSheet } from 'react-native'
 import { Button } from 'native-base';
-import {getToken} from '../../helpers/token'
+import {getToken} from '../../helpers/Token'
 
 export default function Home() {
     return (

@@ -1,6 +1,6 @@
 import {React, useState, useEffect} from 'react';
 import { Text,View,StyleSheet,TouchableOpacity,Linking } from 'react-native'
-import {Location} from './Location';
+import { Location } from './Location';
 import { getRides } from '../../api/rides';
 import { Button, Center } from 'native-base';
 import {getToken} from '../../helpers/Token'

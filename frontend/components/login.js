@@ -4,7 +4,7 @@ import { Button } from 'native-base'
 import axios from 'axios';
 import {Alert,View, Text, ImageBackground ,TouchableOpacity, Dimensions, StyleSheet, TextInput } from 'react-native'
 import Loading from './Loading';
-import {setToken} from '../helpers/token'
+import {setToken} from '../helpers/Token'
 
 export default function Login({navigation})  {
     const [email,setEmail] = useState("");

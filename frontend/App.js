@@ -8,7 +8,7 @@ import ManageRide from './components/IndexComponents/Rides/ManageRide'
 import Routes from './components/Routes'
 import { RideContainer } from "./components/IndexComponents/Rides/RideContainer";
 import Chat from "./components/IndexComponents/Chat";
- import Document from "./components/IndexComponents/ProfileComponents/Document.js"
+import Docscreen from "./components/IndexComponents/ProfileComponents/Docscreen.js"
 
 
 // Define the config
@@ -25,7 +25,7 @@ export default function App() {
       <NativeBaseProvider>
         {/* <ManageRide/> */}
         {/* <Routes/> */}
-        <Document/>
+        <Docscreen/>
       </NativeBaseProvider>
   );
 }

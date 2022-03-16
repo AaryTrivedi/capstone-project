@@ -6,7 +6,7 @@ import Signup from "../components/Signup";
 import DashBoard from "../components/DashBoard";
 import SplashScreen from "./SplashScreen";
 import ErrorScreen from "./ErrorScreen";
-import { getToken } from "../helpers/token";
+import { getToken } from "../helpers/Token";
 import ChatScreen from "./IndexComponents/ChatScreen";
 
 const Stack = createNativeStackNavigator();
