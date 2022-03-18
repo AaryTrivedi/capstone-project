@@ -91,6 +91,12 @@ export default function Main({ navigation }) {
         });
     }
 
+    const goToProfile = () => {
+        navigation.navigate("Profile", {
+            userId: "622a6256935a001986b8bdc4"
+        })
+    }
+
     return (
         <ScrollView style={Styles.container}>
             <View
