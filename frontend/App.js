@@ -10,6 +10,8 @@ import Signup from "./components/Signup";
 import ResetPassword from "./components/IndexComponents/ProfileComponent/ResetPassword";
 import Profile from "./components/IndexComponents/Profile";
 import ForgetPassword from "./components/IndexComponents/ProfileComponent/ForgetPassword";
+import RideDetails from "./components/RideDetailComponents/RideDetails";
+import CusomerRideDetail from "./components/RideDetailComponents/CustomerRideDetail";
 
 // Define the config
 const config = {
@@ -29,7 +31,9 @@ export default function App() {
       {/* <Signup /> */}
       {/* <ResetPassword/> */}
       {/* <Profile/> */}
-      <ForgetPassword/>
+      {/* <RideDetails/> */}
+      <CusomerRideDetail/>
+      {/* <ForgetPassword/> */}
     </NativeBaseProvider>
   );
 }
