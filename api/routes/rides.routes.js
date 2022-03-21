@@ -17,6 +17,18 @@ ridesRouter.get("/:rideId", verifyToken, async function (req, res, next) {
     }
 })
 
+ridesRouter.post("/connecting-rides", async function (req, res, next) {
+    try {
+        const response = await ridesService.getConnectedRides(
+            req.body.fromLocation,
+            req.body.toLocation
+        );
+        httpResponse.sendSuccess(res, "Rejected request", response);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+});
+
 // Get rides request
 ridesRouter.post("/filter", verifyToken, async function (req, res, next) {
     try {

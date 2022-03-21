@@ -6,7 +6,8 @@ import {
 } from "native-base";
 import DocumentUpload from "./components/IndexComponents/ProfileComponent/DocumentUpload";
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
-import Routes from './components/Routes'
+import Routes from './components/Routes';
+
 
 // Define the config
 const config = {

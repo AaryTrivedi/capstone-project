@@ -244,58 +244,57 @@ export default function PostRide() {
     return stops;
   }
   const handlePost = async ()=>{
-
-    const [fromLocationDetailsResponse, fromLocationDetailsError] =
-      await getLocationDetails(from.place_id);
-    const [toLocationDetailsResponse, toLocationDetailsError] =
-      await getLocationDetails(to.place_id);
-
-    const { result: fromLocationDetails } = fromLocationDetailsResponse.data;
-    const { result: toLocationDetails } =
-      toLocationDetailsResponse.data;
-
-    const fromDetails = {
-      locationName: from.structured_formatting.main_text,
-      latitude: fromLocationDetails.geometry.location.lat,
-      longitude: fromLocationDetails.geometry.location.lng,
-    };
-
-    const toDetails = {
-      locationName: to.structured_formatting.main_text,
-      latitude: toLocationDetails.geometry.location.lat,
-      longitude: toLocationDetails.geometry.location.lng,
-    };
-
-    const preferences = handlePreferences()
-    const stops = await getStopsValue();
-    const details = {
-      from: fromDetails,
-      to: toDetails,
-      preferences,
-      startDateAndTime: date,
-      numberOfSeats: Number(seatsAvailable),
-      pricePerSeat: Number(amount),
-      paymentType: paymentMethod.toLowerCase(),
-      stops
-    };
-
     try {
-      const token = await getToken();
-      const config={
-          headers:{
-              "Content-type":"application/json",
-              Authorization: `Bearer ${token}`
-          }
-      }
-      const {data} = await axios.post(
-          `http://localhost:4000/rides`,
-          details,
-          config
-          );
-      } catch (e) {
+        const [fromLocationDetailsResponse, fromLocationDetailsError] =
+            await getLocationDetails(from.place_id);
+        const [toLocationDetailsResponse, toLocationDetailsError] =
+            await getLocationDetails(to.place_id);
+
+        const { result: fromLocationDetails } =
+            fromLocationDetailsResponse.data;
+        const { result: toLocationDetails } = toLocationDetailsResponse.data;
+
+        const fromDetails = {
+            locationName: from.structured_formatting.main_text,
+            latitude: fromLocationDetails.geometry.location.lat,
+            longitude: fromLocationDetails.geometry.location.lng,
+        };
+
+        const toDetails = {
+            locationName: to.structured_formatting.main_text,
+            latitude: toLocationDetails.geometry.location.lat,
+            longitude: toLocationDetails.geometry.location.lng,
+        };
+
+        const preferences = handlePreferences();
+        const stops = await getStopsValue();
+        const details = {
+            from: fromDetails,
+            to: toDetails,
+            preferences,
+            startDateAndTime: date,
+            numberOfSeats: Number(seatsAvailable),
+            pricePerSeat: Number(amount),
+            paymentType: paymentMethod.toLowerCase(),
+            stops,
+        };
+
+        const token = await getToken();
+        const config = {
+            headers: {
+                "Content-type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        };
+        const response = await axios.post(
+            `http://192.168.0.158:4000/rides`,
+            details,
+            config
+        );
+    } catch (e) {
         console.error(e);
-        Alert.alert(e)
-      }
+        Alert.alert(e);
+    }
  
    }
   const handleSeat = (value) => {

@@ -88,29 +88,14 @@ export default function FilterRide({ navigation }) {
         }
 
         navigation.navigate("AllRides", {
-            rides: rides.data.data
+            rides: rides.data.data,
+            fromFilter: true,
+            from,
+            to
         })
     }
 
     return (
-<<<<<<< HEAD
-        <View padding={3} flexDirection={"column"} justifyContent={"flex-start"}>
-            <View width={"full"}>
-                <Heading fontSize={"2xl"}>Filter Rides</Heading>
-                <Text fontSize={"sm"}>From</Text>
-                <LocationAutoComplete onChange={setFrom} />
-                <Text></Text>
-                <Text></Text>
-                <Text></Text>
-                <Text fontSize={"sm"}>To</Text>
-                <LocationAutoComplete onChange={setTo} />
-                <Text></Text>
-                <Text></Text>
-                <Text fontSize={"sm"}>Amount</Text>
-                <Text fontSize={"xs"}>Max</Text>
-                <NumericInput
-                    onChange={setMaxAmount} />
-=======
         <ScrollView style={Styles.container}>
             <View style={Styles.header}>
                 <View style={[Styles.filterRide, Styles.marginleft]}>
@@ -159,7 +144,6 @@ export default function FilterRide({ navigation }) {
                         />
                     </View>
                 </View>
->>>>>>> main
             </View>
             <View style={[{ borderBottomColor: 'black', borderBottomWidth: 0.5, paddingVertical: 10 }, Styles.marginleft, Styles.marginright]}></View>
             <View style={[Styles.marginleft, Styles.marginright]}>
