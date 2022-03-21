@@ -86,11 +86,7 @@ export default function Login({ navigation }) {
                 };
                 setIsLoading(true);
                 const { data } = await axios.post(
-<<<<<<< HEAD
-                    `http://192.168.0.158:4000/users/login`,
-=======
                     `${API_URL}/users/login`,
->>>>>>> CP-114-admin-panel-endpoints
                     {
                         email, // R@P.com
                         password, // Rutik123

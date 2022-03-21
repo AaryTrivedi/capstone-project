@@ -4,7 +4,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Search from './IndexComponents/Search';
 import Chat from './IndexComponents/Chat';
-import Profile from './IndexComponents/Profile';
+import Profile from './IndexComponents/ProfileComponent/Profile';
 import Main from './IndexComponents/HomeComponent/Home.DashBoard';
 import NotificationScreen from './IndexComponents/NotificationComponents/NotificationScreen';
 
@@ -32,7 +32,7 @@ export default class DashBoard extends Component {
                         iconName = focused
                             ? "notifications-circle"
                             : "notifications-circle-outline";
-                    } else if (route.name === "Profile") {
+                    } else if (route.name === "You") {
                         iconName = focused
                             ? "ios-person"
                             : "ios-person-outline";
@@ -68,7 +68,7 @@ export default class DashBoard extends Component {
                 options={{ headerShown: true, tabBarBadge: 1 }}
             />
             <Tab.Screen
-                name="Profile"
+                name="You"
                 component={Profile}
                 options={{ headerShown: true }}
             />
