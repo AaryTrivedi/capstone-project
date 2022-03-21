@@ -69,11 +69,9 @@ class UserService {
     async getUserByEmail(email) {
         return User.findOne({ email });
     }
-<<<<<<< HEAD
     async getUserById(_id) {
         return User.findOne({ _id });
     }
-=======
     
     async pendingDriverList(){
         return User.find({
@@ -88,7 +86,6 @@ class UserService {
         })
     }
 
->>>>>>> CP-114-admin-panel-endpoints
 }
 
 module.exports = new UserService;

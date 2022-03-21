@@ -17,11 +17,8 @@ import StripeConsent from "./payment/stripe-consent";
 import AddToWallet from "./payment/AddToWallet";
 import RideDetails from "./RideDetailComponents/RideDetails";
 import AllRides from "./IndexComponents/SearchComponent/AllRides";
-<<<<<<< HEAD
 import StartRide from "./IndexComponents/Rides/StartRide";
-=======
 import DocumentUpload from "./IndexComponents/ProfileComponent/DocumentUpload";
->>>>>>> CP-114-admin-panel-endpoints
 
 const Stack = createNativeStackNavigator();
 
