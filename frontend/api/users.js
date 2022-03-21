@@ -12,7 +12,6 @@ export async function getUserById(userId){
     try {
         const request = await axios.get(
             `${API_URL}/users/${userId}`,
-            {},
             {
                 headers: {
                     "Content-Type": "application/json",
@@ -22,7 +21,43 @@ export async function getUserById(userId){
         );
         return [request, null];
     } catch (e) {
-        console.log(e);
+        return [null, e.message];
+    }
+}
+
+export async function createReview(reviewDetails) {
+    const token = await getToken();
+    try {
+        const request = await axios.post(
+            `${API_URL}/users/review`,
+            reviewDetails,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function getReviewsOfUser(userId) {
+    const token = await getToken();
+    try {
+        const request = await axios.get(
+            `${API_URL}/users/${userId}/reviews`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request, null];
+    } catch (e) {
         return [null, e.message];
     }
 }
