@@ -66,6 +66,45 @@ export async function getRideOfCurrentUserAsPassenger() {
     }
 }
 
+export async function getCurrentRideOfCurrentUserAsPassenger() {
+    const user = getUser()
+    const token = await getToken()
+    try {
+        const request = await axios.get(
+            `${API_URL}/rides/current-ride/of-user/as-passenger`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    }
+    catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function getCurrentRideOfCurrentUserAsDriver() {
+    const user = getUser()
+    const token = await getToken()
+    try {
+        const request = await axios.get(
+            `${API_URL}/rides/current-ride/of-user/as-driver`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    }
+    catch (e) {
+        return [null, e.message];
+    }
+}
 export async function getRideOfCurrentUserAsDriver() {
     const token = await getToken();
     try {

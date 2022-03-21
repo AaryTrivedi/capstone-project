@@ -76,6 +76,9 @@ export default function Main({ navigation }) {
         navigation.navigate("ManageRide")
     }
 
+    // const nvigateToProfile = () => {
+    //     navigation.navigate("ManageRide")
+    // }
     const navigateToWallet = () => {
         navigation.navigate("Wallet")
     }
@@ -88,7 +91,7 @@ export default function Main({ navigation }) {
 
     const goToProfile = () => {
         navigation.navigate("Profile", {
-            userId: "622a6256935a001986b8bdc4"
+            userId: "6212b7f83b9ed0931ab83070"
         })
     }
 
@@ -196,6 +199,7 @@ export default function Main({ navigation }) {
                     ))
                 }
             </View>
+            <TouchableOpacity onPress={()=>goToProfile()}><Text>to profile</Text></TouchableOpacity>
         </ScrollView>
     );
 }

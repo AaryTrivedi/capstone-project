@@ -87,10 +87,7 @@ class UserService {
     async getUserByEmail(email) {
         return User.findOne({ email });
     }
-<<<<<<< HEAD
-=======
 
->>>>>>> main
     async getUserById(_id) {
         return User.findOne({ _id });
     }
@@ -108,8 +105,6 @@ class UserService {
         })
     }
 
-<<<<<<< HEAD
-=======
     async getUserById(_id) {
         return User.findOne({ _id });
     }
@@ -139,7 +134,6 @@ class UserService {
         );
         return {};
     }
->>>>>>> main
 }
 
 module.exports = new UserService;
