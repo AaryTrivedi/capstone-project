@@ -61,7 +61,9 @@ class ChatService {
                     ]
                 }
             ]
-        }).populate("fromUser toUser");
+        })
+        .populate("fromUser toUser")
+        .sort([["dateSent", "desc"]]);
         return messages;
     }
     

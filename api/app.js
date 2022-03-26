@@ -59,7 +59,7 @@ io.on("connection", socket => {
     socket.on("message_send", async data => {
         const { forUserId, fromUserId, message } = data;
         await chatServices.addChat(fromUserId, forUserId, message);
-        io.emit("message_receive", msg);
+        io.emit("message_receive", data);
     });
 });
 
