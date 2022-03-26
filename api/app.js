@@ -7,6 +7,7 @@ const chatServices = require('./services/chat.services')
 const app = express();
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
+const logger = require('morgan');
 
 // Initialize environment
 const env = process.env.NODE_ENV || "development";
@@ -35,6 +36,9 @@ app.use(bodyParser.urlencoded({
 }));
 // Enable cors
 app.use(cors())
+
+// Use logger
+app.use(logger('dev'));
 
 // Start app on environment port
 app.listen(config.PORT, async function () {

@@ -16,6 +16,8 @@ export default function Main({ navigation }) {
     const [rides, setRides] = useState([])
     const [userRide,setuserRides]=useState([])
     const [isLoading,setIsLoding]=useState(false)
+    const [driverRides, setDriverRides] = useState([])
+    const [small, setSmall] = useState({})
 
     const myCar = <Icon name="car" size={20} />;
     const myArrow = <Icon name="arrow-right" size={20} />;
@@ -65,19 +67,19 @@ export default function Main({ navigation }) {
     }, [])
 
     // console.log(userRide[0].startDateAndTime!==undefined);
-    useEffect(() => {
-        getRideOfCurrentUserAsDriver().then((response)=>{
-            const [result, error] = response;
-            if (error) {
-                alert(error);
-                return;
-            }
-            // console.log(response)
-            setDriverRides(result.data.rides)
-            // console.log(driverRides);
+    // useEffect(() => {
+    //     getRideOfCurrentUserAsDriver().then((response)=>{
+    //         const [result, error] = response;
+    //         if (error) {
+    //             alert(error);
+    //             return;
+    //         }
+    //         // console.log(response)
+    //         setDriverRides(result.data.rides)
+    //         // console.log(driverRides);
             
-        });
-    },[])
+    //     });
+    // },[])
 
     useEffect(() => {
         getRidesAroundUser().then((response) => {
