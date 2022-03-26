@@ -88,6 +88,7 @@ export default function Main({ navigation }) {
                 alert(error);
                 return;
             }
+            console.log(result.data.data.rides);
             setRides(result.data.data.rides);
             // console.log(rides)
         });
@@ -113,9 +114,9 @@ export default function Main({ navigation }) {
         console.log(driverRides[0]);
     }
 
-    useEffect(() => {
-        viewCurrentRide()
-    },[])
+    // useEffect(() => {
+    //     viewCurrentRide()
+    // },[])
     
     const navigateToManageRide = () => {
         navigation.navigate("ManageRide")

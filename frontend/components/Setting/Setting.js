@@ -5,7 +5,7 @@ import { useState } from "react";
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { IconButton, Colors } from 'react-native-paper';
 
-export default function Setting() {
+export default function Setting({ navigation }) {
     const [user, setUser] = useState('John Doe');
     const [isEnabled, setIsEnabled] = useState(false);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
@@ -14,6 +14,10 @@ export default function Setting() {
     set = <Icon name='settings' size={40} color="white"/>;
     setq = <Icon name='chevron-right' size={25} />;
     plus = <Ionicons name = 'plus' size={20}/>;
+
+    const navigateToDocuments = () => {
+        navigation.navigate("DocumentUpload")
+    }
 
    
       return(
@@ -57,7 +61,7 @@ export default function Setting() {
                                         onPress={() => console.log('Pressed')}
                             />
                         </View>
-                        <View style={Styles.label}>
+                        <TouchableOpacity onPress={navigateToDocuments} style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Become a driver </Text>
                             <IconButton
                                         icon="chevron-right"
@@ -65,7 +69,7 @@ export default function Setting() {
                                         size={25}
                                         onPress={() => console.log('Pressed')}
                             />
-                        </View>
+                        </TouchableOpacity>
                         <View style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Add a payment method </Text>
                             <IconButton
