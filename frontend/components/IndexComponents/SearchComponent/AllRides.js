@@ -22,6 +22,35 @@ export default function AllRides({ route, navigation }) {
 
         const { data: fromLocationData } = fromDetails;
         const { data: toLocationData } = toDetails;
+
+        const fromLocationInformation = {
+            longitude: fromLocationData.result.geometry.location.lng,
+            latitude: fromLocationData.result.geometry.location.lat,
+        }
+
+        const toLocationInformation = {
+            longitude: toLocationData.result.geometry.location.lng,
+            latitude: toLocationData.result.geometry.location.lat,
+        }
+
+        const request = await fetch("http://localhost:4000/rides/connecting-rides", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                fromLocation: fromLocationInformation,
+                toLocation: toLocationInformation
+            })
+        });
+
+        const response = await request.json();
+
+        // console.log(response.data);
+
+        navigation.navigate("AllRides", {
+            rides: response.data.rides
+        })
     }
 
     return (
@@ -38,7 +67,7 @@ export default function AllRides({ route, navigation }) {
                     <Button variant={"link"} colorScheme={"blue"}>
                         Notify when a ride is available
                     </Button>
-                    <Button variant={"link"} colorScheme={"blue"}>
+                    <Button onPress={showConnectingRide} variant={"link"} colorScheme={"blue"}>
                         Show connecting ride
                     </Button>
                 </View>

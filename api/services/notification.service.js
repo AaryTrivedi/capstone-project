@@ -8,7 +8,7 @@ class NotificationService {
         })
         .populate("forUser")
         .populate("fromUser")
-        .populate("ride", "ride._id ride.rideIdentifier");
+        .populate("ride", "ride._id rideIdentifier");
         return notifications;
     }
 }

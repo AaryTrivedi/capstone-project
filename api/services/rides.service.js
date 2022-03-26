@@ -30,6 +30,31 @@ class RidesService {
         return ride;
     }
 
+    validateUpdateRideFields(rideDetails) {
+        this.validateStartDateAndTime(rideDetails.startDateAndTime);
+        this.validateNumberOfSeats(rideDetails.numberOfSeats);
+        this.validatePricePerSeat(rideDetails.pricePerSeat);
+        this.validatePreferences(rideDetails.preferences);
+        this.validatePaymentType(rideDetails.paymentType);
+        }
+
+    async updateRide(rideDetails) {
+        const {_id, startDateAndTime, pricePerSeat,numberOfSeats, preferences, paymentType} = rideDetails;
+        // this.validateUpdateRideFields(rideDetails);
+        // const rideIdentifier = await this.getRideIdentifier(rideDetails);
+        // const rideCode = this.generateRideCodeOfLength(6);
+        // rideDetails.rideIdentifier = rideIdentifier;
+        // rideDetails.code = rideCode;
+        const ride = await Ride.findOneAndUpdate({ _id },rideDetails)
+        // ride.startDateAndTime = startDateAndTime;
+        // ride.pricePerSeat = pricePerSeat;
+        // ride.numberOfSeats = numberOfSeats;
+        // ride.preferences = preferences;
+        // ride.paymentType = paymentType;
+
+        return ride;
+    }
+
     async getRideIdentifier(rideDetails) {
         const user = await User.findOneAndUpdate(
             { _id: rideDetails.driver },
@@ -85,16 +110,51 @@ class RidesService {
         });
         return rides;
     }
-
+    
     async getRidesOfUserAsDriver(user) {
         const { _id } = user;
         if (_id === undefined || _id === null) {
             throw new Error("Token is invalid");
         }
-        const rides = await Ride.find({
-            driver: new ObjectId(_id),
-        });
+        const rides = await Ride.find({driver: new ObjectId(_id),})
         return rides;
+    }
+    async getCurrentRideOfUserAsPassenger(user) {
+        const { _id } = user;
+        if (_id === undefined || _id === null) {
+            throw new Error("Token is invalid");
+        }
+        const rides = await Ride.find({
+            "passengers.userId": new ObjectId(_id),
+        }).where('startDateAndTime').gte(new Date().toISOString());
+
+        var smallest = rides[0]
+
+        for (var i = 1; i < rides.length; i++) {
+            if (rides[i].startDateAndTime < smallest.startDateAndTime) {
+                smallest = rides[i];
+            }
+        }
+        return smallest;
+    }
+    async getCurrentRideOfUserAsDriver(user) {
+        const { _id } = user;
+        if (_id === undefined || _id === null) {
+            throw new Error("Token is invalid");
+        }
+        const rides = await Ride.find({ driver: new ObjectId(_id), })
+            .where('startDateAndTime').gte(new Date().toISOString());
+        
+        var smallest = rides[0]
+
+            for (var i = 1; i < rides.length; i++) {
+                if (rides[i].startDateAndTime < smallest.startDateAndTime) {
+                    smallest = rides[i];
+                }
+            }
+        // rides = smallest
+        // console.log((smallest));
+        return smallest;
     }
 
     async removeAsPassengerByUserIdAndRideId(rideAndUserDetails) {
@@ -425,6 +485,7 @@ class RidesService {
     }
 
     async getRequestList(_id) {
+        console.log(_id)
         const result = await Ride.findOne({ _id }).populate({
             path: "requests",
             populate: {

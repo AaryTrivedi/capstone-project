@@ -1,5 +1,6 @@
 import { Box, View, Text, Button, ScrollView, Actionsheet, useDisclose } from 'native-base';
 import React, { useState, useEffect } from "react";
+import {StyleSheet} from "react-native"
 import Loading from '../Loading';
 import Ionicons from "react-native-vector-icons/MaterialIcons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -233,6 +234,13 @@ export default function RideDetails({ route, navigation }) {
         </Actionsheet>
     );
   }
+
+  const goToEdit = () => {
+      navigation.navigate("EditRide", {
+          rideId: rideDetails._id
+      })
+  }
+
   return (
       <>
           <ScrollView>
@@ -306,7 +314,7 @@ export default function RideDetails({ route, navigation }) {
                           <Text>Delete</Text>
                       </Button>
                       <Button
-                          onPress={() => console.log("Edit Button Pressed")}
+                          onPress={goToEdit}
                           flex={1}
                           flexDirection={"row"}
                           size={"sm"}
@@ -393,6 +401,7 @@ export default function RideDetails({ route, navigation }) {
                       padding={3}
                       backgroundColor={"white"}
                       marginX={3}
+                      style={rideDetails.preferences.includes('pet')?style.iconSelected:null}
                   >
                       {petIcon}
                   </View>
@@ -401,6 +410,7 @@ export default function RideDetails({ route, navigation }) {
                       padding={3}
                       backgroundColor={"white"}
                       marginX={3}
+                      style={rideDetails.preferences.includes('smokefree')?style.iconSelected:null}
                   >
                       {smokeIcon}
                   </View>
@@ -409,6 +419,7 @@ export default function RideDetails({ route, navigation }) {
                       padding={3}
                       backgroundColor={"white"}
                       marginX={3}
+                      style={rideDetails.preferences.includes('female')?style.iconSelected:null}
                   >
                       {genderIcon}
                   </View>
@@ -417,6 +428,7 @@ export default function RideDetails({ route, navigation }) {
                       padding={3}
                       backgroundColor={"white"}
                       marginX={3}
+                      style={rideDetails.preferences.includes('luggage')?style.iconSelected:null}
                   >
                       {luggageIcon}
                   </View>
@@ -445,3 +457,9 @@ export default function RideDetails({ route, navigation }) {
       </>
   );
 }
+
+const style = StyleSheet.create({
+    iconSelected: {
+        borderWidth: 2,
+      }
+})

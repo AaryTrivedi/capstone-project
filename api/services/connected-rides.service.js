@@ -21,9 +21,11 @@ class ConnectedRides {
                 loc.longitude === this.to.longitude &&
                 loc.latitude === this.to.latitude
         );
-        const { distance, parents } = this.dijkstra(graph, 5);
+        console.table(locations.map((loc) => loc.locationName))
+        const { distance, parents } = this.dijkstra(graph, fromIndex);
         const path = this.calculatePathFromSourceToDestination(parents, fromIndex, toIndex);
         const rides = this.getRideFromPath(path, locations, allRides);
+        console.log(rides);
         return rides;
     }
 
