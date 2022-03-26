@@ -14,6 +14,7 @@ import {
 } from "react-native";
 import { borderColor, flex } from "styled-system";
 import { color } from "react-native-reanimated";
+import { updateUser } from "../../../api/users";
 
 export default class ResetPassword extends React.Component {
   constructor(props) {
@@ -106,11 +107,12 @@ export default class ResetPassword extends React.Component {
   handleSubmit = () => {
     const { isError, error } = this.state;
     if (this.state.passValidate) {
-      alert(` 
-           
-            ${this.state.tempPassword}
-            ${this.state.password}
-        `);
+      updateUser({ password: this.state.password })
+        .then(() => {
+          this.props.navigation.navigate("DashBoard", {
+            screen: "Home"
+          })
+        })
     } else if (isError) {
       alert(`${error}`);
     } else {

@@ -25,6 +25,25 @@ export async function getUserById(userId){
     }
 }
 
+export async function updateUser(properties){
+    const token = await getToken()
+    try {
+        const request = await axios.put(
+            `${API_URL}/users/`,
+            { properties },
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
 export async function createReview(reviewDetails) {
     const token = await getToken();
     try {
