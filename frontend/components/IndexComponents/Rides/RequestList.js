@@ -33,10 +33,10 @@ const RequestList = ({rideId,limit=null}) => {
         requestAccept(rideId, userId).then((result) => {
             const [response, error] = result;
             if (error) {
-                console.log(error);
+                console.error(error);
                 return;
             }
-            const newAllRequests = allRequest.filter(
+            const newAllRequests = requestList.filter(
                 (request) => request.id !== requestId
             );
             setRequestList(newAllRequests);
@@ -50,7 +50,7 @@ const RequestList = ({rideId,limit=null}) => {
                 console.log(error);
                 return;
             }
-            const newAllRequests = allRequest.filter(
+            const newAllRequests = requestList.filter(
                 (request) => request.id !== requestId
             );
             setRequestList(newAllRequests);

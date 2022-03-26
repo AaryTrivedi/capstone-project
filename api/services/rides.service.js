@@ -128,6 +128,9 @@ class RidesService {
         if (this.userHasRequestToJoin(userId, ride)) {
             throw new Error("Request for user already exists");
         }
+        if (typeof stopId === "object") {
+            stopId = ""
+        }
         const request = {
             userId,
             stopId,

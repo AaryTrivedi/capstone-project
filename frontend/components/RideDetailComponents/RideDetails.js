@@ -13,6 +13,8 @@ import {
 import { getUser } from "../../helpers/user";
 import MapView, { Marker } from 'react-native-maps';
 import RequestList from '../IndexComponents/Rides/RequestList';
+import axios from 'axios';
+import { getToken } from '../../helpers/Token';
 
 export default function RideDetails({ route, navigation }) {
 
@@ -147,11 +149,25 @@ export default function RideDetails({ route, navigation }) {
     );
   }
 
-  const handleStartPress = () => {
+  const handleStartPress = async () => {
       try {
-          navigation.navigate("StartRide", {
-              rideId
-          })
+            const token = await getToken();
+            const config = {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                }
+            }
+          if (currentUser._id === rideDetails.driver) {
+            await axios.post(
+                "http://localhost:4000/rides/updateRide",
+                { _id: rideId, started: true },
+                config
+              );
+            }
+            navigation.navigate("StartRide", {
+                rideId
+            }) 
       } catch (e) {
           console.error(e);
       }
@@ -413,18 +429,18 @@ export default function RideDetails({ route, navigation }) {
                         rideId={rideDetails._id} />
                   }
               </View>
-              <View
-                padding={4}>
-                  {
-                  (currentUser._id === rideDetails.driver)
-                  ||
-                  (rideDetails.started) ?
-                  <StartButton />
-                  :
-                  <RequestButton />
-                  }
-                  <JoinOptions />
-              </View>
+                <View
+                    padding={4}>
+                    {
+                    (currentUser._id === rideDetails.driver)
+                    ||
+                    (rideDetails.started) ?
+                    <StartButton />
+                    :
+                    <RequestButton />
+                    }
+                    <JoinOptions />
+                </View>
           </ScrollView>
       </>
   );

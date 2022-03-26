@@ -287,10 +287,11 @@ export default function PostRide() {
             },
         };
         const response = await axios.post(
-            `http://192.168.0.158:4000/rides`,
+            `http://localhost:4000/rides`,
             details,
             config
         );
+        console.log("DONE");
     } catch (e) {
         console.error(e);
         Alert.alert(e);
