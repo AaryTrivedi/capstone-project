@@ -51,7 +51,13 @@ export default function ChatScreen() {
     socket.emit("message_send", {
       message: newMessage[0].text,
       forUserId: id,
-      fromUserId: user._id
+      fromUserId: user._id,
+      user: user
+    })
+    socket.on("message_receive", data => {
+      const newMessages = messages.slice();
+      newMessage.push(data);
+      setMessages(newMessages);
     })
   }
   function renderSend(props) {
