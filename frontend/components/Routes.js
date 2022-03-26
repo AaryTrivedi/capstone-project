@@ -17,10 +17,15 @@ import StripeConsent from "./payment/stripe-consent";
 import AddToWallet from "./payment/AddToWallet";
 import RideDetails from "./RideDetailComponents/RideDetails";
 import AllRides from "./IndexComponents/SearchComponent/AllRides";
+import EditRide from "./IndexComponents/Rides/EditRide";
 import StartRide from "./IndexComponents/Rides/StartRide";
+<<<<<<< HEAD
+import AllRideRequest from "./RideDetailComponents/AllRideRequest";
+=======
 import Profile from './IndexComponents/ProfileComponent/Profile';
 import Setting from "./Setting/Setting";
 
+>>>>>>> ccd0e925facf6c4a9aab84dcf8fe6d9e58197a06
 const Stack = createNativeStackNavigator();
 
 export default function Routes() {
@@ -79,11 +84,18 @@ export default function Routes() {
                               })}
                           />
                           <Stack.Screen
+                            name="EditRide"
+                            component={EditRide} />
+                          <Stack.Screen  
                             name="Settings"
                             component={Setting} />
                           <Stack.Screen
                             name="StartRide"
                             component={StartRide} />
+                          <Stack.Screen
+                            name="RequestList"
+                            component={AllRideRequest} />
+
                       </>
                   ) : (
                       <>

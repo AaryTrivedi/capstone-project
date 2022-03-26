@@ -201,4 +201,22 @@ ridesRouter.post("/:rideId/mark-present", verifyToken, async function (req, res,
     }
 })
 
+//Update ride details
+
+ridesRouter.post("/updateRide", verifyToken, async function (req, res, next) {
+    try {
+        // Set driver id of ride to current logged in user id
+        const { _id: driverId } = req.user;
+        req.body.driver = driverId;
+        const ride = await ridesService.updateRide(req.body);
+        console.log("DONE");
+        httpResponse.sendSuccess(res, "Ride Update successfully", ride);
+    } catch (e) {
+        console.log(e);
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
+
+
 module.exports = ridesRouter;
