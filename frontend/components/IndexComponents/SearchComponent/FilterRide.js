@@ -96,44 +96,19 @@ export default function FilterRide({ navigation }) {
     }
 
     return (
-        <ScrollView style={Styles.container}>
-            <View style={Styles.header}>
-                <View style={[Styles.filterRide, Styles.marginleft]}>
-                    <Heading style={{ fontSize: 32 }}>Filter Rides</Heading>
-                </View>
-                <View style={[Styles.wallet, Styles.marginright]}>
-                    <Button onPress={() => handleSubmit()}>Apply Filter</Button>
-                </View>
+        <View padding={3} flexDirection={"column"} justifyContent={"flex-start"}>
+            <View>
+                <Heading fontSize={"2xl"}>Filter Rides</Heading>
             </View>
-            <View style={[Styles.fromLocation, Styles.marginright, Styles.marginleft, { paddingBottom: 24 }]}>
-                <Text style={[Styles.textLable]}>From</Text><Text></Text>
-                <LocationAutoComplete value={from} onChange={setFrom} />
-                
-                <Text style={[Styles.arrow, { paddingVertical: 25 }]}>{arrow}</Text>
-                <Text style={[Styles.textLable]}>To</Text><Text></Text>
-                <LocationAutoComplete value={to} onChange={setTo} />
-
-                <TouchableOpacity style={[Styles.marginleft, { paddingVertical: 10 }]}
-                    onPress={() => {
-                        setShowDateTimePicker(!showDateTimePicker);
-                    }}>
-                    <Text style={Styles.textLable}>Select Date and Time</Text>
-                </TouchableOpacity>
-                <View style={[Styles.dateTime, Styles.marginleft, { paddingBottom: 10, paddingVertical: 10 }]}>
-                    {showDateTimePicker && (
-                        <DateTimePicker
-                            value={date}
-                            mode={"datetime"}
-                            is24Hour={true}
-                            onChange={(e, value) => onChangeDate(e, value)}
-                        />
-                    )}
-                </View>
-                {/* <View style={Styles.marginleft}> */}
-                <Text style={Styles.textLable}>Amount</Text>
-                <View style={[Styles.marginleft, Styles.amount]}>
-                    <View style={Styles.marginright}>
-                        <Text style={Styles.minimum}>maximum</Text>
+            <View width={"full"}>
+                <Text fontSize={"sm"}>From</Text>
+                <LocationAutoComplete zIndex={2} zIndexInverse={1} onChange={setFrom} />
+                <Text fontSize={"sm"}>To</Text>
+                <LocationAutoComplete zIndex={1} zIndexInverse={2} onChange={setTo} />
+                <Text fontSize={"sm"}>Amount</Text>
+                <View>
+                    <View>
+                        <Text fontSize={"xs"}>Max</Text>
                         <NumericInput
                             value={maxAmount}
                             onChange={value => onChangeMaxAmount(value)}
@@ -144,68 +119,58 @@ export default function FilterRide({ navigation }) {
                         />
                     </View>
                 </View>
+                <Text fontSize={"sm"}>Preferences</Text>
+                <View flexDirection={"row"} justifyContent={"space-between"}>
+                    <Button
+                        marginX={3}
+                        padding={3}
+                        backgroundColor="white"
+                        >
+                        <Image
+                            source={require("../../../assets/pet.png")}
+                            height={25}
+                            width={25}
+                        ></Image>
+                    </Button>
+                    <Button
+                        marginX={3}
+                        padding={3}
+                        backgroundColor="white"
+                        >
+                        <Image
+                            source={require("../../../assets/smokeFree.png")}
+                            height={25}
+                            width={25}
+                        ></Image>
+                    </Button>
+                    <Button
+                        marginX={3}
+                        padding={3}
+                        backgroundColor="white"
+                        >
+                        <Image
+                            source={require("../../../assets/female.png")}
+                            height={25}
+                            width={25}
+                        ></Image>
+                    </Button>
+                    <Button
+                        marginX={3}
+                        padding={3}
+                        backgroundColor="white"
+                        >
+                        <Image
+                            source={require("../../../assets/luggage.png")}
+                            height={25}
+                            width={25}
+                        ></Image>
+                    </Button>
+                </View>
             </View>
-            <View style={[{ borderBottomColor: 'black', borderBottomWidth: 0.5, paddingVertical: 10 }, Styles.marginleft, Styles.marginright]}></View>
-            <View style={[Styles.marginleft, Styles.marginright]}>
-                <Text style={[Styles.textLable, { paddingVertical: 10 }]}>Seats Available</Text>
-                <NumericInput
-                    value={seat}
-                    onChange={value => setSeat(value)}
-                    //   onLimitReached={(isMax, msg) => alert(msg)} 
-                    totalWidth={240}
-                    totalHeight={50}
-                    minValue={1}
-                    maxValue={10}
-                    valueType='real'
-                    rounded
-                />
-            </View>
-            <View style={[{ borderBottomColor: 'black', borderBottomWidth: 0.5, paddingVertical: 10 }, Styles.marginleft, Styles.marginright]}></View>
-            <Text style={[Styles.textLable, Styles.marginleft, { paddingVertical: 10 }]}>Preferences</Text>
-            <View style={[Styles.img, { paddingVertical: 10 },Styles.marginleft]}>
-                
-                <TouchableOpacity
-                    onPress={() => checkPet()}
-                    style={pet ? Styles.iconSelected : Styles.icons}
-                >
-                    <Image
-                        source={require("../../../assets/pet.png")}
-                        style={Styles.icons}
-                        alt={"pet"}
-                    ></Image>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => checkSmoke()}
-                    style={smokeFree ? Styles.iconSelected : Styles.icons}
-                >
-                    <Image
-                        source={require("../../../assets/smokeFree.png")}
-                        style={Styles.icons}
-                        alt={"smokefree"}
-                    ></Image>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => checkFemale()}
-                    style={female ? Styles.iconSelected : Styles.icons}
-                >
-                    <Image
-                        source={require("../../../assets/female.png")}
-                        style={Styles.icons}
-                        alt={"female"}
-                    ></Image>
-                </TouchableOpacity>
-                <TouchableOpacity
-                    onPress={() => checkLuggage()}
-                    style={luggage ? Styles.iconSelected : Styles.icons}
-                >
-                    <Image
-                        source={require("../../../assets/luggage.png")}
-                        style={Styles.icons}
-                        alt={"luggage"}
-                    ></Image>
-                </TouchableOpacity>
-            </View>
-        </ScrollView>
+            <Button onPress={handleSubmit} width={"full"} mx={3}>
+                Search
+            </Button>
+        </View>
     );
 }
 

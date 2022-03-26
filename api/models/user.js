@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
+    approveBy:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
     numberOfRides: {
         type: Number,
         default: 0

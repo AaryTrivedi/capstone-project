@@ -3,10 +3,18 @@ import React from 'react'
 import { StyleSheet } from 'react-native'
 
 export default function NotificationItem({
+    navigateToRequestList,
     notification
 }) {
+    const handlePress = () => {
+        // alert(notification._id)
+        if (notification.type === "join-request") {
+            navigateToRequestList(notification.ride._id,notification._id);
+        }
+    }
+
     return (
-        <View backgroundColor="#F5F5F5" marginTop={3} padding={3}>
+        <Button onPress={handlePress} backgroundColor="#F5F5F5" marginTop={3} padding={3}>
             <View style={styles.header}>
                 <View width={"80%"} style={styles.headerText}>
                     <NotificationText notification={notification} />
@@ -17,7 +25,7 @@ export default function NotificationItem({
                     }</Text>
                 </View>
             </View>
-        </View>
+        </Button>
     );
 }
 

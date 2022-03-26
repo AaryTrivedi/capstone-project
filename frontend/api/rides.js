@@ -66,6 +66,45 @@ export async function getRideOfCurrentUserAsPassenger() {
     }
 }
 
+export async function getCurrentRideOfCurrentUserAsPassenger() {
+    const user = getUser()
+    const token = await getToken()
+    try {
+        const request = await axios.get(
+            `${API_URL}/rides/current-ride/of-user/as-passenger`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    }
+    catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function getCurrentRideOfCurrentUserAsDriver() {
+    const user = getUser()
+    const token = await getToken()
+    try {
+        const request = await axios.get(
+            `${API_URL}/rides/current-ride/of-user/as-driver`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    }
+    catch (e) {
+        return [null, e.message];
+    }
+}
 export async function getRideOfCurrentUserAsDriver() {
     const token = await getToken();
     try {
@@ -125,7 +164,6 @@ export async function requestAccept(rideId,passengerId) {
 export async function requestReject(rideId, passengerId) {
     const token = await getToken();
     try {
-        debugger;
         const request = await axios.post(
             `${API_URL}/rides/${rideId}/request/reject`,
             {passengerId },
@@ -137,9 +175,7 @@ export async function requestReject(rideId, passengerId) {
             }
             
         );
-        debugger
         return [request.data, null];
-        debugger
     } catch (e) {
         return [null, e.message];
     }
@@ -220,3 +256,5 @@ export async function markPresent(paymentDetails, rideDetails) {
         return [null, e.message];
     }
 }
+
+
