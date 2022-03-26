@@ -16,6 +16,7 @@ import MapView, { Marker } from 'react-native-maps';
 import RequestList from '../IndexComponents/Rides/RequestList';
 import axios from 'axios';
 import { getToken } from '../../helpers/Token';
+import UserDetail from '../IndexComponents/Rides/UserDetail';
 
 export default function RideDetails({ route, navigation }) {
 
@@ -241,6 +242,18 @@ export default function RideDetails({ route, navigation }) {
       })
   }
 
+    const navigateToMessage = () => {
+        navigation.navigate("ChatScreen", {
+            userId: rideDetails.driver
+        })
+    }
+
+    const navigateToProfile = () => {
+        navigation.navigate("Profile", {
+            userId: rideDetails.driver
+        })
+    }
+
   return (
       <>
           <ScrollView>
@@ -441,6 +454,13 @@ export default function RideDetails({ route, navigation }) {
                         rideId={rideDetails._id} />
                   }
               </View>
+              {
+                  currentUser._id !== rideDetails.driver &&
+                  <UserDetail
+                    userId={rideDetails.driver}
+                    navigateToMessage={navigateToMessage}
+                    navigateToProfile={navigateToProfile} />
+              }
                 <View
                     padding={4}>
                     {

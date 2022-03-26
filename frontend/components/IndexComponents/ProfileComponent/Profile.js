@@ -57,8 +57,8 @@ export default function Profile({ route, navigation }) {
                     console.error(error);
                     return;
                 }
-                const ratingStars = getRatingStar(result.data.data);
-                setReviews(result.data.data);
+                const ratingStars = getRatingStar(result.data.data.reviews);
+                setReviews(result.data.data.reviews);
                 setRatingStars(ratingStars)
             })
     }
