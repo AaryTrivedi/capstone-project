@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -14,34 +14,27 @@ import { ListItem, SearchBar } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ChatScreen from "./ChatScreen";
+import { getChats } from "../../api/users";
 const Messages = [
   {
     id: "1",
     userName: "Jess",
     userImg: require("../../assets/user-3.png"),
-    messageTime: "4 mins ago",
-    messageText: "Have a good one!",
   },
   {
     id: "2",
     userName: "Sandra",
     userImg: require("../../assets/user-1.png"),
-    messageTime: "2 hours ago",
-    messageText: "Hello! Are you available for tonight",
   },
   {
     id: "3",
     userName: "Samantha",
     userImg: require("../../assets/user-4.png"),
-    messageTime: "1 hours ago",
-    messageText: "Good Bye!",
   },
   {
     id: "4",
     userName: " Jack",
     userImg: require("../../assets/user-6.png"),
-    messageTime: "1 day ago",
-    messageText: "See you Again !",
   },
 ];
 
@@ -50,6 +43,12 @@ const Chat = ({ navigation }) => {
   const updateSearch = (search) => {
     setSearch(search);
   };
+  useEffect(() => {
+    getChats()
+      .then(result => {
+        const [response, error] = result;
+      })
+  }, [])
   return (
     <SafeAreaView style={styles.background}>
       <ScrollView>
@@ -82,16 +81,6 @@ const Chat = ({ navigation }) => {
                 {"Recents Chats"}
               </Text>
             </View>
-            <View style={styles.rightContainer}>
-              <Text
-                style={[
-                  styles.text,
-                  { fontSize: 14, fontWeight: "bold", fontFamily: "Arial",color:"blue" },
-                ]}
-              >
-                {"Requests"}
-              </Text>
-            </View>
           </View>
 
           <View style={styles.container}>
@@ -115,9 +104,7 @@ const Chat = ({ navigation }) => {
                     <View style={styles.textsection}>
                       <View style={styles.userinfotext}>
                         <Text style={styles.username}>{item.userName}</Text>
-                        <Text style={styles.posttime}>{item.messageTime}</Text>
                       </View>
-                      <Text style={styles.messagetext}>{item.messageText}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>

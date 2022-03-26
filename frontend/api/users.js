@@ -61,3 +61,39 @@ export async function getReviewsOfUser(userId) {
         return [null, e.message];
     }
 }
+
+export async function getChats() {
+    const token = await getToken();
+    try {
+        const request = await axios.get(
+            `${API_URL}/chats`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}
+
+export async function getChatsBetweenUser(userId) {
+    const token = await getToken();
+    try {
+        const request = await axios.get(
+            `${API_URL}/chats/${userId}`,
+            {
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        return [request.data, null];
+    } catch (e) {
+        return [null, e.message];
+    }
+}

@@ -38,7 +38,7 @@ app.listen(config.PORT, async function () {
     const { MONGO_PORT, MONGO_DB_NAME, MONGO_HOST } = config
     try {
         // await mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB_NAME}`);
-        await mongoose.connect(`mongodb+srv://rutikpatel:Rutik123@com3123.4rasi.mongodb.net/test`)
+        await mongoose.connect(`mongodb+srv://aary:123@cluster0.ra2w9.mongodb.net/capstone?retryWrites=true&w=majority`)
         console.log("Connected to mongo");
     } catch (e) {
         console.error(e);
@@ -56,9 +56,10 @@ httpServer.listen(3001);
 
 io.on("connection", socket => {
     console.log("a user connected :D");
-    socket.on("message_send", msg => {
-        console.log(msg);
-        io.emit("chat message", msg);
+    socket.on("message_send", async data => {
+        const { forUserId, fromUserId, message } = data;
+        await chatServices.addChat(fromUserId, forUserId, message);
+        // io.emit("chat message", msg);
     });
 });
 
@@ -77,5 +78,9 @@ app.use("/notifications", notificationRouter);
 
 const documentRouter = require('./routes/document.route');
 app.use("/document", documentRouter);
+
+const chatRouter = require('./routes/chat.routes');
+const chatServices = require('./services/chat.services');
+app.use("/chats", chatRouter)
 // Export app for testing
 module.exports = app
