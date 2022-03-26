@@ -13,6 +13,7 @@ export default function NotificationScreen({ navigation }) {
             .then(response => {
                 const [result, error] = response;
                 if (error) {
+                    console.log("HERE 1");
                     console.error(error);
                     return;
                 }
