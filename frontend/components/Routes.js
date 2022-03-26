@@ -23,6 +23,7 @@ import DocumentUpload from "./IndexComponents/ProfileComponent/DocumentUpload";
 import AllRideRequest from "./RideDetailComponents/AllRideRequest";
 import Profile from './IndexComponents/ProfileComponent/Profile';
 import Setting from "./Setting/Setting";
+import ResetPassword from "./IndexComponents/ProfileComponent/ResetPassword";
 
 const Stack = createNativeStackNavigator();
 
@@ -97,7 +98,6 @@ export default function Routes() {
                           <Stack.Screen
                             name="RequestList"
                             component={AllRideRequest} />
-
                       </>
                   ) : (
                       <>
@@ -118,6 +118,10 @@ export default function Routes() {
                           />
                       </>
                   )}
+                  <Stack.Screen
+                    name="ResetPassword"
+                    component={ResetPassword}
+                />
               </Stack.Navigator>
           </NavigationContainer>
       </StripeProvider>

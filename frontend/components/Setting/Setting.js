@@ -11,12 +11,20 @@ export default function Setting({ navigation }) {
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
    
-    set = <Icon name='settings' size={40} color="white"/>;
-    setq = <Icon name='chevron-right' size={25} />;
-    plus = <Ionicons name = 'plus' size={20}/>;
+    const set = <Icon name='settings' size={40} color="white"/>;
+    const setq = <Icon name='chevron-right' size={25} />;
+    const plus = <Ionicons name = 'plus' size={20}/>;
 
     const navigateToDocuments = () => {
         navigation.navigate("DocumentUpload")
+    }
+
+    const navigateToResetPassword = () => {
+        navigation.navigate("ResetPassword");
+    }
+
+    const navigateToAddCard = () => {
+        navigation.navigate("AddCard");
     }
 
    
@@ -52,7 +60,7 @@ export default function Setting({ navigation }) {
                                         onPress={() => console.log('Pressed')}
                             />
                         </View>
-                        <View style={Styles.label}>
+                        <TouchableOpacity onPress={navigateToResetPassword} style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Change password </Text>
                             <IconButton
                                         icon="chevron-right"
@@ -60,7 +68,7 @@ export default function Setting({ navigation }) {
                                         size={25}
                                         onPress={() => console.log('Pressed')}
                             />
-                        </View>
+                        </TouchableOpacity>
                         <TouchableOpacity onPress={navigateToDocuments} style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Become a driver </Text>
                             <IconButton
@@ -70,7 +78,7 @@ export default function Setting({ navigation }) {
                                         onPress={() => console.log('Pressed')}
                             />
                         </TouchableOpacity>
-                        <View style={Styles.label}>
+                        <TouchableOpacity onPress={navigateToAddCard} style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Add a payment method </Text>
                             <IconButton
                                         icon="plus"
@@ -78,7 +86,7 @@ export default function Setting({ navigation }) {
                                         size={25}
                                         onPress={() => console.log('Pressed')}
                             />
-                        </View>
+                        </TouchableOpacity>
                         <View style={Styles.label} marginTop= '2%'>
                             <Text style={{fontSize : 20 }}>Push notifications</Text>
                             <Switch
