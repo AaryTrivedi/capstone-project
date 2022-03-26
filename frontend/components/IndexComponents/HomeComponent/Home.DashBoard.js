@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, TouchableOpacity } from 'react-native'
+import {safeAreaView} from 'react-native'
 import { View, Button, ScrollView } from 'native-base';
 import { GetCurrentLocation } from './GetCurrentLocation';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -42,14 +43,6 @@ export default function Main({ navigation }) {
         
     }
     useEffect(() => {
-        getRidesAroundUser().then((response) => {
-            const [result, error] = response;
-            if (error) {
-                alert(error);
-                return;
-            }
-            setRides(result.data.data.rides);
-        });
         GetCurrentLocation().then((value) => {
             setLocation(value)
         });
@@ -69,9 +62,59 @@ export default function Main({ navigation }) {
                         setuserRides(userRide)
                     })
         setIsLoding(false)
-    })
+    }, [])
 
     // console.log(userRide[0].startDateAndTime!==undefined);
+    useEffect(() => {
+        getRideOfCurrentUserAsDriver().then((response)=>{
+            const [result, error] = response;
+            if (error) {
+                alert(error);
+                return;
+            }
+            // console.log(response)
+            setDriverRides(result.data.rides)
+            // console.log(driverRides);
+            
+        });
+    },[])
+
+    useEffect(() => {
+        getRidesAroundUser().then((response) => {
+            const [result, error] = response;
+            if (error) {
+                alert(error);
+                return;
+            }
+            setRides(result.data.data.rides);
+            // console.log(rides)
+        });
+    },[])
+    
+    const viewCurrentRide=()=>{
+        const newDriverRides = driverRides.filter(
+            (rides)=>
+            (rides.startDateAndTime > new Date().toISOString())
+        )
+        setDriverRides(newDriverRides)
+
+        var smallest = driverRides[0]
+        for(var i=1; i<driverRides.length; i++){
+            if(driverRides[i].startDateAndTime < smallest.startDateAndTime){
+                smallest = driverRides[i];   
+            }
+        }
+        console.log(smallest)
+        setDriverRides(smallest)
+        setSmall(smallest)
+        console.log(small)
+        console.log(driverRides[0]);
+    }
+
+    useEffect(() => {
+        viewCurrentRide()
+    },[])
+    
     const navigateToManageRide = () => {
         navigation.navigate("ManageRide")
     }

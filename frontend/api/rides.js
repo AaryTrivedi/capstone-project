@@ -164,7 +164,6 @@ export async function requestAccept(rideId,passengerId) {
 export async function requestReject(rideId, passengerId) {
     const token = await getToken();
     try {
-        debugger;
         const request = await axios.post(
             `${API_URL}/rides/${rideId}/request/reject`,
             {passengerId },
@@ -176,9 +175,7 @@ export async function requestReject(rideId, passengerId) {
             }
             
         );
-        debugger
         return [request.data, null];
-        debugger
     } catch (e) {
         return [null, e.message];
     }
@@ -259,3 +256,5 @@ export async function markPresent(paymentDetails, rideDetails) {
         return [null, e.message];
     }
 }
+
+

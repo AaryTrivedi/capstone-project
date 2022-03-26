@@ -30,6 +30,31 @@ class RidesService {
         return ride;
     }
 
+    validateUpdateRideFields(rideDetails) {
+        this.validateStartDateAndTime(rideDetails.startDateAndTime);
+        this.validateNumberOfSeats(rideDetails.numberOfSeats);
+        this.validatePricePerSeat(rideDetails.pricePerSeat);
+        this.validatePreferences(rideDetails.preferences);
+        this.validatePaymentType(rideDetails.paymentType);
+        }
+
+    async updateRide(rideDetails) {
+        const {_id, startDateAndTime, pricePerSeat,numberOfSeats, preferences, paymentType} = rideDetails;
+        // this.validateUpdateRideFields(rideDetails);
+        // const rideIdentifier = await this.getRideIdentifier(rideDetails);
+        // const rideCode = this.generateRideCodeOfLength(6);
+        // rideDetails.rideIdentifier = rideIdentifier;
+        // rideDetails.code = rideCode;
+        const ride = await Ride.findOneAndUpdate({ _id },rideDetails)
+        // ride.startDateAndTime = startDateAndTime;
+        // ride.pricePerSeat = pricePerSeat;
+        // ride.numberOfSeats = numberOfSeats;
+        // ride.preferences = preferences;
+        // ride.paymentType = paymentType;
+
+        return ride;
+    }
+
     async getRideIdentifier(rideDetails) {
         const user = await User.findOneAndUpdate(
             { _id: rideDetails.driver },
@@ -162,6 +187,9 @@ class RidesService {
         }
         if (this.userHasRequestToJoin(userId, ride)) {
             throw new Error("Request for user already exists");
+        }
+        if (typeof stopId === "object") {
+            stopId = ""
         }
         const request = {
             userId,
@@ -457,6 +485,7 @@ class RidesService {
     }
 
     async getRequestList(_id) {
+        console.log(_id)
         const result = await Ride.findOne({ _id }).populate({
             path: "requests",
             populate: {
