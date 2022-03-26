@@ -1,71 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import { Text, StyleSheet, TouchableOpacity } from 'react-native'
+import {safeAreaView} from 'react-native'
 import { View, Button, ScrollView } from 'native-base';
 import { GetCurrentLocation } from './GetCurrentLocation';
-import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { getUser } from "../../../helpers/user"
-import { getRidesAroundUser } from "../../../api/rides";
+import { getRidesAroundUser, getCurrentRideOfCurrentUserAsDriver, getCurrentRideOfCurrentUserAsPassenger } from "../../../api/rides";
 import { RideContainer } from '../Rides/RideContainer';
+
 
 
 export default function Main({ navigation }) {
     const [location, setLocation] = useState({})
     const [user, setUser] = useState({})
     const [rides, setRides] = useState([])
+    const [userRide,setuserRides]=useState([])
+    const [isLoading,setIsLoding]=useState(false)
 
     const myCar = <Icon name="car" size={20} />;
     const myArrow = <Icon name="arrow-right" size={20} />;
-    const map = <Icon name="map-marker" size={18} />;
-    const arrow = <Ionicons name="ray-start-arrow" size={25} />
-    const clock = <Icon name="clock-o" color={'orange'} size={16} />;
-    const seat = <Ionicons name="seat" size={16} />
-    const star = <Icon name="star" size={16} />
-    const flag = <Icon name="flag" size={16} />
 
-    const list = () => {
-        try {
-            return [].map((element) => {
-                return (
-                    <View key={element._id}>
-                        <View>
-                            <View style={Styles.backgroundContainer}>
-                                <View style={Styles.childContainer}>
-                                    <Text style={{ fontSize: 18, fontWeight: "bold" }}> {map} {element.from['locationName']}</Text>
-                                    <Text> {arrow} </Text>
-                                    <Text style={{ fontSize: 18, fontWeight: "bold" }}> {map} {element.to['locationName']}</Text>
-                                    <Text style={{ fontSize: 20, marginRight: 5 }}>${element.pricePerSeat}</Text>
-                                </View>
-                                <View style={{ borderBottomColor: '#F5F5F5', borderBottomWidth: 1, }} />
-                                <View style={Styles.childContainer}>
-                                    <Text style={{ fontSize: 16 }}> {clock} {element.startDateAndTime}</Text>
-                                    <Text style={{ fontSize: 16 }}> {seat} {element.numberOfSeats}</Text>
-                                    <Text style={{ fontSize: 16 }}> {star} 2</Text>
-                                    <Text style={{ fontSize: 16 }}> {flag} {element.stops.length}</Text>
-                                    <TouchableOpacity onPress={() => { navigation.navigate('RideDetails') }} ><Text style={{ color: '#0D92DD', }}>Details</Text></TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                );
-            });
-        }
-        catch (e) {
-            alert(JSON.stringify(e.message))
-        }
+    const getRides= async()=>{ 
+        setIsLoding(true)   
+        const userRide = []
+        const [rideAsDriverResponse, rideAsDriverError] = 
+            await getCurrentRideOfCurrentUserAsDriver();
+        const [rideAsPassengerResponse, rideAsPassengerError] =
+            await getCurrentRideOfCurrentUserAsPassenger();
+        const { rides: rideAsDriver } = rideAsDriverResponse.data;
+        const { rides: rideAsPassenger } = rideAsPassengerResponse.data;
 
-    };
-    // setUser(getUser())
-    // to access the lattitude and longitude the use location.lat and location.long 
+        {
+            user&& (user.role==='driver')?
+            userRide.push(rideAsDriver):null
+        }
+        {
+            user && (user.role === 'passenger') ?
+            userRide.push(rideAsPassenger) : null
+        }
+        userRide&&setIsLoding(false)
+        return { userRide }
+        
+    }
     useEffect(() => {
-        getRidesAroundUser().then((response) => {
-            const [result, error] = response;
-            if (error) {
-                alert(error);
-                return;
-            }
-            setRides(result.data.data.rides);
-        });
         GetCurrentLocation().then((value) => {
             setLocation(value)
         });
@@ -77,10 +54,74 @@ export default function Main({ navigation }) {
         })
     }, [])
 
+    useEffect(()=>{
+        setIsLoding(true)
+            getRides()
+                    .then(allRides=>{
+                        const { userRide } = allRides
+                        setuserRides(userRide)
+                    })
+        setIsLoding(false)
+    }, [])
+
+    // console.log(userRide[0].startDateAndTime!==undefined);
+    useEffect(() => {
+        getRideOfCurrentUserAsDriver().then((response)=>{
+            const [result, error] = response;
+            if (error) {
+                alert(error);
+                return;
+            }
+            // console.log(response)
+            setDriverRides(result.data.rides)
+            // console.log(driverRides);
+            
+        });
+    },[])
+
+    useEffect(() => {
+        getRidesAroundUser().then((response) => {
+            const [result, error] = response;
+            if (error) {
+                alert(error);
+                return;
+            }
+            setRides(result.data.data.rides);
+            // console.log(rides)
+        });
+    },[])
+    
+    const viewCurrentRide=()=>{
+        const newDriverRides = driverRides.filter(
+            (rides)=>
+            (rides.startDateAndTime > new Date().toISOString())
+        )
+        setDriverRides(newDriverRides)
+
+        var smallest = driverRides[0]
+        for(var i=1; i<driverRides.length; i++){
+            if(driverRides[i].startDateAndTime < smallest.startDateAndTime){
+                smallest = driverRides[i];   
+            }
+        }
+        console.log(smallest)
+        setDriverRides(smallest)
+        setSmall(smallest)
+        console.log(small)
+        console.log(driverRides[0]);
+    }
+
+    useEffect(() => {
+        viewCurrentRide()
+    },[])
+    
     const navigateToManageRide = () => {
         navigation.navigate("ManageRide")
     }
 
+    // const nvigateToProfile = () => {
+    //     navigation.navigate("ManageRide")
+    // }
     const navigateToWallet = () => {
         navigation.navigate("Wallet")
     }
@@ -89,6 +130,12 @@ export default function Main({ navigation }) {
         navigation.navigate("RideDetail", {
             rideId,
         });
+    }
+
+    const goToProfile = () => {
+        navigation.navigate("Profile", {
+            userId: "6212b7f83b9ed0931ab83070"
+        })
     }
 
     return (
@@ -114,17 +161,46 @@ export default function Main({ navigation }) {
                     <Text>Wallet</Text>
                 </Button>
             </View>
-            <View height={"95"} style={Styles.background}>
-                <Text style={[Styles.containerText, { marginTop: "2%" }]}>
-                    Next ride
-                </Text>
-                <Text style={Styles.containerText}>in 0000 hours</Text>
-            </View>
-            <View marginTop={"-10"} style={Styles.backgroundContainer}>
-                <TouchableOpacity>
-                    <Text>Details</Text>
-                </TouchableOpacity>
-            </View>
+
+                <View height={"95"} style={Styles.background}>
+                    {
+                        userRide.length === 0 ?
+                        null:
+                            userRide[0]===undefined?
+                            null
+                            :
+                                <>
+                                    <Text style={[Styles.containerText, { marginTop: "2%" }]}>
+                                    Next ride
+                                    </Text>
+                                    <Text style={Styles.containerText}>on {
+                                        !isLoading && new Date(userRide[0].startDateAndTime).toDateString()
+                                    }
+                                    </Text>
+                                </>
+                    }
+                </View>
+
+                {   
+                 userRide.length===0?
+                    <View marginTop={"-12"}style={Styles.backgroundContainer}>
+                        <Text style={{ fontSize: '15' }}>Welcome to car pooling please find your next destination</Text>
+                    </View>
+                    :
+                    userRide[0] === undefined ?
+                        null
+                        :
+                        <View marginTop={"-12"} marginBottom={'10'}>
+                            {
+                            (userRide.map((ride, index) => (
+                                <RideContainer
+                                    ride={ride}
+                                    key={index}
+                                    onSelect={() => goToRide(ride._id)} />
+                            )))
+                    }
+                </View>
+                }
             <TouchableOpacity onPress={navigateToManageRide}>
                 <View
                     flex={"1"}
@@ -148,6 +224,15 @@ export default function Main({ navigation }) {
                 <Text style={{ marginLeft: 20, fontSize: 20 }}>
                     Rides around you
                 </Text>
+                {userRide.length === 0 ?
+                null:
+                userRide[0]===undefined?
+                null
+                :
+                <Button onPress={()=>goToRide(userRide[0]._id)}>
+                    Go to ride
+                </Button>
+                }
                 {
                     rides.map((ride, index) => (
                         <RideContainer
@@ -157,6 +242,7 @@ export default function Main({ navigation }) {
                     ))
                 }
             </View>
+            <TouchableOpacity onPress={()=>goToProfile()}><Text>to profile</Text></TouchableOpacity>
         </ScrollView>
     );
 }

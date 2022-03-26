@@ -2,7 +2,8 @@ import React, {useState} from 'react';
 import {View,Text,StyleSheet,Switch,SafeAreaView,Image,Alert,ScrollView,TouchableOpacity} from 'react-native'
 import {Button,Input} from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
-import RadioForm from 'react-native-simple-radio-button';
+import { Radio, Stack } from 'native-base';
+import Icon from 'react-native-vector-icons/FontAwesome';
 import { LocationAutoComplete } from '../../Input/LocationAutoComplete';
 import { getToken } from '../../../helpers/Token';
 import axios from 'axios';
@@ -14,7 +15,7 @@ import NumericInput from 'react-native-numeric-input'
 export default function PostRide() {
 
   const [date, setDate] = useState(new Date());
-  const [paymentMethod, setPaymentMethod] = useState("Cash");
+  const [paymentMethod, setPaymentMethod] = useState('cash');
   const [from, setFrom] = useState(false);
   const [to, setTo] = useState(false);
   const [amount, setAmount] = useState(false);
@@ -78,10 +79,7 @@ export default function PostRide() {
   const [error, setError] = useState([{}]);
 
   //const Preferences = ['Pet Allowed','Smoke free','Women Friendly','Luggage'];
-  const radio_props = [
-    { label: 'Cash', value: 0 },
-    { label: 'Card', value: 1 },
-  ];
+ 
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
@@ -133,23 +131,7 @@ export default function PostRide() {
     values.splice(i, 1);
     setFields(values);
   }
-  const handleRole=(value)=>
-  {
-        if(!value)
-        {
-          setPaymentMethod(
-            radio_props[0].label
-          )
-        }
-        else
-        {
-          setPaymentMethod(
-            radio_props[1].label
-          ) 
-        return true 
-        }  
-  }
-
+  
   const handleFrom =(text) => {
     if(text === "" || text === undefined || text === null)
     {
@@ -222,7 +204,7 @@ export default function PostRide() {
   const handlePreferences=()=>{
     const preferences = [];
     if (pet) { preferences.push("pet") }
-    if (smokeFree) { preferences.push("somefree") }
+    if (smokeFree) { preferences.push("smokefree") }
     if (female) { preferences.push("female") }
     if (luggage) { preferences.push("luggage") }
     return preferences;
@@ -243,41 +225,44 @@ export default function PostRide() {
     }
     return stops;
   }
-  const handlePost = async ()=>{
+
+  const handlePost = async () => {
+
     try {
-        const [fromLocationDetailsResponse, fromLocationDetailsError] =
-            await getLocationDetails(from.place_id);
-        const [toLocationDetailsResponse, toLocationDetailsError] =
-            await getLocationDetails(to.place_id);
 
-        const { result: fromLocationDetails } =
-            fromLocationDetailsResponse.data;
-        const { result: toLocationDetails } = toLocationDetailsResponse.data;
+    const [fromLocationDetailsResponse, fromLocationDetailsError] =
+      await getLocationDetails(from.place_id);
+    const [toLocationDetailsResponse, toLocationDetailsError] =
+      await getLocationDetails(to.place_id);
 
-        const fromDetails = {
-            locationName: from.structured_formatting.main_text,
-            latitude: fromLocationDetails.geometry.location.lat,
-            longitude: fromLocationDetails.geometry.location.lng,
-        };
+    const { result: fromLocationDetails } = fromLocationDetailsResponse.data;
+    const { result: toLocationDetails } =
+      toLocationDetailsResponse.data;
 
-        const toDetails = {
-            locationName: to.structured_formatting.main_text,
-            latitude: toLocationDetails.geometry.location.lat,
-            longitude: toLocationDetails.geometry.location.lng,
-        };
+    const fromDetails = {
+      locationName: from.structured_formatting.main_text,
+      latitude: fromLocationDetails.geometry.location.lat,
+      longitude: fromLocationDetails.geometry.location.lng,
+    };
 
-        const preferences = handlePreferences();
-        const stops = await getStopsValue();
-        const details = {
-            from: fromDetails,
-            to: toDetails,
-            preferences,
-            startDateAndTime: date,
-            numberOfSeats: Number(seatsAvailable),
-            pricePerSeat: Number(amount),
-            paymentType: paymentMethod.toLowerCase(),
-            stops,
-        };
+    const toDetails = {
+      locationName: to.structured_formatting.main_text,
+      latitude: toLocationDetails.geometry.location.lat,
+      longitude: toLocationDetails.geometry.location.lng,
+    };
+
+    const preferences = handlePreferences()
+    const stops = await getStopsValue();
+    const details = {
+      from: fromDetails,
+      to: toDetails,
+      preferences,
+      startDateAndTime: date,
+      numberOfSeats: Number(seatsAvailable),
+      pricePerSeat: Number(amount),
+      paymentType: paymentMethod.toLowerCase(),
+      stops
+    };
 
         const token = await getToken();
         const config = {
@@ -287,10 +272,11 @@ export default function PostRide() {
             },
         };
         const response = await axios.post(
-            `http://192.168.0.158:4000/rides`,
+            `http://localhost:4000/rides`,
             details,
             config
         );
+        console.log(response);
     } catch (e) {
         console.error(e);
         Alert.alert(e);
@@ -327,9 +313,9 @@ export default function PostRide() {
           <Text style={Styles.secondaryHeader}>Ride Details</Text>
 
           <Text style={Styles.textLable}>From</Text>
-          <LocationAutoComplete value={from} onChange={setFrom} />
+          <LocationAutoComplete zIndexInverse={2} zIndex={3} value={from} onChange={setFrom} />
           <Text style={Styles.textLable}>To</Text>
-          <LocationAutoComplete value={to} onChange={setTo} />
+          <LocationAutoComplete zIndexInverse={1} zIndex={2} value={to} onChange={setTo} />
 
           <TouchableOpacity
             onPress={() => {
@@ -361,12 +347,16 @@ export default function PostRide() {
           />
 
           <Text style={Styles.textLable}>Seats Available</Text>
-          <Input
-            style={Styles.input}
-            placeholder={" 4 "}
-            autoCapitalize="none"
-            onChangeText={(text) => handleSeat(text)}
-          />
+          <View style={{marginLeft:'3%', marginTop:'1%'}}>
+                   <NumericInput 
+                       value={seatsAvailable} 
+                       onChange={(value)=>setSeatsAvailable(value)} 
+                       onLimitReached={(isMax,msg) => alert(msg)}               
+                       valueType='real'
+                       rounded 
+                       minValue={0}
+                    />
+            </View>
 
           <Text style={Styles.textLable}>Preferences</Text>
 
@@ -411,16 +401,18 @@ export default function PostRide() {
 
           <Text style={Styles.textLable}>Payment Type</Text>
           <View style={({ paddingTop: "5%" }, { marginLeft: "5%" })}>
-            <RadioForm
-              style={Styles.radio}
-              radio_props={radio_props}
-              itemShowKey="label"
-              itemRealKey="value"
-              formHorizontal={true}
-              initial={0}
-              value={0}
-              onPress={(value) => handleRole(value)}
-            />
+          <Radio.Group value={paymentMethod} onChange={setPaymentMethod}>
+                        <Stack
+                            direction={"row"}
+                            alignItems="center"
+                            space={4}
+                            w="75%"
+                            maxW="300px"
+                        >
+                            <Radio value="cash">Cash</Radio>
+                            <Radio value="card">Card</Radio>
+                        </Stack>
+            </Radio.Group>
           </View>
 
           <Text style={Styles.secondaryHeader}>Stops</Text>
@@ -429,17 +421,23 @@ export default function PostRide() {
             {fields.map((field, idx) => {
               return (
                 <View style={Styles.stopContainer} key={idx}>
-                  <LocationAutoComplete
-                    value={field.value}
-                    onChange={(loc) => handleChangeStop(idx, loc)}
-                  />
+                  <View style={{ width: "90%" }}>
+                    <LocationAutoComplete
+                      value={field.value}
+                      onChange={(loc) => handleChangeStop(idx, loc)}
+                      position={idx}
+                    />
+                  </View>
+                  <Input placeholder = "$ 15" 
+                          onChange = {(loc) => handleStopAmount(idx, loc)}>
+                  </Input>
                   <TouchableOpacity
                     disabled={fields.length === 1}
                     style={Styles.stopButton}
                     onPress={() => handleRemove(idx)}
                     Remove
                   >
-                    <Text style={Styles.innerText}>X</Text>
+                    <Icon color="red" name="remove" size={25} />
                   </TouchableOpacity>
                 </View>
               );

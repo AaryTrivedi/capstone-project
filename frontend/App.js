@@ -4,11 +4,10 @@ import {
   extendTheme,
 
 } from "native-base";
+import DocumentUpload from "./components/IndexComponents/ProfileComponent/DocumentUpload";
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
-import Routes from './components/Routes'
-import Signup from "./components/Signup";
-import ResetPassword from "./components/IndexComponents/ProfileComponent/ResetPassword";
-import Profile from "./components/IndexComponents/Profile";
+import Routes from './components/Routes';
+
 
 // Define the config
 const config = {
@@ -22,14 +21,9 @@ export const theme = extendTheme({ config });
 export default function App() {
   return (
     <NativeBaseProvider>
-      {/* <AuthProvider>
+      <AuthProvider>
         <Routes />
-      </AuthProvider> */}
-      {/* <Signup /> */}
-      <ResetPassword/>
-      {/* <Profile/> */}
+      </AuthProvider>
     </NativeBaseProvider>
   );
 }
-
-

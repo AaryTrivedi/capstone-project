@@ -7,6 +7,13 @@ import { setToken } from "../helpers/Token";
 import { setUser } from "../helpers/user"
 import { AuthContext } from '../context/AuthContext';
 
+
+const API_URL =
+    Platform.OS === "android"
+        ? "http://192.168.0.158:4000"
+        : "http://localhost:4000";
+
+
 export default function Login({ navigation }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -79,7 +86,7 @@ export default function Login({ navigation }) {
                 };
                 setIsLoading(true);
                 const { data } = await axios.post(
-                    `http://192.168.0.158:4000/users/login`,
+                    `${API_URL}/users/login`,
                     {
                         email, // R@P.com
                         password, // Rutik123

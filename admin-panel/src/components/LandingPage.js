@@ -10,7 +10,7 @@ export default function LandingPage() {
             <h1 className="main-title text-center">Login / Register page</h1>
             <div className="buttons text-center">
                 <Link to="/login">
-                    <button className="primary-button">Log in</button>
+                    <button className="primary-button" id="reg_btn"><span>Log in</span></button>
                 </Link>
                 <Link to="/register">
                     <button className="primary-button" id="reg_btn"><span>Register </span></button>
