@@ -23,7 +23,6 @@ export default function App() {
     <NativeBaseProvider>
       <AuthProvider>
         <Routes />
-        {/* <EditRide/> */}
       </AuthProvider>
     </NativeBaseProvider>
   );
