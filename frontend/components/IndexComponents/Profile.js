@@ -1,10 +1,8 @@
 import React, { Component, useContext } from 'react';
-import { View, ScrollView,StyleSheet,Text,Button,Image,TouchableOpacity } from 'react-native';
+import { ScrollView,View,StyleSheet,Text,Button,Image,TouchableOpacity } from 'react-native';
 import * as SecureStore from 'expo-secure-store';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Icon } from 'react-native-elements';
 import { AuthContext } from '../../context/AuthContext';
-import EditRide from './Rides/EditRide'
 
 export default function Profile({route,navigation}){
 

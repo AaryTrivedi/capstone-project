@@ -191,9 +191,6 @@ class RegisterPage extends Component {
 
             <div className="text-danger">{this.state.errors.confirm_password}</div>
           </div>
-          <p>
-            <input type="checkbox" name="checkbox" id="checkbox" required /> <span>I agree all statements in <a href="https://google.com" target="_blank" rel="noopener noreferrer">terms of service</a></span>.
-  </p>
 
           <button id='sub_btn'  >Submit</button>
           {/* <input type="submit" value="Submit"  /> */}

@@ -19,13 +19,11 @@ import RideDetails from "./RideDetailComponents/RideDetails";
 import AllRides from "./IndexComponents/SearchComponent/AllRides";
 import EditRide from "./IndexComponents/Rides/EditRide";
 import StartRide from "./IndexComponents/Rides/StartRide";
-<<<<<<< HEAD
+import DocumentUpload from "./IndexComponents/ProfileComponent/DocumentUpload";
 import AllRideRequest from "./RideDetailComponents/AllRideRequest";
-=======
 import Profile from './IndexComponents/ProfileComponent/Profile';
 import Setting from "./Setting/Setting";
 
->>>>>>> ccd0e925facf6c4a9aab84dcf8fe6d9e58197a06
 const Stack = createNativeStackNavigator();
 
 export default function Routes() {
@@ -65,6 +63,10 @@ export default function Routes() {
                           <Stack.Screen
                               name="RideDetail"
                               component={RideDetails}
+                          />
+                          <Stack.Screen
+                              name="DocumentUpload"
+                              component={DocumentUpload}
                           />
                           <Stack.Screen name="RideForm" component={PostRide} />
                           <Stack.Screen name="Wallet" component={Wallet} />

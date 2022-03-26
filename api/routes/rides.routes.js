@@ -115,6 +115,28 @@ ridesRouter.get("/of-user/as-passenger", verifyToken, async function (req, res, 
     }
 })
 
+ridesRouter.get("/current-ride/of-user/as-passenger", verifyToken, async function (req, res, next) {
+    try {
+        const rides = await ridesService.getCurrentRideOfUserAsPassenger(
+            req.user,
+        );
+        httpResponse.sendSuccess(res, "Rides fetched successfully.", { rides });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
+ridesRouter.get("/current-ride/of-user/as-driver", verifyToken, async function (req, res, next) {
+    try {
+        const rides = await ridesService.getCurrentRideOfUserAsDriver(
+            req.user,
+        );
+        httpResponse.sendSuccess(res, "Rides fetched successfully.", { rides });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 // Get rides of current user as driver
 ridesRouter.get("/of-user/as-driver", verifyToken, async function (req, res, next) {
     try {
