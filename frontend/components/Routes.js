@@ -81,7 +81,7 @@ export default function Routes() {
                               name="ChatScreen"
                               component={ChatScreen}
                               options={({ route }) => ({
-                                  title: route.params.userName,
+                                //   title: route.params.userName,
                                   headerBackTitleVisible: false,
                               })}
                           />

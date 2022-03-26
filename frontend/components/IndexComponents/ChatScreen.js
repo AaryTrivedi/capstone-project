@@ -6,10 +6,11 @@ import io from "socket.io-client";
 import { getUser } from "../../helpers/user";
 import { getChatsBetweenUser } from "../../api/users";
 
-export default function ChatScreen() {
+export default function ChatScreen({ route, navigation }) {
     const [messages, setMessages] = useState([]);
     let socket = io("http://localhost:3001/");
-    const id = "622a6256935a001986b8bdc4";
+    const { userId: id } = route.params;
+    // const id = "622a6256935a001986b8bdc4";
     const [user, setUser] = useState({});
 
     useEffect(() => {

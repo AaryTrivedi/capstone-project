@@ -15,30 +15,31 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ChatScreen from "./ChatScreen";
 import { getChats } from "../../api/users";
-const Messages = [
-  {
-    id: "1",
-    userName: "Jess",
-    userImg: require("../../assets/user-3.png"),
-  },
-  {
-    id: "2",
-    userName: "Sandra",
-    userImg: require("../../assets/user-1.png"),
-  },
-  {
-    id: "3",
-    userName: "Samantha",
-    userImg: require("../../assets/user-4.png"),
-  },
-  {
-    id: "4",
-    userName: " Jack",
-    userImg: require("../../assets/user-6.png"),
-  },
-];
+// const Messages = [
+//   {
+//     id: "1",
+//     userName: "Jess",
+//     userImg: require("../../assets/user-3.png"),
+//   },
+//   {
+//     id: "2",
+//     userName: "Sandra",
+//     userImg: require("../../assets/user-1.png"),
+//   },
+//   {
+//     id: "3",
+//     userName: "Samantha",
+//     userImg: require("../../assets/user-4.png"),
+//   },
+//   {
+//     id: "4",
+//     userName: " Jack",
+//     userImg: require("../../assets/user-6.png"),
+//   },
+// ];
 
 const Chat = ({ navigation }) => {
+  const [messages, setMessages] = useState([]);
   const [search, setSearch] = useState("");
   const updateSearch = (search) => {
     setSearch(search);
@@ -47,6 +48,15 @@ const Chat = ({ navigation }) => {
     getChats()
       .then(result => {
         const [response, error] = result;
+        if (error) {
+          console.error(error);
+          return;
+        }
+        const { chats } = response.data;
+        for (const chat of chats) {
+          chat.userName = chat.firstName + " " + chat.lastName;
+        }
+        setMessages(chats);
       })
   }, [])
   return (
@@ -85,13 +95,13 @@ const Chat = ({ navigation }) => {
 
           <View style={styles.container}>
             <FlatList
-              data={Messages}
-              keyExtractor={(item) => item.id}
+              data={messages}
+              keyExtractor={(item) => item._id}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.card}
                   onPress={() =>
-                    navigation.navigate("ChatScreen", { userName: item.userName })
+                    navigation.navigate("ChatScreen", { userId: item._id })
                   }
                 >
                   <View style={styles.userinfo}>
