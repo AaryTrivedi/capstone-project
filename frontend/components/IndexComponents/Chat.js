@@ -43,41 +43,6 @@ const Messages = [
     messageTime: "1 day ago",
     messageText: "See you Again !",
   },
-  // {
-  //   id: "5",
-  //   userName: " George",
-  //   userImg: require("../../assets/user-5.png"),
-  //   messageTime: "2 days ago",
-  //   messageText: "Ok Thank You !",
-  // },
-  // {
-  //   id: "6",
-  //   userName: " Daniel",
-  //   messageTime: "2 days ago",
-  //   userImg: require("../../assets/user-2.png"),
-  //   messageText: "Ok Thank You!",
-  // },
-  // {
-  //   id: "7",
-  //   userName: "Jess",
-  //   userImg: require("../../assets/user-3.png"),
-  //   messageTime: "4 mins ago",
-  //   messageText: "Have a good one!",
-  // },
-  // {
-  //   id: "8",
-  //   userName: "Jess",
-  //   userImg: require("../../assets/user-3.png"),
-  //   messageTime: "4 mins ago",
-  //   messageText: "Have a good one!",
-  // },
-  // {
-  //   id: "9",
-  //   userName: "Jess",
-  //   userImg: require("../../assets/user-3.png"),
-  //   messageTime: "4 mins ago",
-  //   messageText: "Have a good one!",
-  // },
 ];
 
 const Chat = ({ navigation }) => {

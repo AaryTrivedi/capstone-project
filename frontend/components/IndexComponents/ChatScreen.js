@@ -2,9 +2,11 @@ import React , { useCallback,useEffect, useLayoutEffect, useState } from "react"
 import { GiftedChat, Bubble, Send } from 'react-native-gifted-chat';
 import { IconButton } from 'react-native-paper';
 import { View, StyleSheet } from 'react-native';
+import io from "socket.io-client";
 
 export default function ChatScreen() {
     const [messages, setMessages] = useState([]);
+    let socket = io("http://localhost:3001/");
 
     useEffect(() => {
       setMessages([
@@ -15,18 +17,16 @@ export default function ChatScreen() {
           user: {
             _id: 2,
             name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
           },
         },
       ])
     }, [])
   
-    // const onSend = useCallback((messages = []) => {
-    //   setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
-    // }, [])
-  
-function handleSend(newMessage = []) {
+  function handleSend(newMessage = []) {
     setMessages(GiftedChat.append(messages, newMessage));
+    socket.emit("message_send", {
+      msg: "Test"
+    })
   }
   function renderSend(props) {
     return (
@@ -43,7 +43,6 @@ function handleSend(newMessage = []) {
         messages={messages}
         onSend={newMessage => handleSend(newMessage)}
         placeholder='Type your message here...'
-        showUserAvatar
         alwaysShowSend
         renderSend={renderSend}
     />

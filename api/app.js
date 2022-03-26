@@ -3,11 +3,9 @@ const express = require('express')
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const chatServices = require('./services/chat.services')
 const app = express();
-const http = require('http').createServer(app)
-const io = require('socket.io')(http)
 const logger = require('morgan');
+const socketio = require('socket.io');
 
 // Initialize environment
 const env = process.env.NODE_ENV || "development";
@@ -15,13 +13,6 @@ const env = process.env.NODE_ENV || "development";
 // Get config for current environment
 const config = require('./config/config.json')[env];
 // Initialize express app
-
-io.on('connection', (socket) => {
-    socket.on(message,(data)=>{
-        io.emit(data)
-        chatServices.saveMessage(data)
-    })
-})
 
 // Enable accepting json body
 app.use(bodyParser.json())
@@ -59,6 +50,18 @@ app.get('/', function (req, res) {
     res.status(200).send("Server started");
 })
 
+const httpServer = require('http').createServer(app);
+const io = new socketio.Server(httpServer);
+httpServer.listen(3001);
+
+io.on("connection", socket => {
+    console.log("a user connected :D");
+    socket.on("message_send", msg => {
+        console.log(msg);
+        io.emit("chat message", msg);
+    });
+});
+
 // Import routers and use in server
 const userRouter = require('./routes/user.routes');
 app.use('/users', userRouter);
@@ -71,9 +74,6 @@ app.use('/payments', paymentRouter);
 
 const notificationRouter = require('./routes/notification.routes');
 app.use("/notifications", notificationRouter);
-
-const chatRouter = require('./routes/chat.routes');
-app.use("/chat", chatRouter);
 
 const documentRouter = require('./routes/document.route');
 app.use("/document", documentRouter);
