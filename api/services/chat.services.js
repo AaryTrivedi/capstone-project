@@ -1,56 +1,72 @@
-const Chat =require('../models/chat')
-var bodyParser = require('body-parser')
-const app = require('express')()
-const http = require('http').createServer(app)
-const io = require('socket.io')(http)
+const Chat = require("../models/chat");
+const User = require("../models/user");
 
+class ChatService {
 
-class ChatService{
-
-    async getChatHistory(){
-        const chatHistory = await Chat.find({});
-        return { chatHistory }
+    async getChats(user) {
+        const forUserChats = await Chat.find({
+            fromUser: user._id
+        })
+        .select("toUser")
+        .distinct("toUser")
+        const fromUserChats = await Chat.find({
+            toUser: user._id
+        })
+        .select("fromUser")
+        .distinct("fromUser")
+        const userIds = [];
+        for (const userId of forUserChats) {
+            const isUserAdded = userIds.findIndex(u => u.toString() === userId.toString()) > -1;
+            if (isUserAdded === false) {
+                userIds.push(userId);
+            }
+        }
+        for (const userId of fromUserChats) {
+            const isUserAdded = userIds.findIndex(u => u.toString() === userId.toString()) > -1;
+            if (isUserAdded === false) {
+                userIds.push(userId);
+            }
+        }
+        const users = await User.find({
+            _id: userIds
+        });
+        console.log(users);
+        return users;
     }
 
-    async sendMessage(chatDetails){
-        const { toUser, message, fromUser } = chatDetails;
-        
-        
-            // console.log(toUser)
-            // socket.on('message', async (data) => {
-            //     const message = {
-            //         fromUser: data.fromUser,
-            //         toUser: data.toUser,
-            //         message: data.message
-            //     }
-            //     console.log(`${data.fromUser} send a message to ${data.toUser}`)
-                try {
-                    const newMsg = Chat({
-                        fromUser,
-                        toUser,
-                        message
-                    })
-                    await newMsg.save()
-                }
-                catch (e) {
-                    throw new Error(e.message)
-                } 
-            //     const client = io()
-            //     messageSend = {
-            //         toUser: toUser,
-            //         message: message,
-            //         fromUser: fromUser
-            //     }
-            //     client.emit('message', messageSend)
-            // return { messageSend }
-          
+    async addChat(fromUser, toUser, message) {
+        const chat = new Chat({
+            fromUser,
+            toUser,
+            message
+        });
+        await chat.save();
+    }
 
-    
-        // const { toUser } = chatDetails
-        // const result = await Chat.find({ toUser: toUser })
-        // return {result}
+    async getChatsBetweenUser(user1Id, user2Id) {
+        const messages = await Chat.find({
+            $or: [
+                {
+                    $and: [
+                        {
+                            fromUser: user1Id, toUser: user2Id
+                        }
+                    ]
+                },
+                {
+                    $and: [
+                        {
+                            toUser: user1Id, fromUser: user2Id
+                        }
+                    ]
+                }
+            ]
+        })
+        .populate("fromUser toUser")
+        .sort([["dateSent", "desc"]]);
+        return messages;
     }
     
 }
 
-module.exports = new ChatService
+module.exports = new ChatService;

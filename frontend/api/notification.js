@@ -9,7 +9,7 @@ const API_URL =
 export async function getCurrentUserNotifications() {
     const token = await getToken();
     try {
-        const request = await axios.post(
+        const request = await axios.get(
             `${API_URL}/notifications`,
             {
                 headers: {

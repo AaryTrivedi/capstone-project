@@ -34,7 +34,7 @@ const RequestList = ({rideId,limit=null,notificationId}) => {
         requestAccept(rideId, userId).then((result) => {
             const [response, error] = result;
             if (error) {
-                console.log(error);
+                console.error(error);
                 return;
             }    
             const newAllRequests = requestList.filter(

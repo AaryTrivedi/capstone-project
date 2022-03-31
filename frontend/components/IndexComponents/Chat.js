@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   View,
   Text,
@@ -14,77 +14,51 @@ import { ListItem, SearchBar } from "react-native-elements";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import ChatScreen from "./ChatScreen";
-const Messages = [
-  {
-    id: "1",
-    userName: "Jess",
-    userImg: require("../../assets/user-3.png"),
-    messageTime: "4 mins ago",
-    messageText: "Have a good one!",
-  },
-  {
-    id: "2",
-    userName: "Sandra",
-    userImg: require("../../assets/user-1.png"),
-    messageTime: "2 hours ago",
-    messageText: "Hello! Are you available for tonight",
-  },
-  {
-    id: "3",
-    userName: "Samantha",
-    userImg: require("../../assets/user-4.png"),
-    messageTime: "1 hours ago",
-    messageText: "Good Bye!",
-  },
-  {
-    id: "4",
-    userName: " Jack",
-    userImg: require("../../assets/user-6.png"),
-    messageTime: "1 day ago",
-    messageText: "See you Again !",
-  },
-  // {
-  //   id: "5",
-  //   userName: " George",
-  //   userImg: require("../../assets/user-5.png"),
-  //   messageTime: "2 days ago",
-  //   messageText: "Ok Thank You !",
-  // },
-  // {
-  //   id: "6",
-  //   userName: " Daniel",
-  //   messageTime: "2 days ago",
-  //   userImg: require("../../assets/user-2.png"),
-  //   messageText: "Ok Thank You!",
-  // },
-  // {
-  //   id: "7",
-  //   userName: "Jess",
-  //   userImg: require("../../assets/user-3.png"),
-  //   messageTime: "4 mins ago",
-  //   messageText: "Have a good one!",
-  // },
-  // {
-  //   id: "8",
-  //   userName: "Jess",
-  //   userImg: require("../../assets/user-3.png"),
-  //   messageTime: "4 mins ago",
-  //   messageText: "Have a good one!",
-  // },
-  // {
-  //   id: "9",
-  //   userName: "Jess",
-  //   userImg: require("../../assets/user-3.png"),
-  //   messageTime: "4 mins ago",
-  //   messageText: "Have a good one!",
-  // },
-];
+import { getChats } from "../../api/users";
+// const Messages = [
+//   {
+//     id: "1",
+//     userName: "Jess",
+//     userImg: require("../../assets/user-3.png"),
+//   },
+//   {
+//     id: "2",
+//     userName: "Sandra",
+//     userImg: require("../../assets/user-1.png"),
+//   },
+//   {
+//     id: "3",
+//     userName: "Samantha",
+//     userImg: require("../../assets/user-4.png"),
+//   },
+//   {
+//     id: "4",
+//     userName: " Jack",
+//     userImg: require("../../assets/user-6.png"),
+//   },
+// ];
 
 const Chat = ({ navigation }) => {
+  const [messages, setMessages] = useState([]);
   const [search, setSearch] = useState("");
   const updateSearch = (search) => {
     setSearch(search);
   };
+  useEffect(() => {
+    getChats()
+      .then(result => {
+        const [response, error] = result;
+        if (error) {
+          console.error(error);
+          return;
+        }
+        const { chats } = response.data;
+        for (const chat of chats) {
+          chat.userName = chat.firstName + " " + chat.lastName;
+        }
+        setMessages(chats);
+      })
+  }, [])
   return (
     <SafeAreaView style={styles.background}>
       <ScrollView>
@@ -117,27 +91,17 @@ const Chat = ({ navigation }) => {
                 {"Recents Chats"}
               </Text>
             </View>
-            <View style={styles.rightContainer}>
-              <Text
-                style={[
-                  styles.text,
-                  { fontSize: 14, fontWeight: "bold", fontFamily: "Arial",color:"blue" },
-                ]}
-              >
-                {"Requests"}
-              </Text>
-            </View>
           </View>
 
           <View style={styles.container}>
             <FlatList
-              data={Messages}
-              keyExtractor={(item) => item.id}
+              data={messages}
+              keyExtractor={(item) => item._id}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.card}
                   onPress={() =>
-                    navigation.navigate("ChatScreen", { userName: item.userName })
+                    navigation.navigate("ChatScreen", { userId: item._id })
                   }
                 >
                   <View style={styles.userinfo}>
@@ -150,9 +114,7 @@ const Chat = ({ navigation }) => {
                     <View style={styles.textsection}>
                       <View style={styles.userinfotext}>
                         <Text style={styles.username}>{item.userName}</Text>
-                        <Text style={styles.posttime}>{item.messageTime}</Text>
                       </View>
-                      <Text style={styles.messagetext}>{item.messageText}</Text>
                     </View>
                   </View>
                 </TouchableOpacity>

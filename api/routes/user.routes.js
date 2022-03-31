@@ -28,6 +28,7 @@ userRouter.post('/', async function (req, res, next) {
         const result = await userService.createUser(req.body);
         httpResponse.sendSuccess(res, "User created successfully", result);
     } catch (e) {
+        console.log(e);
         httpResponse.sendFailure(res, e.message);
     }
 });
@@ -67,12 +68,30 @@ userRouter.get('/pending-driver-details-list', async function (req, res, next) {
     }
 })
 
+userRouter.post("/users/review", verifyToken, async function (req, res, next) {
+    try {
+        const response = await userService.createReview(req.user, req.body);
+        httpResponse.sendSuccess(res, "Review created", response);
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
 // Get ride by id route
 userRouter.get("/:userId", verifyToken, async function (req, res, next) {
     try {
         const userId = req.params.userId || req.user._id;
         const user = await userService.getUserById(userId);
         httpResponse.sendSuccess(res, "User fetched successfully", { user });
+    } catch (e) {
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
+userRouter.get("/:userId/reviews", verifyToken, async function (req, res, next) {
+    try {
+        const reviews = await userService.getReviewOfUser(req.params.userId);
+        httpResponse.sendSuccess(res, "Reviews fetched successfully", { reviews });
     } catch (e) {
         httpResponse.sendFailure(res, e.message);
     }

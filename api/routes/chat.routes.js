@@ -2,23 +2,26 @@ const express = require('express');
 const httpResponse = require('../helpers/httpResponse');
 const { verifyToken } = require('../helpers/token');
 const chatServices = require('../services/chat.services');
-const chatRouter = express.Router();
+const router = express.Router();
 
-chatRouter.get('/',verifyToken,async(req,res,next)=>{
+router.get("/", verifyToken, async (req, res, next) => {
     try {
-        const result = await chatServices.getChatHistory();
-        httpResponse.sendSuccess(res, "Chat fetched successfully",  result );
+        const chats = await chatServices.getChats(req.user);
+        httpResponse.sendSuccess(res, "Chats fetched", { chats })
     } catch (e) {
-        httpResponse.sendFailure(res, e.message);
-    }
-})
-chatRouter.post('/sendMessage', verifyToken, async (req, res, next) => {
-    try {
-        const result = await chatServices.sendMessage(req.body);
-        httpResponse.sendSuccess(res, "message sent successfully");
-    } catch (e) {
+        console.log(e);
         httpResponse.sendFailure(res, e.message);
     }
 })
 
-module.exports = chatRouter;
+router.get("/:userId", verifyToken, async (req, res, next) => {
+    try {
+        const messages = await chatServices.getChatsBetweenUser(req.user._id, req.params.userId);
+        httpResponse.sendSuccess(res, "Chats fetched", { messages })
+    } catch (e) {
+        console.log(e);
+        httpResponse.sendFailure(res, e.message);
+    }
+})
+
+module.exports = router;

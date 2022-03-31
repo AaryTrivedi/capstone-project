@@ -2,31 +2,64 @@ import React , { useCallback,useEffect, useLayoutEffect, useState } from "react"
 import { GiftedChat, Bubble, Send } from 'react-native-gifted-chat';
 import { IconButton } from 'react-native-paper';
 import { View, StyleSheet } from 'react-native';
+import io from "socket.io-client";
+import { getUser } from "../../helpers/user";
+import { getChatsBetweenUser } from "../../api/users";
 
-export default function ChatScreen() {
+export default function ChatScreen({ route, navigation }) {
     const [messages, setMessages] = useState([]);
+    let socket = io("http://localhost:3001/");
+    const { userId: id } = route.params;
+    // const id = "622a6256935a001986b8bdc4";
+    const [user, setUser] = useState({});
 
     useEffect(() => {
-      setMessages([
-        {
-          _id: 1,
-          text: 'Hello developer',
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'React Native',
-            avatar: 'https://placeimg.com/140/140/any',
-          },
-        },
-      ])
+      getUser()
+        .then(user => {
+          setUser(user)
+          getChatsBetweenUser(id)
+            .then(result => {
+              const [response, error] = result;
+              if (error) {
+                console.error(error);
+                return;
+              }
+              const { messages } = response.data;
+              for (const message of messages) {
+                message.user = message.fromUser;
+                message.text = message.message;
+                message.createdAt = message.dateSent;
+                message.user.name = message.user.firstName + ' ' + message.user.lastName;
+              }
+              setMessages(messages)
+            })
+        })
+      // setMessages([
+      //   {
+      //     _id: 1,
+      //     text: 'Hello developer',
+      //     createdAt: new Date(),
+      //     user: {
+      //       _id: 2,
+      //       name: 'React Native',
+      //     },
+      //   },
+      // ])
     }, [])
   
-    // const onSend = useCallback((messages = []) => {
-    //   setMessages(previousMessages => GiftedChat.append(previousMessages, messages))
-    // }, [])
-  
-function handleSend(newMessage = []) {
+  function handleSend(newMessage = []) {
     setMessages(GiftedChat.append(messages, newMessage));
+    socket.emit("message_send", {
+      message: newMessage[0].text,
+      forUserId: id,
+      fromUserId: user._id,
+      user: user
+    })
+    socket.on("message_receive", data => {
+      const newMessages = messages.slice();
+      newMessage.push(data);
+      setMessages(newMessages);
+    })
   }
   function renderSend(props) {
     return (
@@ -39,11 +72,10 @@ function handleSend(newMessage = []) {
   }
   return (
     <GiftedChat
-        user={{ _id: 1, name: 'Aarya' }}
+        user={user}
         messages={messages}
         onSend={newMessage => handleSend(newMessage)}
         placeholder='Type your message here...'
-        showUserAvatar
         alwaysShowSend
         renderSend={renderSend}
     />

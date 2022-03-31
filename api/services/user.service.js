@@ -6,6 +6,7 @@ const User = require("../models/user");
 class UserService {
     async createUser(userDetails) {
         const { email, firstName, lastName, password } = userDetails;
+        console.log(email);
         if (
             email === undefined ||
             email === null ||

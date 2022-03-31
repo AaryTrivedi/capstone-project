@@ -16,6 +16,8 @@ export default function Main({ navigation }) {
     const [rides, setRides] = useState([])
     const [userRide,setuserRides]=useState([])
     const [isLoading,setIsLoding]=useState(false)
+    const [driverRides, setDriverRides] = useState([])
+    const [small, setSmall] = useState({})
 
     const myCar = <Icon name="car" size={20} />;
     const myArrow = <Icon name="arrow-right" size={20} />;
@@ -65,19 +67,19 @@ export default function Main({ navigation }) {
     }, [])
 
     // console.log(userRide[0].startDateAndTime!==undefined);
-    useEffect(() => {
-        getRideOfCurrentUserAsDriver().then((response)=>{
-            const [result, error] = response;
-            if (error) {
-                alert(error);
-                return;
-            }
-            // console.log(response)
-            setDriverRides(result.data.rides)
-            // console.log(driverRides);
+    // useEffect(() => {
+    //     getRideOfCurrentUserAsDriver().then((response)=>{
+    //         const [result, error] = response;
+    //         if (error) {
+    //             alert(error);
+    //             return;
+    //         }
+    //         // console.log(response)
+    //         setDriverRides(result.data.rides)
+    //         // console.log(driverRides);
             
-        });
-    },[])
+    //     });
+    // },[])
 
     useEffect(() => {
         getRidesAroundUser().then((response) => {
@@ -86,6 +88,7 @@ export default function Main({ navigation }) {
                 alert(error);
                 return;
             }
+            console.log(result.data.data.rides);
             setRides(result.data.data.rides);
             // console.log(rides)
         });
@@ -111,9 +114,9 @@ export default function Main({ navigation }) {
         console.log(driverRides[0]);
     }
 
-    useEffect(() => {
-        viewCurrentRide()
-    },[])
+    // useEffect(() => {
+    //     viewCurrentRide()
+    // },[])
     
     const navigateToManageRide = () => {
         navigation.navigate("ManageRide")
