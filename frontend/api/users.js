@@ -48,7 +48,7 @@ export async function createReview(reviewDetails) {
     const token = await getToken();
     try {
         const request = await axios.post(
-            `${API_URL}/users/review`,
+            `${API_URL}/users/users/review`,
             reviewDetails,
             {
                 headers: {
