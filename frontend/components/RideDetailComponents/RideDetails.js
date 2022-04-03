@@ -257,10 +257,10 @@ export default function RideDetails({ route, navigation }) {
   return (
       <>
           <ScrollView>
-              <View textAlign={"center"} backgroundColor="#21A656">
-                  <Text mx={3}>{rideDetails.from.locationName}</Text>
-                  {direction}
-                  <Text mx={3}>{rideDetails.to.locationName}</Text>
+              <View style={{ color: "white",padding: "5%" }} textAlign={"center"} backgroundColor="#21A656">
+                  <Text style = {{alignSelf:'center',fontSize:20,fontWeight:'bold'}} mx={3}>{rideDetails.from.locationName}</Text>
+                  <View style = {{alignSelf:'center',}} >{direction}</View>
+                  <Text style = {{alignSelf:'center',fontSize:20,fontWeight:'bold'}}mx={3}>{rideDetails.to.locationName}</Text>
               </View>
               <View
                   marginTop={-2}
@@ -462,7 +462,7 @@ export default function RideDetails({ route, navigation }) {
                     navigateToProfile={navigateToProfile} />
               }
                 <View
-                    padding={4}>
+                    padding={10}>
                     {
                     (currentUser._id === rideDetails.driver)
                     ||
