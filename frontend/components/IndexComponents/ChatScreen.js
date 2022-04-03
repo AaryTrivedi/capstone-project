@@ -34,17 +34,11 @@ export default function ChatScreen({ route, navigation }) {
               setMessages(messages)
             })
         })
-      // setMessages([
-      //   {
-      //     _id: 1,
-      //     text: 'Hello developer',
-      //     createdAt: new Date(),
-      //     user: {
-      //       _id: 2,
-      //       name: 'React Native',
-      //     },
-      //   },
-      // ])
+        socket.on("message_receive", data => {
+          const newMessages = messages.slice();
+          newMessages.push(data);
+          setMessages(newMessages);
+        })
     }, [])
   
   function handleSend(newMessage = []) {
@@ -54,12 +48,7 @@ export default function ChatScreen({ route, navigation }) {
       forUserId: id,
       fromUserId: user._id,
       user: user
-    })
-    socket.on("message_receive", data => {
-      const newMessages = messages.slice();
-      newMessage.push(data);
-      setMessages(newMessages);
-    })
+    });
   }
   function renderSend(props) {
     return (

@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {View,StyleSheet,Text, ImageBackground,Dimensions,ScrollView,Image, Switch,TouchableOpacity,} from 'react-native';
 import { Icon } from 'react-native-elements';
 import { useState } from "react";
 import Ionicons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { IconButton, Colors } from 'react-native-paper';
+import { getUser } from '../../helpers/user';
 
 export default function Setting({ navigation }) {
     const [user, setUser] = useState('John Doe');
@@ -14,6 +15,13 @@ export default function Setting({ navigation }) {
     const set = <Icon name='settings' size={40} color="white"/>;
     const setq = <Icon name='chevron-right' size={25} />;
     const plus = <Ionicons name = 'plus' size={20}/>;
+
+    useEffect(() => {
+        getUser()
+            .then(user => {
+                setUser(user.firstName + " " + user.lastName)
+            })
+    }, [])
 
     const navigateToDocuments = () => {
         navigation.navigate("DocumentUpload")
