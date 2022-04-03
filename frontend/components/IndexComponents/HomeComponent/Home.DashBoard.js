@@ -62,10 +62,11 @@ export default function Main({ navigation }) {
                     .then(allRides=>{
                         const { userRide } = allRides
                         setuserRides(userRide)
+                        console.log(userRide.length === 0)
                     })
         setIsLoding(false)
-    }, [])
-
+    })
+    
     // console.log(userRide[0].startDateAndTime!==undefined);
     // useEffect(() => {
     //     getRideOfCurrentUserAsDriver().then((response)=>{
