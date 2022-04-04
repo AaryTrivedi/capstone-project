@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions,Platform, View, TouchableOpacity, ImageBackground,Image,StyleSheet } from 'react-native';
+import { Dimensions,Platform, View,ScrollView, TouchableOpacity, ImageBackground,Image,StyleSheet } from 'react-native';
 import { Heading,Button,Text } from 'native-base';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import { uploadDocument ,uploadImage} from '../../../api/document'
 import {getUser} from '../../../helpers/user'
 
-export default function DocumentUpload() {
+export default function DocumentUpload({navigation}) {
   const win = Dimensions.get('window');
   const [workDoc, setWorkDoc] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -294,6 +294,7 @@ export default function DocumentUpload() {
             insuranceDocError: " ",
             profileError: " "
           })
+          navigation.navigate("Home")
         setUploading(false)
     }
     catch(e){
@@ -301,7 +302,7 @@ export default function DocumentUpload() {
       }
     }
   return (
-    <>
+    <ScrollView>
         <ImageBackground
           source={require('../../../assets/DocumentUpload.png')}
           style={
@@ -404,7 +405,7 @@ export default function DocumentUpload() {
             </Button>
         }
       </View>}
-    </>
+    </ScrollView>
   )
 }
 

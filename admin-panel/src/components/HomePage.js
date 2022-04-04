@@ -14,24 +14,28 @@ function HomePage({ navigation }) {
     const [pendingData, setPendingData] = useState([])
     const [documentData, setDocumentData] = useState([])
     const [verify, setVerify] = useState(false)
-    const [driverDetailsValid,setDriverDetailsValid] = useState()
+    const [driverDetailsValid, setDriverDetailsValid] = useState()
     let Token = localStorage.getItem('token')
     if (Token === null || Token === "" || Token === undefined) {
         window.location.href = "http://localhost:3000/login"
     }
     useEffect(() => {
         async function fetchData() {
-            await approvedDriversList().then((value) => setApprovedData(value.data))
-            await pendingDriversList().then((value) => setPendingData(value.data))
+            await approvedDriversList().then((value) => setApprovedData(value.data.filter(user => {
+                return user.role.toLowerCase() !== "admin"
+            })))
+            await pendingDriversList().then((value) => setPendingData(value.data.filter(user => {
+                return user.role.toLowerCase() !== "admin"
+            })))
         }
         fetchData()
     }, [])
 
 
     const setData = (_id, firstName, driverDetailsValid) => {
-        window.localStorage.setItem('tempId',_id)
+        window.localStorage.setItem('tempId', _id)
         window.localStorage.setItem('tempName', firstName)
-        setDriverDetailsValid(driverDetailsValid) 
+        setDriverDetailsValid(driverDetailsValid)
         getDocumentByuserId(_id).then((value) => {
             setDocumentData(value.data)
         })
@@ -50,15 +54,15 @@ function HomePage({ navigation }) {
 
     const DisplayPendingData = pendingData.map(
         (info) => {
-                return (
-                    <tr key={info._id}>
-                        <td>{info.firstName}</td>
-                        <td>{info.lastName}</td>
-                        <td>{info.email}</td>
-                        <td><button type="button" className="btn btn-link" onClick={() => setData(info._id, info.firstName, info.driverDetailsValid)}>see document list</button></td>
-                    </tr>
-                )
-            }
+            return (
+                <tr key={info._id}>
+                    <td>{info.firstName}</td>
+                    <td>{info.lastName}</td>
+                    <td>{info.email}</td>
+                    <td><button type="button" className="btn btn-link" onClick={() => setData(info._id, info.firstName, info.driverDetailsValid)}>see document list</button></td>
+                </tr>
+            )
+        }
     )
     const DisplayApprovedData = approvedData.map(
         (info) => {
@@ -76,13 +80,13 @@ function HomePage({ navigation }) {
                 return
             }
         }
-    ) 
+    )
 
-    const submitVerification = async()=>{
+    const submitVerification = async () => {
         const _id = localStorage.getItem('tempId')
-        if(verify)
-            await approveDocuments(_id,verify,user._id).then((response)=>console.log(JSON.stringify(response)))
-        else{
+        if (verify)
+            await approveDocuments(_id, verify, user._id).then((response) => console.log(JSON.stringify(response)))
+        else {
             alert('Please review the documents first')
         }
         // await approvedDriversList().then((value) => setApprovedData(value.data))
@@ -109,98 +113,98 @@ function HomePage({ navigation }) {
                 </Container>
             </Navbar>
             {pendingData.length === 0 ?
-            null
-            :
-            <>
-            <ul className="text-center">Pending users list</ul>
-            <div className="container">
-                <div className="text-center">
-                    <table style={{ width: '65%' }} className="container table table-striped">
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {DisplayPendingData}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            </>
-            }   
+                null
+                :
+                <>
+                    <ul className="text-center">Pending users list</ul>
+                    <div className="container">
+                        <div className="text-center">
+                            <table style={{ width: '65%' }} className="container table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {DisplayPendingData}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
+            }
             {approvedData.length === 0 ?
-            null
-            :
-            <>
-            <ul className="text-center">Approved users list</ul>
+                null
+                :
+                <>
+                    <ul className="text-center">Approved users list</ul>
 
-            <div className="container">
-                <div className="text-center">
-                    <table style={{ width: '65%' }} className="container table table-striped">
-                        <thead>
-                            <tr>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {DisplayApprovedData}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            </>
+                    <div className="container">
+                        <div className="text-center">
+                            <table style={{ width: '65%' }} className="container table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Email</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {DisplayApprovedData}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </>
             }
             <div className="container">
                 <div className="text-center">
                     {documentData.length === 0 ?
-                    <div>
+                        <div>
                             <span>No document uploaded</span>
-                    </div> 
-                    :
-                    <div>
-                            <header><h3><b>Document Uploaded by {window.localStorage.getItem('tempName')}</b></h3></header>
-                        <table style={{ width: '65%' }} className="container table">
-                        <thead>
-                            <tr>
-                                <th>Document Name</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {displayDocumentList}
-                        </tbody>  
-                    </table>
-                    
-                    {
-                        driverDetailsValid?
-                        null
+                        </div>
                         :
-                        (
-                        <form className="container text-center" style = {{ width: "30%" }} onSubmit={() => submitVerification()}>
-                            <div className="container text-center" style={{display: "flex",width: "60%" }}>
-                                <label for={'Approve'}>Approve Documents
-                                </label>
-                                <input style={{alignSelf:'center'}} id='Approve' type='checkbox' defaultChecked={verify} onClick={()=>setVerify(!verify)}></input>
-                                <br/>
-                                <button 
-                                    className={verify ? "btn btn-success":"btn btn-secondary"}>Approve
-                                </button>
-                            </div>
-                        </form>
-                        )  
+                        <div>
+                            <header><h3><b>Document Uploaded by {window.localStorage.getItem('tempName')}</b></h3></header>
+                            <table style={{ width: '65%' }} className="container table">
+                                <thead>
+                                    <tr>
+                                        <th>Document Name</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {displayDocumentList}
+                                </tbody>
+                            </table>
+
+                            {
+                                driverDetailsValid ?
+                                    null
+                                    :
+                                    (
+                                        <form className="container text-center" style={{ width: "30%" }} onSubmit={() => submitVerification()}>
+                                            <div className="container text-center" style={{ display: "flex", width: "60%" }}>
+                                                <label for={'Approve'}>Approve Documents
+                                                </label>
+                                                <input style={{ alignSelf: 'center' }} id='Approve' type='checkbox' defaultChecked={verify} onClick={() => setVerify(!verify)}></input>
+                                                <br />
+                                                <button
+                                                    className={verify ? "btn btn-success" : "btn btn-secondary"}>Approve
+                                                </button>
+                                            </div>
+                                        </form>
+                                    )
+                            }
+                        </div>
                     }
-                    </div>   
-                }
                 </div>
 
-         </div>
+            </div>
         </>
     )
 }

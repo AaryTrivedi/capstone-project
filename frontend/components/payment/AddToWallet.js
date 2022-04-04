@@ -34,7 +34,7 @@ export default function AddToWallet({ navigation }) {
                 console.error(error);
                 return;
             }
-            navigation.goBack();
+            navigation.navigate("Home");
         });
     }
 

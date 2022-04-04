@@ -42,6 +42,9 @@ export default function Setting({ navigation }) {
     const navigateToAbout = () => {
         navigation.navigate("AboutUs");
     }
+    const navigateToPolicy = () => {
+        navigation.navigate("policy");
+    }
 
    
       return(
@@ -123,7 +126,7 @@ export default function Setting({ navigation }) {
                                         onPress={() => console.log('Pressed')}
                             />
                         </TouchableOpacity>
-                        <View style={Styles.label}>
+                              <TouchableOpacity onPress={navigateToPolicy} style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Privacy policy </Text>
                             <IconButton
                                         icon="chevron-right"
@@ -131,7 +134,7 @@ export default function Setting({ navigation }) {
                                         size={25}
                                         onPress={() => console.log('Pressed')}
                             />
-                        </View>
+                        </TouchableOpacity>
                         <TouchableOpacity onPress={navigateToTerms} style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Terms and conditions </Text>
                             <IconButton

@@ -26,6 +26,7 @@ import Setting from "./Setting/Setting";
 import ResetPassword from "./IndexComponents/ProfileComponent/ResetPassword";
 import TermsAndConditions from "./Setting/TermsAndConditions";
 import AboutUs from "./Setting/About";
+import Policy from './Setting/Policy'
 
 const Stack = createNativeStackNavigator();
 
@@ -106,6 +107,9 @@ export default function Routes() {
                             <Stack.Screen
                                 name="AboutUs"
                                 component={AboutUs} />
+                          <Stack.Screen
+                              name="policy"
+                              component={Policy}/>
                       </>
                   ) : (
                       <>

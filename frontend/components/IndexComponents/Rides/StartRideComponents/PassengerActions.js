@@ -5,7 +5,7 @@ import { markPresent } from '../../../../api/rides';
 import { getCustomerAccount, getPaymentMethods } from '../../../../api/stripe';
 import { BarCodeScanner } from "expo-barcode-scanner";
 
-export default function PassengerActions({ currentUser, rideDetails }) {
+export default function PassengerActions({ currentUser, rideDetails ,navigation}) {
 
     const [code, setCode] = useState("");
     const [customer, setCustomer] = useState({});
@@ -64,6 +64,7 @@ export default function PassengerActions({ currentUser, rideDetails }) {
                     console.log(error);
                     return;
                 }
+                navigation.navigate("Home")
                 console.log("Done");
             })
     }

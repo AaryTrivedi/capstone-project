@@ -58,7 +58,8 @@ export default function StartRide({ route, navigation }) {
 				:
 				<PassengerActions
 					currentUser={currentUser}
-					rideDetails={rideDetails} />
+					rideDetails={rideDetails}
+					navigation={navigation} />
 			}
         </View>
     );
