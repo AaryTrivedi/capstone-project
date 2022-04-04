@@ -38,7 +38,9 @@ app.listen(config.PORT, async function () {
     const { MONGO_PORT, MONGO_DB_NAME, MONGO_HOST } = config
     try {
         // await mongoose.connect(`mongodb://${MONGO_HOST}:${MONGO_PORT}/${MONGO_DB_NAME}`);
-        await mongoose.connect(`mongodb+srv://aary:123@cluster0.ra2w9.mongodb.net/capstone?retryWrites=true&w=majority`)
+        await mongoose.connect(`mongodb+srv://rutikpatel:Rutik123@com3123.4rasi.mongodb.net/test`)
+
+        // await mongoose.connect(`mongodb+srv://aary:123@cluster0.ra2w9.mongodb.net/capstone?retryWrites=true&w=majority`)
         console.log("Connected to mongo");
     } catch (e) {
         console.error(e);
