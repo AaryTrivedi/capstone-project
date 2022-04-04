@@ -1,6 +1,6 @@
-import React, {useState} from 'react';
-import {View,Text,StyleSheet,Switch,SafeAreaView,Image,Alert,ScrollView,TouchableOpacity} from 'react-native'
-import {Button,Input} from 'native-base'
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Switch, SafeAreaView, Image, Alert, ScrollView, TouchableOpacity } from 'react-native'
+import { Button, Input } from 'native-base'
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Radio, Stack } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -12,13 +12,13 @@ import SelectBox from 'react-native-multi-selectbox'
 import { xorBy } from 'lodash'
 import NumericInput from 'react-native-numeric-input'
 
-export default function PostRide() {
+export default function PostRide({ navigation }) {
 
   const [date, setDate] = useState(new Date());
   const [paymentMethod, setPaymentMethod] = useState('cash');
   const [from, setFrom] = useState(false);
   const [to, setTo] = useState(false);
-  const [amount, setAmount] = useState(false);
+  const [amount, setAmount] = useState(5);
   const [seatsAvailable, setSeatsAvailable] = useState(false);
   const [fields, setFields] = useState([{ value: null, key: 1 }]);
   const [showDateTimePicker, setShowDateTimePicker] = useState(false);
@@ -30,17 +30,17 @@ export default function PostRide() {
   const [preferences, setPreferences] = useState([''])
   const [isRecurring, setRecurring] = useState(false);
   const [selectedTeams, setSelectedTeams] = useState([])
-  const [errors,setErrors] = useState(
+  const [errors, setErrors] = useState(
     {
-      fromError : "",
-      toError : "",
-      dateError : "",
-      amountError : "",
-      stopAmountError : "",
+      fromError: "",
+      toError: "",
+      dateError: "",
+      amountError: "",
+      stopAmountError: "",
       seatsError: ""
     }
   );
- 
+
   const K_OPTIONS = [
     {
       item: 'Sunday',
@@ -79,7 +79,7 @@ export default function PostRide() {
   const [error, setError] = useState([{}]);
 
   //const Preferences = ['Pet Allowed','Smoke free','Women Friendly','Luggage'];
- 
+
   const onChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setDate(currentDate);
@@ -90,37 +90,35 @@ export default function PostRide() {
     values[i].value = value;
     setFields(values);
   }
-  const handleChangeStop = (i, loc) =>{
+  const handleChangeStop = (i, loc) => {
     const values = [...fields];
     values[i].value = loc;
     setFields(values);
   }
-  const handleStopAmount = (i, loc) =>{
+  const handleStopAmount = (i, loc) => {
     const values = [...fields];
-    if(fields[0].values === ""){
+    if (fields[0].values === "") {
       setErrors({
-				...errors,
-				stopAmountError : "Please select stop address first !"
-			})  
+        ...errors,
+        stopAmountError: "Please select stop address first !"
+      })
     }
-    else if(loc === null)
-    {
+    else if (loc === null) {
       setErrors({
-				...errors,
-				stopAmountError : "Amount can not be empty"
-			})    
+        ...errors,
+        stopAmountError: "Amount can not be empty"
+      })
     }
-    else
-    { 
+    else {
       setErrors({
         ...errors,
         stopAmountError: "",
-      });   
+      });
       values[i].amount = loc;
       setFields(values);
     }
   }
-  const handleAdd =()=> {
+  const handleAdd = () => {
     const values = [...fields];
     values.push({ value: null });
     setFields(values);
@@ -131,77 +129,72 @@ export default function PostRide() {
     values.splice(i, 1);
     setFields(values);
   }
-  
-  const handleFrom =(text) => {
-    if(text === "" || text === undefined || text === null)
-    {
+
+  const handleFrom = (text) => {
+    if (text === "" || text === undefined || text === null) {
       setErrors({
-				...errors,
-				fromError : "Please select 'from' location"
-			})
+        ...errors,
+        fromError: "Please select 'from' location"
+      })
     }
-    else
-    {
+    else {
       setErrors({
-				...errors,
-				fromError : ""
-			})
+        ...errors,
+        fromError: ""
+      })
     }
 
   }
 
-  const handleTo = (text)=> {
-    if(text === "" || text === undefined || text === null)
-    {
+  const handleTo = (text) => {
+    if (text === "" || text === undefined || text === null) {
       setErrors({
-				...errors,
-				toError : "Please select 'to' location"
-			})
+        ...errors,
+        toError: "Please select 'to' location"
+      })
     }
-    else
-    {
+    else {
       setErrors({
-				...errors,
-				toError : ""
-			})
+        ...errors,
+        toError: ""
+      })
     }
   }
   const handleAmount = (value) => {
     let pattern = new RegExp(/^[+-]?([0-9]+\.?[0-9]*|\.[0-9]+)$/);
-    if(value.trim() === "")
-    {
+    if (value.trim() === "") {
       setErrors({
-				...errors,
-				amountError : "Please enter a valid amount! "
-			}) 
-    }else if(!pattern.test(value)){ 
+        ...errors,
+        amountError: "Please enter a valid amount! "
+      })
+    } else if (!pattern.test(value)) {
       setErrors({
-				...errors,
-				amountError : "Only numeric values are allowed! "
-			}) 
-    }else{
+        ...errors,
+        amountError: "Only numeric values are allowed! "
+      })
+    } else {
       setErrors({
-				...errors,
-				amountError : ""
-			}) 
+        ...errors,
+        amountError: ""
+      })
       setAmount(value)
     };
 
   }
-  
+
   const checkPet = () => {
     setPet(!pet)
   }
   const checkSmoke = () => {
     setSmokeFree(!smokeFree)
   }
-  const checkFemale = () =>{
+  const checkFemale = () => {
     setFemale(!female)
   }
-  const checkLuggage = () =>{
+  const checkLuggage = () => {
     setLuggage(!luggage)
   }
-  const handlePreferences=()=>{
+  const handlePreferences = () => {
     const preferences = [];
     if (pet) { preferences.push("pet") }
     if (smokeFree) { preferences.push("smokefree") }
@@ -230,59 +223,59 @@ export default function PostRide() {
 
     try {
 
-    const [fromLocationDetailsResponse, fromLocationDetailsError] =
-      await getLocationDetails(from.place_id);
-    const [toLocationDetailsResponse, toLocationDetailsError] =
-      await getLocationDetails(to.place_id);
+      const [fromLocationDetailsResponse, fromLocationDetailsError] =
+        await getLocationDetails(from.place_id);
+      const [toLocationDetailsResponse, toLocationDetailsError] =
+        await getLocationDetails(to.place_id);
 
-    const { result: fromLocationDetails } = fromLocationDetailsResponse.data;
-    const { result: toLocationDetails } =
-      toLocationDetailsResponse.data;
+      const { result: fromLocationDetails } = fromLocationDetailsResponse.data;
+      const { result: toLocationDetails } =
+        toLocationDetailsResponse.data;
 
-    const fromDetails = {
-      locationName: from.structured_formatting.main_text,
-      latitude: fromLocationDetails.geometry.location.lat,
-      longitude: fromLocationDetails.geometry.location.lng,
-    };
+      const fromDetails = {
+        locationName: from.structured_formatting.main_text,
+        latitude: fromLocationDetails.geometry.location.lat,
+        longitude: fromLocationDetails.geometry.location.lng,
+      };
 
-    const toDetails = {
-      locationName: to.structured_formatting.main_text,
-      latitude: toLocationDetails.geometry.location.lat,
-      longitude: toLocationDetails.geometry.location.lng,
-    };
+      const toDetails = {
+        locationName: to.structured_formatting.main_text,
+        latitude: toLocationDetails.geometry.location.lat,
+        longitude: toLocationDetails.geometry.location.lng,
+      };
 
-    const preferences = handlePreferences()
-    const stops = await getStopsValue();
-    const details = {
-      from: fromDetails,
-      to: toDetails,
-      preferences,
-      startDateAndTime: date,
-      numberOfSeats: Number(seatsAvailable),
-      pricePerSeat: Number(amount),
-      paymentType: paymentMethod.toLowerCase(),
-      stops
-    };
+      const preferences = handlePreferences()
+      const stops = await getStopsValue();
+      const details = {
+        from: fromDetails,
+        to: toDetails,
+        preferences,
+        startDateAndTime: date,
+        numberOfSeats: Number(seatsAvailable),
+        pricePerSeat: Number(amount),
+        paymentType: paymentMethod.toLowerCase(),
+        stops
+      };
 
-        const token = await getToken();
-        const config = {
-            headers: {
-                "Content-type": "application/json",
-                Authorization: `Bearer ${token}`,
-            },
-        };
-        const response = await axios.post(
-            `http://localhost:4000/rides`,
-            details,
-            config
-        );
-        console.log(response);
+      const token = await getToken();
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      const response = await axios.post(
+        `http://localhost:4000/rides`,
+        details,
+        config
+      );
+      navigation.navigate("Home")
     } catch (e) {
-        console.error(e);
-        Alert.alert(e);
+      console.error(e);
+      Alert.alert(e);
     }
- 
-   }
+
+  }
   const handleSeat = (value) => {
     let pattern = new RegExp(/^[0-9\b]+$/);
     if (value.trim() === "") {
@@ -304,7 +297,7 @@ export default function PostRide() {
   function onMultiChange() {
     return (item) => setSelectedTeams(xorBy(selectedTeams, [item], 'id'))
   }
-  
+
   return (
     <View style={{ flex: 1 }} showsVerticalScrollIndicator={true}>
       <SafeAreaView style={Styles.container}>
@@ -347,16 +340,16 @@ export default function PostRide() {
           />
 
           <Text style={Styles.textLable}>Seats Available</Text>
-          <View style={{marginLeft:'3%', marginTop:'1%'}}>
-                   <NumericInput 
-                       value={seatsAvailable} 
-                       onChange={(value)=>setSeatsAvailable(value)} 
-                       onLimitReached={(isMax,msg) => alert(msg)}               
-                       valueType='real'
-                       rounded 
-                       minValue={0}
-                    />
-            </View>
+          <View style={{ marginLeft: '3%', marginTop: '1%' }}>
+            <NumericInput
+              value={seatsAvailable}
+              onChange={(value) => setSeatsAvailable(value)}
+              onLimitReached={(isMax, msg) => alert(msg)}
+              valueType='real'
+              rounded
+              minValue={0}
+            />
+          </View>
 
           <Text style={Styles.textLable}>Preferences</Text>
 
@@ -401,17 +394,17 @@ export default function PostRide() {
 
           <Text style={Styles.textLable}>Payment Type</Text>
           <View style={({ paddingTop: "5%" }, { marginLeft: "5%" })}>
-          <Radio.Group value={paymentMethod} onChange={setPaymentMethod}>
-                        <Stack
-                            direction={"row"}
-                            alignItems="center"
-                            space={4}
-                            w="75%"
-                            maxW="300px"
-                        >
-                            <Radio value="cash">Cash</Radio>
-                            <Radio value="card">Card</Radio>
-                        </Stack>
+            <Radio.Group value={paymentMethod} onChange={setPaymentMethod}>
+              <Stack
+                direction={"row"}
+                alignItems="center"
+                space={4}
+                w="75%"
+                maxW="300px"
+              >
+                <Radio value="cash">Cash</Radio>
+                <Radio value="card">Card</Radio>
+              </Stack>
             </Radio.Group>
           </View>
 
@@ -428,8 +421,8 @@ export default function PostRide() {
                       position={idx}
                     />
                   </View>
-                  <Input placeholder = "$ 15" 
-                          onChange = {(loc) => handleStopAmount(idx, loc)}>
+                  <Input placeholder="$ 15"
+                    onChange={(loc) => handleStopAmount(idx, loc)}>
                   </Input>
                   <TouchableOpacity
                     disabled={fields.length === 1}
@@ -479,21 +472,21 @@ const Styles = StyleSheet.create({
     alignSelf: "center",
     textAlign: "center",
   },
-  disabled:{
-    backgroundColor:'#90d3ab',
-    justifyContent : "center",
-    alignItems : "center",
-    width : '100%',
-    alignSelf : "center",
-    textAlign : "center",
+  disabled: {
+    backgroundColor: '#90d3ab',
+    justifyContent: "center",
+    alignItems: "center",
+    width: '100%',
+    alignSelf: "center",
+    textAlign: "center",
     opacity: 0.5,
-    color:'black'
+    color: 'black'
   },
 
   innerText: {
     color: 'red',
-    fontWeight : '700',
-    fontSize : 18,
+    fontWeight: '700',
+    fontSize: 18,
   },
 
   icons: {
@@ -507,10 +500,10 @@ const Styles = StyleSheet.create({
     width: 30
   },
 
-  addBtn:{
-    width : '100%',
-    height : 50,
-    justifyContent : "center"  
+  addBtn: {
+    width: '100%',
+    height: 50,
+    justifyContent: "center"
   },
 
   addBtnText: {
@@ -532,28 +525,28 @@ const Styles = StyleSheet.create({
     fontSize: 18,
   },
 
-  textLable:{
-    marginTop : "6%",
-    marginLeft : "3%"
+  textLable: {
+    marginTop: "6%",
+    marginLeft: "3%"
   },
 
-  input:{
-    borderColor:'black',
-    height: 35 , 
-    width : "90%" , 
-    marginLeft : "3%",
-    borderRadius :5,
+  input: {
+    borderColor: 'black',
+    height: 35,
+    width: "90%",
+    marginLeft: "3%",
+    borderRadius: 5,
   },
 
-  dateTime : {
-    width : "90%" , 
-    marginLeft : "5%",
-    
+  dateTime: {
+    width: "90%",
+    marginLeft: "5%",
+
   },
-  stopContainer:{
-    flexDirection:"row",
-    marginLeft : "1%",
-    width : "88%",
+  stopContainer: {
+    flexDirection: "row",
+    marginLeft: "1%",
+    width: "88%",
   },
 
   img: {
@@ -573,21 +566,21 @@ const Styles = StyleSheet.create({
     marginRight: '15%',
     marginBottom: '2%'
   },
-  stopButton:{
-    marginRight : "15%",
-    color:'#FF0000',
-    alignSelf : "center",
+  stopButton: {
+    marginRight: "15%",
+    color: '#FF0000',
+    alignSelf: "center",
     fontWeight: '100',
   },
 
-  recurring:{
-    borderColor:'black',
-    height: 35 , 
-    width : "90%" , 
-    marginLeft : "3%",
-    borderRadius :5,
-    flexDirection:'row',
-    alignItems:'center'
+  recurring: {
+    borderColor: 'black',
+    height: 35,
+    width: "90%",
+    marginLeft: "3%",
+    borderRadius: 5,
+    flexDirection: 'row',
+    alignItems: 'center'
   },
 
 
@@ -604,10 +597,10 @@ const Styles = StyleSheet.create({
     marginTop: '3%'
   },
 
-  container:{
-      flex: 1,
-      marginRight:'3%',
-      marginLeft : "3%",
+  container: {
+    flex: 1,
+    marginRight: '3%',
+    marginLeft: "3%",
   },
   screen: {
     flex: 1,

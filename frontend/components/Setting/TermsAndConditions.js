@@ -21,7 +21,7 @@ export default function TermsAndConditions() {
             <Text style={styles.bold}>  {"\n"} Interpretation {"\n"}</Text>
            <Text>The words of which the initial letter is capitalized have meanings defined under the following conditions. The following definitions shall have the same meaning regardless of whether they appear in singular or in plural.</Text>
            <Text style={styles.bold}>  {"\n"} Definitions </Text>
-           <Text>  {"\n"} For the purposes of these Terms and Conditions:
+           <Text style={{ paddingLeft: 20, paddingRight: 20, textAlign: "justify" }}>  {"\n"} For the purposes of these Terms and Conditions:
 
             Application means the software program provided by the Company downloaded by You on any electronic device, named Car Pooling
 

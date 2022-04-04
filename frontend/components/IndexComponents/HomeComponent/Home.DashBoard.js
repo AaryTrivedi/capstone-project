@@ -22,7 +22,7 @@ export default function Main({ navigation }) {
     const myCar = <Icon name="car" size={20} />;
     const myArrow = <Icon name="arrow-right" size={20} />;
 
-    const getRides = async (user) => {
+    const getRides = async (currentUser) => {
         setIsLoding(true)
         const userRide = []
         const [rideAsDriverResponse, rideAsDriverError] =
@@ -32,15 +32,18 @@ export default function Main({ navigation }) {
         const { rides: rideAsDriver } = rideAsDriverResponse.data;
         const { rides: rideAsPassenger } = rideAsPassengerResponse.data;
 
-        {
-            user && (user.role === 'driver') ?
-                userRide.push(rideAsDriver) : null
+        if (currentUser.role === "driver") {
+            // userRide.push(rideAsDriver)
+            if (rideAsDriver === undefined) {
+                userRide.push(rideAsPassenger)
+            } else {
+                userRide.push(rideAsDriver)
+            }
+        } else if (currentUser.role === "passenger") {
+            userRide.push(rideAsPassenger)
         }
-        {
-            user && (user.role === 'passenger') ?
-                userRide.push(rideAsPassenger) : null
-        }
-        userRide && setIsLoding(false)
+        setIsLoding(false)
+
         return { userRide }
 
     }
@@ -170,14 +173,13 @@ export default function Main({ navigation }) {
                 </Button>
             </View>
 
-            <View height={"95"} style={Styles.background}>
                 {
                     userRide.length === 0 ?
                         null :
                         userRide[0] === undefined ?
                             null
                             :
-                            <>
+                            <View height={"95"} style={Styles.background}>
                                 <Text style={[Styles.containerText, { marginTop: "2%" }]}>
                                     Next ride
                                 </Text>
@@ -185,9 +187,8 @@ export default function Main({ navigation }) {
                                     !isLoading && new Date(userRide[0].startDateAndTime).toDateString()
                                 }
                                 </Text>
-                            </>
+                            </View>
                 }
-            </View>
 
             {
                 userRide.length === 0 ?
@@ -232,15 +233,6 @@ export default function Main({ navigation }) {
                 <Text style={{ marginLeft: 20, fontSize: 20 }}>
                     Rides around you
                 </Text>
-                {userRide.length === 0 ?
-                    null :
-                    userRide[0] === undefined ?
-                        null
-                        :
-                        <Button onPress={() => goToRide(userRide[0]._id)}>
-                            Go to ride
-                        </Button>
-                }
                 {
                     rides.map((ride, index) => (
                         <RideContainer
@@ -250,7 +242,6 @@ export default function Main({ navigation }) {
                     ))
                 }
             </View>
-            <TouchableOpacity onPress={() => goToProfile()}><Text>to profile</Text></TouchableOpacity>
         </ScrollView>
     );
 }

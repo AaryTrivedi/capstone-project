@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { View, Button, Text } from 'native-base';
+import { View, Button, Text, Heading } from 'native-base';
 import { getReviewsOfUser, getUserById } from '../../../api/users';
 
 export default function UserDetail({ userId, navigateToMessage, navigateToProfile }) {
@@ -61,9 +61,23 @@ export default function UserDetail({ userId, navigateToMessage, navigateToProfil
                 flex={1}
                 flexDirection={"row"}
                 justifyContent={"space-between"}>
-                <Text>{ user.firstName + " " + user.lastName }</Text>
-                <Text>{ user.numberOfRides }</Text>
-                <Text>{ rating }</Text>
+                <View>
+                    <Heading>
+                        {user.firstName + " " + user.lastName}
+                    </Heading>
+                </View>
+                <View>
+                    <Heading fontSize={"md"}>
+                        No. of Rides
+                    </Heading>
+                    <Text>{user.numberOfRides}</Text>
+                </View>
+                <View>
+                    <Heading fontSize={"md"}>
+                        Ratings
+                    </Heading>
+                    <Text>{isNaN(rating) ? 0 : rating}</Text>
+                </View>
             </View>
             <View marginTop={5} flex={1} flexDirection={"row"}>
                 <Button onPress={navigateToMessage} height={"9"} width={"48"} variant={"link"}>

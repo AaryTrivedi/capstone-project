@@ -6,6 +6,13 @@ import io from "socket.io-client";
 import { getUser } from "../../helpers/user";
 import { getChatsBetweenUser } from "../../api/users";
 
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random()*16|0, v = c == 'x' ? r : (r&0x3|0x8);
+      return v.toString(16);
+  });
+}
+
 export default function ChatScreen({ route, navigation }) {
     const [messages, setMessages] = useState([]);
     let socket = io("http://localhost:3001/");
@@ -35,9 +42,12 @@ export default function ChatScreen({ route, navigation }) {
             })
         })
         socket.on("message_receive", data => {
-          const newMessages = messages.slice();
-          newMessages.push(data);
-          setMessages(newMessages);
+          if (data.forUserId !== id ) {
+            console.log("HERhe");
+            const newMessages = messages.slice();
+            newMessages.push({ ...data, _id: uuidv4() });
+            setMessages(newMessages);
+          }
         })
     }, [])
   

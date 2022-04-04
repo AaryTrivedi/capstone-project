@@ -26,12 +26,7 @@ export default function App() {
   return (
     <NativeBaseProvider>
       <AuthProvider>
-        {/* <Signup/> */}
-        <Policy/>
-        {/* <TermsAndConditions/> */}
-        {/* <AboutUs/> */}
-      {/* <StripeConsent/> */}
-        {/* <Routes /> */}
+        <Routes />
       </AuthProvider>
     </NativeBaseProvider>
   );

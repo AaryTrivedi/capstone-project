@@ -60,12 +60,12 @@ export default class DashBoard extends Component {
             <Tab.Screen
                 name="Chat"
                 component={Chat}
-                options={{ headerShown: true, tabBarBadge: 1 }}
+                options={{ headerShown: true }}
             />
             <Tab.Screen
                 name="Notification"
                 component={NotificationScreen}
-                options={{ headerShown: true, tabBarBadge: 1 }}
+                options={{ headerShown: true }}
             />
             <Tab.Screen
                 name="You"
