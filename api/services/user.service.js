@@ -6,7 +6,6 @@ const User = require("../models/user");
 class UserService {
     async createUser(userDetails) {
         const { email, firstName, lastName, password } = userDetails;
-        console.log(email);
         if (
             email === undefined ||
             email === null ||
@@ -80,6 +79,7 @@ class UserService {
         const user = await User.findOne({ _id })
         user.driverDetailsValid = driverDetailsValid
         user.approveBy = approveBy
+        user.role = "driver";
         user.save()
         return {user}
         const token = generateToken({ ...user._doc });
@@ -94,13 +94,13 @@ class UserService {
     }
     
     async pendingDriverList(){
-        return User.find({
-            driverDetailsValid:'false',
-            role:'driver'})
+        return await User.find({
+            driverDetailsValid:'false'
+        })
     }
 
     async approvedDriverList() {
-        return User.find({
+        return await User.find({
             driverDetailsValid: 'true',
             role: 'driver'
         })

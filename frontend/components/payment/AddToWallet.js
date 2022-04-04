@@ -2,7 +2,7 @@ import { Button, Input, ScrollView, Text, View } from 'native-base';
 import React, { useEffect, useState } from 'react'
 import { addToWallet, getPaymentMethods } from '../../api/stripe';
 
-export default function AddToWallet() {
+export default function AddToWallet({ navigation }) {
 
     const [amount, setAmount] = useState(0);
     const [paymentMethods, setPaymentMethods] = useState([]);
@@ -28,10 +28,14 @@ export default function AddToWallet() {
             amount: paymentAmount,
             paymentMethodId,
         })
-            .then(result => {
-                const [response, error] = result;
-                console.log(response, error);
-            });
+        .then(result => {
+            const [response, error] = result;
+            if (error) {
+                console.error(error);
+                return;
+            }
+            navigation.goBack();
+        });
     }
 
     return (

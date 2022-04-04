@@ -93,7 +93,7 @@ export default function Signup({ navigation }) {
     }, [password])
 
     useEffect(() => {
-        if (confirmPassword.trim() === "") {
+        if (confirmPassword.trim() === "" && password.trim() !== "") {
             setErrors({
                 ...errors,
                 confirmPasswordError: "Confirm Password cannot be empty",
@@ -150,8 +150,8 @@ export default function Signup({ navigation }) {
             style={{ height: Dimensions.get("screen") }.height}
         >
             <View padding={"3"}>
-                <Heading size={"lg"}>Create an account</Heading>
-                <View paddingY={"1"}>
+                <Heading size={"lg"} style={{margin:'20%',marginBottom:'5%'}}>Create an account</Heading>
+                <View paddingY={"2"}>
                     <Text>
                         First name{" "}
                         <Text fontSize={"sm"} color={"red.600"}>
@@ -166,7 +166,7 @@ export default function Signup({ navigation }) {
                         isInvalid={errors.firstNameError.length > 0}
                     />
                 </View>
-                <View paddingY={"1"}>
+                <View paddingY={"2"}>
                     <Text>
                         Last name{" "}
                         <Text fontSize={"sm"} color={"red.600"}>
@@ -181,7 +181,7 @@ export default function Signup({ navigation }) {
                         isInvalid={errors.lastNameError.length > 0}
                     />
                 </View>
-                <View paddingY={"1"}>
+                <View paddingY={"2"}>
                     <Text>
                         Email{" "}
                         <Text fontSize={"sm"} color={"red.600"}>
@@ -196,7 +196,7 @@ export default function Signup({ navigation }) {
                         isInvalid={errors.emailError.length > 0}
                     />
                 </View>
-                <View paddingY={"1"}>
+                <View paddingY={"2"}>
                     <Text>
                         Password{" "}
                         <Text fontSize={"sm"} color={"red.600"}>
@@ -204,14 +204,15 @@ export default function Signup({ navigation }) {
                         </Text>
                     </Text>
                     <Input
+                        type="password"
                         background={"white"}
-                        placeholder="Email"
+                        placeholder="Password"
                         value={password}
                         onChangeText={setPassword}
                         isInvalid={errors.passwordError.length > 0}
                     />
                 </View>
-                <View paddingY={"1"}>
+                <View paddingY={"2"}>
                     <Text>
                         Confirm Password{" "}
                         <Text fontSize={"sm"} color={"red.600"}>
@@ -219,14 +220,16 @@ export default function Signup({ navigation }) {
                         </Text>
                     </Text>
                     <Input
+                    Input
+                        type="password"
                         background={"white"}
-                        placeholder="Email"
+                        placeholder="Confirm Password"
                         value={confirmPassword}
                         onChangeText={setConfirmPassword}
                         isInvalid={errors.confirmPasswordError.length > 0}
                     />
                 </View>
-                <View paddingY={"1"}>
+                <View paddingY={"2"}>
                     <Text>Register As</Text>
                     <Radio.Group value={role} onChange={setRole}>
                         <Stack
@@ -241,7 +244,7 @@ export default function Signup({ navigation }) {
                         </Stack>
                     </Radio.Group>
                 </View>
-                <View paddingY={"1"}>
+                <View paddingY={"2"}>
                     <Button
                         width={"full"}
                         colorScheme="tertiary"

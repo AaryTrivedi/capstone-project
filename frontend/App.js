@@ -7,7 +7,11 @@ import {
 import DocumentUpload from "./components/IndexComponents/ProfileComponent/DocumentUpload";
 import { AuthProvider, AuthStateValue } from "./context/AuthContext";
 import Routes from './components/Routes';
-
+import StripeConsent from './components/payment/stripe-consent';
+import AboutUs from "./components/Setting/About";
+import TermsAndConditions from "./components/Setting/TermsAndConditions";
+import Policy from "./components/Setting/Policy";
+import Signup from "./components/Signup";
 
 // Define the config
 const config = {
@@ -22,7 +26,12 @@ export default function App() {
   return (
     <NativeBaseProvider>
       <AuthProvider>
-        <Routes />
+        {/* <Signup/> */}
+        <Policy/>
+        {/* <TermsAndConditions/> */}
+        {/* <AboutUs/> */}
+      {/* <StripeConsent/> */}
+        {/* <Routes /> */}
       </AuthProvider>
     </NativeBaseProvider>
   );
