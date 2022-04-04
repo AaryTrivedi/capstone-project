@@ -64,9 +64,6 @@ export default function AllRides({ route, navigation }) {
             ))}
             {fromFilter && rides.length === 0 && (
                 <View>
-                    <Button variant={"link"} colorScheme={"blue"}>
-                        Notify when a ride is available
-                    </Button>
                     <Button onPress={showConnectingRide} variant={"link"} colorScheme={"blue"}>
                         Show connecting ride
                     </Button>

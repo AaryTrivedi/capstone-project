@@ -35,6 +35,14 @@ export default function Setting({ navigation }) {
         navigation.navigate("AddCard");
     }
 
+    const navigateToTerms = () => {
+        navigation.navigate("Terms");
+    }
+
+    const navigateToAbout = () => {
+        navigation.navigate("AboutUs");
+    }
+
    
       return(
         <ScrollView>
@@ -95,16 +103,6 @@ export default function Setting({ navigation }) {
                                         onPress={() => console.log('Pressed')}
                             />
                         </TouchableOpacity>
-                        <View style={Styles.label} marginTop= '2%'>
-                            <Text style={{fontSize : 20 }}>Push notifications</Text>
-                            <Switch
-                            trackColor={{ false: "#767577", true: "#21A656" }}
-                            thumbColor={isEnabled ? "#ffffff" : "#f4f3f4"}
-                            ios_backgroundColor="#3e3e3e"
-                            onValueChange={toggleSwitch}
-                            value={isEnabled}
-                            />
-                        </View>
                     </View>
                     <View
                             style={{
@@ -116,7 +114,7 @@ export default function Setting({ navigation }) {
                         <View style={Styles.label}>
                             <Text style={{fontSize : 20 , color : '#ADADAD'}}>More</Text>
                         </View>
-                        <View style={Styles.label}>
+                        <TouchableOpacity onPress={navigateToAbout} style={Styles.label}>
                             <Text style={{fontSize : 20 }}>About Us </Text>
                             <IconButton
                                         icon="chevron-right"
@@ -124,7 +122,7 @@ export default function Setting({ navigation }) {
                                         size={25}
                                         onPress={() => console.log('Pressed')}
                             />
-                        </View>
+                        </TouchableOpacity>
                         <View style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Privacy policy </Text>
                             <IconButton
@@ -134,7 +132,7 @@ export default function Setting({ navigation }) {
                                         onPress={() => console.log('Pressed')}
                             />
                         </View>
-                        <View style={Styles.label}>
+                        <TouchableOpacity onPress={navigateToTerms} style={Styles.label}>
                             <Text style={{fontSize : 20 }}>Terms and conditions </Text>
                             <IconButton
                                         icon="chevron-right"
@@ -142,7 +140,7 @@ export default function Setting({ navigation }) {
                                         size={25}
                                         onPress={() => console.log('Pressed')}
                             />
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 </View>
                           
@@ -175,7 +173,6 @@ const Styles = StyleSheet.create({
       
     },
     parentContainer: {
-        height : '100%',
         flex:2,
         backgroundColor: '#fff',
         borderRadius: 20,

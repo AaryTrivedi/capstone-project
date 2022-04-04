@@ -106,30 +106,16 @@ export default function FilterRide({ navigation }) {
                 </View>
             </View>
             <View style={[Styles.fromLocation, Styles.marginright, Styles.marginleft, { paddingBottom: 24 }]}>
-                <Text style={[Styles.textLable]}>From</Text><Text></Text>
-                <LocationAutoComplete value={from} onChange={setFrom} />
-
+            <Text fontSize={"sm"}>From</Text>
+                <LocationAutoComplete zIndex={2} zIndexInverse={1} onChange={setFrom} />
                 <Text style={[Styles.arrow, { paddingVertical: 25 }]}>{arrow}</Text>
-                <Text style={[Styles.textLable]}>To</Text><Text></Text>
-                <LocationAutoComplete value={to} onChange={setTo} />
+                <Text fontSize={"sm"}>To</Text>
+                <LocationAutoComplete zIndex={1} zIndexInverse={2} onChange={setTo} />
 
-                <TouchableOpacity style={[Styles.marginleft, { paddingVertical: 10 }]}
-                    onPress={() => {
-                        setShowDateTimePicker(!showDateTimePicker);
-                    }}>
-                    <Text style={Styles.textLable}>Select Date and Time</Text>
-                </TouchableOpacity>
-                <View style={[Styles.dateTime, Styles.marginleft, { paddingBottom: 10, paddingVertical: 10 }]}>
-                    {showDateTimePicker && (
-                        <DateTimePicker
-                            value={date}
-                            mode={"datetime"}
-                            is24Hour={true}
-                            onChange={(e, value) => onChangeDate(e, value)}
-                        />
-                    )}
-                </View>
+                {/* <Text style={[Styles.textLable]}>To</Text><Text></Text>
+                <LocationAutoComplete value={to} onChange={setTo} /> */}
                 {/* <View style={Styles.marginleft}> */}
+                <Text></Text>
                 <Text style={Styles.textLable}>Amount</Text>
                 <View style={[Styles.marginleft, Styles.amount]}>
                     <View style={Styles.marginright}>

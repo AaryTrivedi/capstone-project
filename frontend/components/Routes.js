@@ -24,6 +24,8 @@ import AllRideRequest from "./RideDetailComponents/AllRideRequest";
 import Profile from './IndexComponents/ProfileComponent/Profile';
 import Setting from "./Setting/Setting";
 import ResetPassword from "./IndexComponents/ProfileComponent/ResetPassword";
+import TermsAndConditions from "./Setting/TermsAndConditions";
+import AboutUs from "./Setting/About";
 
 const Stack = createNativeStackNavigator();
 
@@ -98,6 +100,12 @@ export default function Routes() {
                           <Stack.Screen
                             name="RequestList"
                             component={AllRideRequest} />
+                            <Stack.Screen
+                                name="Terms"
+                                component={TermsAndConditions} />
+                            <Stack.Screen
+                                name="AboutUs"
+                                component={AboutUs} />
                       </>
                   ) : (
                       <>
